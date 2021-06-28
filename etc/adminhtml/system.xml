@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="boxalino_di" translate="label" sortOrder="10">
+            <label>Boxalino Data Integration</label>
+        </tab>
+        <section id="boxalino_di" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>General</label>
+            <tab>boxalino_di</tab>
+            <resource>Boxalino_DataIntegration::configuration</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Credentials</label>
+                <field id="status" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="account" translate="label comment" sortOrder="2" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Boxalino account</label>
+                    <validate>required-entry validate-no-empty</validate>
+                    <comment>Please request your account with credentials by contacting support@boxalino.com</comment>
+                </field>
+                <field id="apiKey" translate="label comment" sortOrder="3" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Boxalino API Key (ADMIN role)</label>
+                    <validate>required-entry validate-no-empty</validate>
+                    <comment>Use the API key with "ADMIN" role.</comment>
+                </field>
+                <field id="apiSecret" translate="label comment" sortOrder="3" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Boxalino API Secret (ADMIN role)</label>
+                    <validate>required-entry validate-no-empty</validate>
+                    <comment>Use the API Secret for the "ADMIN" role.</comment>
+                </field>
+                <field id="devIndex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Use development data index</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If "YES", the API requests must have the dev:true parameter; If "NO", the API request must have the "dev":false parameter</comment>
+                </field>
+                <field id="isTest" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Test Mode</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When in test mode, the DI process is logged and profiled</comment>
+                </field>
+                <field id="batchSize" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Batch Size</label>
+                    <validate>validate-digits validate-not-negative-number</validate>
+                    <comment>Batch Size for export in full mode (product, customers, orders, etc)</comment>
+                </field>
+            </group>
+
+            <group id="full" translate="label" type="text"  sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Full Data Integration</label>
+                <field id="product" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Product</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="user" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Customer</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="order" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Orders</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="endpoint" translate="label comment" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Boxalino Endpoint</label>
+                    <validate>required-entry validate-url validate-no-empty</validate>
+                    <comment>Endpoint for exporting the FULL data integration structure.</comment>
+                </field>
+            </group>
+
+            <group id="delta" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Delta Data Integration</label>
+                <field id="product" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Product</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="user" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Customer</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="order" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Orders</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="endpoint" translate="label comment" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Boxalino Endpoint</label>
+                    <validate>required-entry validate-url validate-no-empty</validate>
+                    <comment>Endpoint for exporting the DELTA data integration structure.</comment>
+                </field>
+            </group>
+
+            <group id="instant" translate="label" type="text" sortOrder="40" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Instant Data Integration</label>
+                <field id="product" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Product</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="user" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Customer</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="order" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Orders</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="endpoint" translate="label comment" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Boxalino Endpoint</label>
+                    <validate>required-entry validate-url validate-no-empty</validate>
+                    <comment>Endpoint for exporting the INSTANT data integration structure.</comment>
+                </field>
+            </group>
+        </section>
+
+    </system>
+</config>

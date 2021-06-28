@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <boxalino_di>
+            <general>
+                <status>0</status>
+                <batchSize>300000</batchSize>
+            </general>
+            <full>
+                <product>1</product>
+                <user>0</user>
+                <order>0</order>
+            </full>
+            <delta>
+                <product>0</product>
+                <user>0</user>
+                <order>0</order>
+            </delta>
+            <instant>
+                <product>0</product>
+                <user>0</user>
+                <order>0</order>
+            </instant>
+        </boxalino_di>
+    </default>
+</config>

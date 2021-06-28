@@ -1,0 +1,22 @@
+{
+    "name": "boxalino/data-integration-magento2",
+    "description": "Boxalino Data Integration Layer for Magento2",
+    "type": "magento2-module",
+    "homepage": "http://www.boxalino.com",
+    "keywords": ["boxalino", "exporter","magento"],
+    "support": {
+        "email": "support@boxalino.com"
+    },
+    "license": ["MIT"],
+    "require": {
+        "php": ">=7.2",
+        "magento/module-indexer": "*",
+        "magento/framework": "*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Boxalino\\DataIntegration\\": ""
+        }
+    }
+}
