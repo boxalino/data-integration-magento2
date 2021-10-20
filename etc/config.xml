@@ -2,25 +2,32 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <boxalino_di>
-            <general>
+            <di_config>
                 <status>0</status>
+                <isTest>1</isTest>
                 <batchSize>300000</batchSize>
-            </general>
-            <full>
-                <product>1</product>
-                <user>0</user>
-                <order>0</order>
-            </full>
-            <delta>
-                <product>0</product>
-                <user>0</user>
-                <order>0</order>
-            </delta>
-            <instant>
-                <product>0</product>
-                <user>0</user>
-                <order>0</order>
-            </instant>
+            </di_config>
         </boxalino_di>
+        <boxalino_di_F>
+            <di_config>
+                <product>0</product>
+                <user>0</user>
+                <order>0</order>
+            </di_config>
+        </boxalino_di_F>
+        <boxalino_di_D>
+            <di_config>
+                <product>0</product>
+                <user>0</user>
+                <order>0</order>
+            </di_config>
+        </boxalino_di_D>
+        <boxalino_di_I>
+            <di_config>
+                <product>0</product>
+                <user>0</user>
+                <order>0</order>
+            </di_config>
+        </boxalino_di_I>
     </default>
 </config>

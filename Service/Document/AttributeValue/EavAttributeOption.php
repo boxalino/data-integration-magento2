@@ -1,0 +1,77 @@
+<?php declare(strict_types=1);
+namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
+
+use Boxalino\DataIntegration\Service\Document\DocSchemaTrait;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
+
+/**
+ * Class EavAttributeOption
+ *
+ * Exports the data about the product EAV attributes options
+ * This contains the model required for the content access
+ * A valid resource is used as a data provider
+ *
+ * @package Boxalino\DataIntegration\Service\Document\AttributeValue
+ */
+class EavAttributeOption extends IntegrationPropertyHandlerAbstract
+{
+
+    use DocSchemaTrait;
+    use DiPropertyTrait;
+
+    /**
+     * Structure: [property-name => [$schema, $schema], property-name => [], [..]]
+     *
+     * @return array
+     */
+    public function getValues() : array
+    {
+        $content = [];
+        try {
+            foreach($this->getDataProvider()->getData() as $id => $attributeCode)
+            {
+                $this->getDataProvider()->setAttributeCode($attributeCode);
+
+                $attributeName = $this->sanitizePropertyName($attributeCode);
+                if(!isset($content[$attributeName]))
+                {
+                    $content[$attributeName] = [];
+                }
+
+                $schema = [];
+                $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $attributeName;
+                $schema[DocSchemaInterface::FIELD_NUMERICAL] = $this->getDataProvider()->isNumerical((string)$id);
+                $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
+
+                $name = $this->getDataProvider()->getValueLabel((string)$id);
+                $this->addingLocalizedPropertyToSchema(
+                    DocSchemaInterface::FIELD_VALUE_LABEL,
+                    $schema,
+                    $this->getSystemConfiguration()->getLanguages(),
+                    $name
+                );
+
+                $content[$attributeName][] = $schema;
+            }
+        } catch(MissingSchemaDataProviderDefinitionException $exception)
+        {
+            $this->logger->alert($exception->getMessage());
+        }
+
+
+        return $content;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getResolverType() : string
+    {
+        return "eavAttributesOption";
+    }
+
+
+}

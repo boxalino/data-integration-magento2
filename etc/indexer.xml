@@ -1,0 +1,8 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <!-- Product DELTA data indexer  // for MVIEW usage -->
+    <indexer id="boxalino_di_delta_product" view_id="boxalino_di_delta_product" class="Boxalino\DataIntegration\Model\Indexer\Product\Delta">
+        <title translate="true">Boxalino Delta: Product DI</title>
+        <description translate="true">Delta sync for products to Boxalino GCP ecosystem</description>
+    </indexer>
+
+</config>

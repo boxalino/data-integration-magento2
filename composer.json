@@ -10,8 +10,6 @@
     "license": ["MIT"],
     "require": {
         "php": ">=7.2",
-        "magento/module-indexer": "*",
-        "magento/framework": "*",
         "boxalino/data-integration-doc-php":"~3.0.7"
     },
     "autoload": {
