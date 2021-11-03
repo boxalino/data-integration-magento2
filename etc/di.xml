@@ -79,7 +79,7 @@
             <argument name="propertyHandlers" xsi:type="array">
                 <item name="entity" xsi:type="object">Boxalino\DataIntegration\Service\Document\Product\Attribute\Entity</item>
                 <item name="product_relations" xsi:type="object">Boxalino\DataIntegration\Service\Document\Product\Attribute\ProductRelation</item>
-                <!-- title, description, short_description -->
+                <item name="translation" xsi:type="object">Boxalino\DataIntegration\Service\Document\Product\Attribute\Translation</item>
                 <item name="brands" xsi:type="object">Boxalino\DataIntegration\Service\Document\Product\Attribute\Brand</item>
                 <item name="categories" xsi:type="object">Boxalino\DataIntegration\Service\Document\Product\Attribute\Category</item>
                 <item name="images" xsi:type="object">Boxalino\DataIntegration\Service\Document\Product\Attribute\Image</item>
@@ -111,6 +111,7 @@
             <argument name="dataProviders" xsi:type="array">
                 <item name="entity" xsi:type="object">Boxalino\DataIntegration\Model\DataProvider\Document\Product\Entity</item>
                 <item name="product_relations" xsi:type="object">Boxalino\DataIntegration\Model\DataProvider\Document\Product\ProductRelation</item>
+                <item name="translation" xsi:type="object">Boxalino\DataIntegration\Model\DataProvider\Document\Product\Translation</item>
                 <item name="brands" xsi:type="object">Boxalino\DataIntegration\Model\DataProvider\Document\Product\Brand</item>
                 <item name="categories" xsi:type="object">Boxalino\DataIntegration\Model\DataProvider\Document\Product\Category</item>
                 <item name="images" xsi:type="object">Boxalino\DataIntegration\Model\DataProvider\Document\Product\Image</item>

@@ -17,14 +17,15 @@ class Entity extends IntegrationPropertyHandlerAbstract
 
     public function __construct(
         LoggerInterface $logger,
-        DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
+        DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
+        array $docAttributePropertiesMapping = [
+            "entity_id" => DocSchemaInterface::FIELD_INTERNAL_ID,
+            DocSchemaInterface::FIELD_SKU => DocSchemaInterface::FIELD_SKU,
+            "created_at" => DocSchemaInterface::FIELD_CREATION,
+            "updated_at"=> DocSchemaInterface::FIELD_UPDATE
+        ]
     ){
-        parent::__construct($logger, $diSchemaDataProviderResolver);
-
-        $this->addPropertyNameDocAttributeMapping("entity_id", DocSchemaInterface::FIELD_INTERNAL_ID);
-        $this->addPropertyNameDocAttributeMapping("sku", DocSchemaInterface::FIELD_SKU);
-        $this->addPropertyNameDocAttributeMapping("created_at", DocSchemaInterface::FIELD_CREATION);
-        $this->addPropertyNameDocAttributeMapping("updated_at", DocSchemaInterface::FIELD_UPDATE);
+        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
     }
 
     function getValues(): array
@@ -32,7 +33,8 @@ class Entity extends IntegrationPropertyHandlerAbstract
         $content = [];
         foreach($this->getDataProvider()->getData() as $item)
         {
-            $content[$item[$this->getDiIdField()]] = [];
+            $id = $this->_getDocKey($item);
+            $content[$id] = [];
             foreach($item as $propertyName => $value)
             {
                 if($propertyName == $this->getDiIdField())
@@ -45,12 +47,12 @@ class Entity extends IntegrationPropertyHandlerAbstract
                     $docAttributeName = $this->properties[$propertyName];
                     if(in_array($docAttributeName, $this->getProductSingleValueSchemaTypes()))
                     {
-                        $content[$item[$this->getDiIdField()]][$docAttributeName] = (string)$value;
+                        $content[$id][$docAttributeName] = (string)$value;
                         continue;
                     }
                 }
 
-                $content[$item[$this->getDiIdField()]][$propertyName] = $value;
+                $content[$id][$propertyName] = (string)$value;
             }
         }
 

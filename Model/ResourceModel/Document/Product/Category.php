@@ -14,7 +14,7 @@ namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 class Category extends ModeIntegrator
 {
 
-    public function getDataByFieldsWebsite(array $fields, string $websiteId) : array
+    public function getFetchAllByFieldsWebsite(array $fields, string $websiteId) : array
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $select = $this->adapter->select()

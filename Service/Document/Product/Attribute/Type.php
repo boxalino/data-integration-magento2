@@ -22,7 +22,7 @@ class Type extends IntegrationPropertyHandlerAbstract
                 continue;
             }
 
-            $content[$item[$this->getDiIdField()]][$this->getAttributeCode()] = $item[$this->getAttributeCode()];
+            $content[$this->_getDocKey($item)][$this->getAttributeCode()] = (string)$item[$this->getAttributeCode()];
         }
 
         return $content;

@@ -22,6 +22,4 @@ interface DocProductPropertyInterface extends DiSchemaDataProviderInterface,
 
     public function getAttributeId() : int;
 
-    public function getDataForAttribute() : array;
-
 }

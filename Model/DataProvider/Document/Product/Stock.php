@@ -1,16 +1,15 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
-use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\ProductRelation as DataProviderResourceModel;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Stock as DataProviderResourceModel;
 
 /**
  * Class Stock
+ * Default export for stock information from cataloginventory_stock
+ * Must be extended per project needs
  */
 class Stock extends ModeIntegrator
 {
-
-    use DiIntegrationConfigurationTrait;
 
     /**
      * @var DataProviderResourceModel
@@ -31,19 +30,22 @@ class Stock extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return [];
+        return $this->resourceModel->getFetchAllByFieldsWebsite(
+            $this->getFields(), $this->getSystemConfiguration()->getWebsiteId()
+        );
     }
 
-    public function resolve(): void {}
-
     /**
-     * @return array
+     * @return string[]
      */
-    protected function getFields() : array
+    public function getFields(): array
     {
-         return [
-             new \Zend_Db_Expr("c_p_e_s.entity_id AS {$this->getDiIdField()}")
-         ];
+       return [
+           $this->getDiIdField() => "c_p_e_s.entity_id",
+           $this->getAttributeCode() => "c_p_e_a_s.qty",
+           "c_p_e_a_s.stock_name",
+           "c_p_e_a_s.stock_status"
+       ];
     }
 
     function getDataDelta() : array

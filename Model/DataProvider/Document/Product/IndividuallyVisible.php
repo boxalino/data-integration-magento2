@@ -1,16 +1,14 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
-use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\ProductRelation as DataProviderResourceModel;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\IndividuallyVisible as DataProviderResourceModel;
 
 /**
  * Class IndividuallyVisible
+ * Checks the visibility flag on the main store id.
  */
 class IndividuallyVisible extends ModeIntegrator
 {
-
-    use DiIntegrationConfigurationTrait;
 
     /**
      * @var DataProviderResourceModel
@@ -31,18 +29,33 @@ class IndividuallyVisible extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return [];
+        return $this->resourceModel->getFetchPairsByFieldsWebsiteStoreAttrIdTable(
+            $this->getFields(),
+            $this->getSystemConfiguration()->getWebsiteId(),
+            $this->getAttributeId(),
+            (int) $this->getSystemConfiguration()->getDefaultStoreId(),
+            "catalog_product_entity_int"
+        );
     }
 
-    public function resolve(): void {}
+    public function resolve(): void
+    {
+        $this->setAttributeCode("visibility");
+        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityType(
+            $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
+        );
+    }
 
     /**
      * @return array
      */
     protected function getFields() : array
     {
+        $notVisibleIndividually =  \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE;
+
          return [
-             new \Zend_Db_Expr("c_p_e_s.entity_id AS {$this->getDiIdField()}")
+             $this->getDiIdField() => "c_p_e_s.entity_id",
+             $this->getAttributeCode() => new \Zend_Db_Expr("IF(c_p_e_a_s.value = $notVisibleIndividually, NULL, 1)")
          ];
     }
 

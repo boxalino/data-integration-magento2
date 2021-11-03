@@ -5,6 +5,7 @@ use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Category as Da
 
 /**
  * Class Category
+ * Export category information
  */
 class Category extends ModeIntegrator
 {
@@ -28,10 +29,8 @@ class Category extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getDataByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+        return $this->resourceModel->getFetchAllByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
     }
-
-    public function resolve(): void {}
 
     /**
      * @return array
@@ -39,8 +38,8 @@ class Category extends ModeIntegrator
     protected function getFields() : array
     {
          return [
-             new \Zend_Db_Expr("c_c_p.product_id AS {$this->getDiIdField()}"),
-             new \Zend_Db_Expr("GROUP_CONCAT(c_c_p.category_id SEPARATOR ',') AS " . $this->getAttributeCode())
+             $this->getDiIdField() => "c_c_p.product_id",
+             $this->getAttributeCode() => new \Zend_Db_Expr("GROUP_CONCAT(c_c_p.category_id SEPARATOR ',')")
          ];
     }
 

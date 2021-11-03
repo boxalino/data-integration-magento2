@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
  * Class AttributeAbstract
@@ -10,6 +11,8 @@ use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
  */
 abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
 {
+
+    use AttributeConfigurationOnDataProviderTrait;
 
     /**
      * The flow for accessing/loading different <type>_attributes properties is same
@@ -21,25 +24,32 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
 
-        foreach($this->getDataProvider()->getData() as $attribute)
+        foreach($this->getDataProvider()->getAttributes() as $attribute)
         {
-            $this->_addAttributeConfigOnDataProviderByAttribute($attribute);
-            list($attributeCode, $attributeName) = $this->_getPropertyNameAndAttributeCode($attribute);
+            $this->setAttribute($attribute);
+            $this->_addAttributeConfigOnDataProviderByAttribute();
+            list($attributeCode, $attributeName) = $this->_getPropertyNameAndAttributeCode();
+
+            if($this->breakLoop())
+            {
+                continue;
+            }
 
             /** @var array $item columns di_id, <attributeCode> with value */
-            foreach($this->getDataProvider()->getDataForAttribute() as $id => $item)
+            foreach($this->getDataProvider()->getData() as $id => $item)
             {
                 if($item instanceof \ArrayIterator)
                 {
                     $item = $item->getArrayCopy();
                 }
 
-                if(!isset($content[$item[$this->getDiIdField()]][$this->getDocSchemaPropertyNode()]))
+                $id = $this->_getDocKey($item);
+                if(!isset($content[$id][$this->getDocSchemaPropertyNode()]))
                 {
-                    $content[$item[$this->getDiIdField()]][$this->getDocSchemaPropertyNode()] = [];
+                    $content[$id][$this->getDocSchemaPropertyNode()] = [];
                 }
 
-                $content[$item[$this->getDiIdField()]][$this->getDocSchemaPropertyNode()][] =
+                $content[$id][$this->getDocSchemaPropertyNode()][] =
                     $this->getSchema($item, $languages, $attributeName, $attributeCode);
 
             }
@@ -57,36 +67,58 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
      */
     abstract function getSchema(array $item, array $languages, string $attributeName, string $attributeCode) : DocPropertiesInterface;
 
-
     /**
-     * @param array $attribute
+     * @return bool
      */
-    protected function _addAttributeConfigOnDataProviderByAttribute(array $attribute) : void
+    protected function breakLoop() : bool
     {
-        if(isset($attribute["attribute_code"]))
+        if(in_array($this->attribute['attribute_code'], $this->getSkipAttributeCodeList()))
         {
-            $this->dataProvider->setAttributeCode($attribute['attribute_code']);
+            return true;
         }
 
-        if(isset($attribute["attribute_id"]))
+        if(in_array($this->attribute['frontend_input'], $this->getSkipFrontendInputTypeList()))
         {
-            $this->dataProvider->setAttributeId((int)$attribute['attribute_id']);
+            return true;
         }
+
+        return false;
     }
 
     /**
-     * @param array $attribute
+     * Can be customized for every attribute-type property handler
+     * (ex: do not export price, visibility, name, description, title which are isolated properties)
+     *
      * @return array
      */
-    protected function _getPropertyNameAndAttributeCode(array $attribute) : array
+    public function getSkipAttributeCodeList() : array
     {
-        $attributeCode = $this->getAttributeCode();
-        if(isset($attribute['attribute_code']))
-        {
-            $attributeCode = $attribute['attribute_code'];
-        }
+        return [
+            DocSchemaInterface::FIELD_PRICE,
+            DocSchemaInterface::FIELD_STATUS,
+            DocSchemaInterface::FIELD_TITLE,
+            DocSchemaInterface::FIELD_DESCRIPTION,
+            DocSchemaInterface::FIELD_SHORT_DESCRIPTION,
+            DocSchemaInterface::FIELD_LINK,
+            DocSchemaInterface::FIELD_STATUS,
+            DocSchemaInterface::FIELD_VISIBILITY,
+            DocSchemaInterface::FIELD_CATEGORIES,
+            DocSchemaInterface::FIELD_STOCK,
+            DocSchemaInterface::FIELD_IMAGES,
+            DocSchemaInterface::FIELD_BRANDS,
+            DocSchemaInterface::FIELD_SUPPLIERS,
+            "name"
+        ];
+    }
 
-        return [$attributeCode, $this->sanitizePropertyName($attributeCode)];
+    /**
+     * @return string[]
+     */
+    public function getSkipFrontendInputTypeList() : array
+    {
+        return [
+          "media_image"
+        ];
     }
 
 

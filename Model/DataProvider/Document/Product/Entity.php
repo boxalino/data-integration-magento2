@@ -33,10 +33,8 @@ class Entity extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getDataByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+        return $this->resourceModel->getFetchAllByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
     }
-
-    public function resolve(): void {}
 
     /**
      * @return array

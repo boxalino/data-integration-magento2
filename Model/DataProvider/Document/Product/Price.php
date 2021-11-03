@@ -2,15 +2,12 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\ProductRelation as DataProviderResourceModel;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 
 /**
  * Class Price
  */
 class Price extends ModeIntegrator
 {
-
-    use DiIntegrationConfigurationTrait;
 
     /**
      * @var DataProviderResourceModel
@@ -36,15 +33,6 @@ class Price extends ModeIntegrator
 
     public function resolve(): void {}
 
-    /**
-     * @return array
-     */
-    protected function getFields() : array
-    {
-         return [
-             new \Zend_Db_Expr("c_p_e_s.entity_id AS {$this->getDiIdField()}")
-         ];
-    }
 
     function getDataDelta() : array
     {

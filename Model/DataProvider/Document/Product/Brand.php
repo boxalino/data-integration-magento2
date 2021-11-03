@@ -2,9 +2,11 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Brand as DataProviderResourceModel;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
  * Class Brand
+ * Exporting brand information based on the configured attribute code
  */
 class Brand extends ModeIntegrator
 {
@@ -21,6 +23,7 @@ class Brand extends ModeIntegrator
         DataProviderResourceModel $resource
     ) {
         $this->resourceModel = $resource;
+        $this->attributeNameValuesList = new \ArrayObject();
     }
 
     /**
@@ -31,17 +34,41 @@ class Brand extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return [];
+        return $this->resourceModel->getFetchAllByWebsiteAttributeCode(
+            $this->getFields(),
+            $this->getSystemConfiguration()->getWebsiteId(),
+            $this->getAttributeId()
+        );
     }
-
-    public function resolve(): void {}
 
     /**
      * @return array
      */
     protected function getFields() : array
     {
-         return [];
+        return [
+            $this->getDiIdField() => "c_p_e_s.entity_id",
+            $this->getAttributeCode() => "c_p_e_a_s.value",
+            DocSchemaInterface::FIELD_INTERNAL_ID => "c_p_e_a_s.option_id",
+        ];
+    }
+
+    /**
+     * Add attribute id
+     * Load option id translations
+     */
+    public function resolve(): void
+    {
+        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityType(
+            $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
+        );
+
+        $this->attributeNameValuesList = new \ArrayObject();
+        foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
+        {
+            $data = $this->resourceModel->getAttributeOptionValuesByStoreAndAttributeId($this->getAttributeId(), $storeId);
+            $this->addValueToAttributeContent($data, $this->attributeNameValuesList, $languageCode);
+        }
     }
 
     public function getAttributeCode() : string
@@ -51,7 +78,7 @@ class Brand extends ModeIntegrator
 
     function getDataDelta() : array
     {
-       return [];
+        return [];
     }
 
 

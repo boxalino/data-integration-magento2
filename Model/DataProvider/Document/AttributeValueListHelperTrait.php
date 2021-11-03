@@ -18,7 +18,7 @@ trait AttributeValueListHelperTrait
      * @param string $id
      * @return array
      */
-    protected function getDataByCode(string $code, string $id) : array
+    public function getDataByCode(string $code, string $id) : array
     {
         if($this->attributeNameValuesList->offsetExists($code))
         {
@@ -29,6 +29,22 @@ trait AttributeValueListHelperTrait
                 $content = $attributeValues->offsetGet($id);
                 return $content->getArrayCopy();
             }
+        }
+
+        return [];
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getDataById(string $id) : array
+    {
+        if($this->attributeNameValuesList->offsetExists($id))
+        {
+            /** @var \ArrayIterator $content */
+            $content = $this->attributeNameValuesList->offsetGet($id);
+            return $content->getArrayCopy();
         }
 
         return [];

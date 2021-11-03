@@ -17,9 +17,9 @@ trait EavResourceTrait
     /**
      * @param string $code
      * @param int $type
-     * @return string
+     * @return string | null
      */
-    public function getAttributeIdByAttributeCodeAndEntityType(string $code, int $type) : string
+    public function getAttributeIdByAttributeCodeAndEntityType(string $code, int $type) : ?string
     {
         $whereConditions = [
             $this->adapter->quoteInto('attr.attribute_code = ?', $code),
@@ -30,7 +30,13 @@ trait EavResourceTrait
             ->from(['attr'=>'eav_attribute'], ['attribute_id'])
             ->where(implode(' AND ', $whereConditions));
 
-        return $this->adapter->fetchOne($attributeIdSql);
+        $attributeId = $this->adapter->fetchOne($attributeIdSql);
+        if(is_bool($attributeId))
+        {
+            return NULL;
+        }
+
+        return $attributeId;
     }
 
     /**
@@ -46,10 +52,10 @@ trait EavResourceTrait
      */
     protected function getEavJoinAttributeSQLByStoreAttrIdTable(int $attributeId, int $storeId, string $table, string $main = 'catalog_product_entity') : Select
     {
-        $select = $this->getEavJoin($attributeId, $storeId, $table, $main);
+        $select = $this->_getEavJoin($attributeId, $storeId, $table, $main);
         return $this->adapter->select()
             ->from(
-               ['joins' => $select],
+                ['joins' => $select],
                 [
                     'attribute_id' => 'joins.attribute_id',
                     'entity_id' => 'joins.entity_id',
@@ -72,15 +78,15 @@ trait EavResourceTrait
      */
     protected function getEavJoinAttributeSQLByStoresAttrIdTable(int $attributeId, array $storeIds, string $table, string $main = 'catalog_product_entity') : Select
     {
-        $select = $this->getEavJoin($attributeId, $storeIds, $table, $main);
+        $select = $this->_getEavJoin($attributeId, $storeIds, $table, $main);
         return $this->adapter->select()
             ->from(
-                array('joins' => $select),
-                array(
+                ['joins' => $select],
+                [
                     'attribute_id'=>'joins.attribute_id',
                     'entity_id' => 'joins.entity_id',
-                    'value' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR joins.store_value = '', 0, joins.store_id)")
-                )
+                    'value' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR joins.store_value = '', joins.default_value, joins.store_value)")
+                ]
             );
     }
 
@@ -91,7 +97,7 @@ trait EavResourceTrait
      * @param string $main
      * @return Select
      */
-    protected function getEavJoin(int $attributeId, $storeId, string $table, string $main = 'catalog_product_entity') : Select
+    protected function _getEavJoin(int $attributeId, $storeId, string $table, string $main = 'catalog_product_entity') : Select
     {
         $select = $this->adapter
             ->select()
@@ -138,73 +144,22 @@ trait EavResourceTrait
     {
         $select = $this->adapter->select()
             ->from(
-                array('a_o' => $this->adapter->getTableName('eav_attribute_option')),
-                array(
+                ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
+                [
                     'option_id',
                     new \Zend_Db_Expr("CASE WHEN c_o.value IS NULL THEN b_o.value ELSE c_o.value END as value")
-                )
-            )->joinLeft(array('b_o' => $this->adapter->getTableName('eav_attribute_option_value')),
+                ]
+            )->joinLeft(
+                ['b_o' => $this->adapter->getTableName('eav_attribute_option_value')],
                 'b_o.option_id = a_o.option_id AND b_o.store_id = 0',
-                array()
-            )->joinLeft(array('c_o' => $this->adapter->getTableName('eav_attribute_option_value')),
+                []
+            )->joinLeft(
+                ['c_o' => $this->adapter->getTableName('eav_attribute_option_value')],
                 'c_o.option_id = a_o.option_id AND c_o.store_id = ' . $storeId,
-                array()
+                []
             )->where('a_o.attribute_id = ?', $key);
 
         return $this->adapter->fetchAll($select);
-    }
-
-    /**
-     * Get child attribute value based on the parent attribute value
-     *
-     * @param string $attributeCode
-     * @param string $type
-     * @param int $storeId
-     * @param int $entityTypeId
-     * @return \Zend_Db_Select
-     * @throws \Zend_Db_Select_Exception
-     */
-    public function getAttributeParentUnionSqlByCodeTypeStore(
-        string $attributeCode, string $type, int $storeId,
-        int $entityTypeId = \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID) : \Zend_Db_Select
-    {
-        $attributeId = $this->getAttributeIdByAttributeCodeAndEntityType($attributeCode, $entityTypeId);
-        $select1 = $this->adapter->select()
-            ->from(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
-                ['c_p_e.entity_id']
-            )
-            ->joinLeft(
-                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
-                'c_p_e.entity_id = c_p_r.child_id',
-                ['parent_id']
-            );
-
-        $select1->where('t_d.attribute_id = ?', $attributeId)->where('t_d.store_id = 0 OR t_d.store_id = ?',$storeId);
-//        if(!empty($this->exportIds) && $this->isDelta) $select1->where('c_p_e.entity_id IN(?)', $this->exportIds);
-
-        $select2 = clone $select1;
-        $select2->join(['t_d' => $this->adapter->getTableName('catalog_product_entity_' . $type)],
-            't_d.entity_id = c_p_e.entity_id AND c_p_r.parent_id IS NULL',
-            [
-                't_d.attribute_id',
-                't_d.value',
-                't_d.store_id'
-            ]
-        );
-        $select1->join(['t_d' => $this->adapter->getTableName('catalog_product_entity_' . $type)],
-            't_d.entity_id = c_p_r.parent_id',
-            [
-                't_d.attribute_id',
-                't_d.value',
-                't_d.store_id'
-            ]
-        );
-
-        return $this->adapter->select()->union(
-            array($select1, $select2),
-            \Zend_Db_Select::SQL_UNION
-        );
     }
 
     /**
@@ -267,39 +222,84 @@ trait EavResourceTrait
     }
 
     /**
-     * Getting count of parent products that have a certain value for an attribute
-     * Used for validation of child values
-     *
-     * @param $attributeId
-     * @param $value
-     * @param $storeId
-     * @return \Magento\Framework\DB\Select
+     * @param string $attributeCode
+     * @param int $entityTypeId
+     * @return string|null
      */
-    protected function getAttributeParentCountSqlByAttrIdValueStoreId($attributeId, $value, $storeId) : \Magento\Framework\DB\Select
+    public function getAttributeScopeByAttrCode(
+        string $attributeCode,
+        int $entityTypeId = \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID) : ?string
     {
-        $storeAttributeValue = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_int");
         $select = $this->adapter->select()
             ->from(
-                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
-                ['c_p_r.parent_id']
+                ['e_a' => $this->adapter->getTableName('eav_attribute')],
+                []
             )
-            ->joinLeft(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
-                'c_p_e.entity_id = c_p_r.child_id',
-                ['c_p_e.entity_id']
+            ->joinInner(
+                ['c_e_a' => $this->adapter->getTableName('catalog_eav_attribute')],
+                'c_e_a.attribute_id = e_a.attribute_id',
+                ['is_global']
             )
-            ->join(['t_d' => new \Zend_Db_Expr("( ". $storeAttributeValue->__toString() . ' )')],
-                't_d.entity_id = c_p_r.parent_id',
-                ['t_d.value']
-            );
+            ->where('e_a.entity_type_id = ?', $entityTypeId)
+            ->where('e_a.attribute_code= ?', $attributeCode);
 
-        return $this->adapter->select()
-            ->from(
-                ["parent_select"=> new \Zend_Db_Expr("( ". $select->__toString() . ' )')],
-                ["count" => new \Zend_Db_Expr("COUNT(parent_select.parent_id)"), 'entity_id']
-            )
-            ->where("parent_select.value = ?", $value)
-            ->group("parent_select.entity_id");
+        $scope = $this->adapter->fetchOne($select);
+        if(is_bool($scope))
+        {
+            return NULL;
+        }
+
+        return $scope;
     }
+
+    /**
+     * @param int $attributeId
+     * @param int $storeId
+     * @return array
+     */
+    public function getAttributeOptionValuesByStoreAndAttributeId(int $attributeId, int $storeId) : array
+    {
+        $select = $this->adapter->select()
+            ->from(
+                ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
+                [
+                    'option_id',
+                    new \Zend_Db_Expr("CASE WHEN c_o.value IS NULL THEN b_o.value ELSE c_o.value END as value")
+                ]
+            )->joinLeft(
+                ['b_o' => $this->adapter->getTableName('eav_attribute_option_value')],
+                'b_o.option_id = a_o.option_id AND b_o.store_id = 0',
+                []
+            )->joinLeft(
+                ['c_o' => $this->adapter->getTableName('eav_attribute_option_value')],
+                'c_o.option_id = a_o.option_id AND c_o.store_id = ' . $storeId,
+                []
+            )->where('a_o.attribute_id = ?', $attributeId);
+
+        return $this->adapter->fetchPairs($select);
+    }
+
+    /**
+     * @param int $attributeId
+     * @return Select
+     */
+    public function getAttributeOptionCodeByAttributeIdSelect(int $attributeId) : Select
+    {
+        $select = $this->adapter->select()
+            ->from(
+                ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
+                [
+                    'option_id',
+                    new \Zend_Db_Expr("b_o.value as value")
+                ]
+            )->joinLeft(
+                ['b_o' => $this->adapter->getTableName('eav_attribute_option_value')],
+                'b_o.option_id = a_o.option_id AND b_o.store_id = 0',
+                []
+            )->where('a_o.attribute_id = ?', $attributeId);
+
+        return $select;
+    }
+
 
 }

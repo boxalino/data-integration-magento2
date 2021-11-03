@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
+use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocProductAttributeTrait;
@@ -37,7 +38,7 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
     protected $diSchemaDataProviderResolver;
 
     /**
-     * @var DocProductPropertyInterface
+     * @var DocProductPropertyInterface | DocProductPropertyListInterface
      */
     protected $dataProvider;
 
@@ -47,16 +48,22 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
      */
     public function __construct(
         LoggerInterface $logger,
-        DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
+        DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
+        array $docAttributePropertiesMapping = []
     ){
+        parent::__construct();
+
         $this->logger = $logger;
         $this->diSchemaDataProviderResolver = $diSchemaDataProviderResolver;
 
-        parent::__construct();
+        foreach($docAttributePropertiesMapping as $key=>$name)
+        {
+            $this->addPropertyNameDocAttributeMapping($key, $name);
+        }
     }
 
     /**
-     * @return DocProductPropertyInterface
+     * @return DocProductPropertyInterface | DocProductPropertyListInterface
      */
     public function getDataProvider() : DocProductPropertyInterface
     {
@@ -103,6 +110,27 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
     public function getAttributeCode() : string
     {
         return $this->getResolverType();
+    }
+
+    /**
+     * Artificially created string as identifier in order to be able to array_merge_recursive all contents
+     *
+     * @param array | string | int $item
+     * @return string
+     */
+    public function _getDocKey($item) : string
+    {
+        if(is_array($item))
+        {
+            if(isset($item[$this->getDiIdField()]))
+            {
+                return "_" . $item[$this->getDiIdField()];
+            }
+
+            return (string)$item[$this->getDiIdField()];
+        }
+
+        return "_" . $item;
     }
 
 

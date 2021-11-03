@@ -22,9 +22,10 @@ class Category extends IntegrationPropertyHandlerAbstract
         $languages = $this->getSystemConfiguration()->getLanguages();
         foreach($this->getDataProvider()->getData() as $item)
         {
-            if(!isset($content[$item[$this->getDiIdField()]]))
+            $id = $this->_getDocKey($item);
+            if(!isset($content[$id]))
             {
-                $content[$item[$this->getDiIdField()]][$this->getDocSchemaPropertyNode()] = [];
+                $content[$id][$this->getDocSchemaPropertyNode()] = [];
             }
 
             if(is_null($item[$this->getAttributeCode()]))
@@ -38,7 +39,7 @@ class Category extends IntegrationPropertyHandlerAbstract
                 $languages
             );
 
-            $content[$item[$this->getDiIdField()]][$this->getDocSchemaPropertyNode()][] = $schema;
+            $content[$id][$this->getDocSchemaPropertyNode()][] = $schema;
         }
 
         return $content;

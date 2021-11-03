@@ -81,6 +81,7 @@ class Configuration implements DiConfigurationInterface
                     $languagesCountryMap = [];
                     $currencyLanguagesMap = [];
                     $genericConfigurations = [];
+                    $useSeoLinkRewritesMap = [];
                     $defaultGroupStore = $group->getDefaultStore();
                     if($defaultGroupStore)
                     {
@@ -135,7 +136,7 @@ class Configuration implements DiConfigurationInterface
 
                     $this->configurations[$genericConfigurations[DiConfigurationInterface::DI_CONFIG_ACCOUNT]] = array_merge(
                         $genericConfigurations,
-                        ["websiteId"=> $website->getId()],
+                        ["websiteId" => $website->getId()],
                         ["languages" => $languages],
                         ["storeIds" => $storeIds],
                         ["currencyCodes" => $currencyCodes],

@@ -14,7 +14,24 @@ class Status extends IntegrationPropertyHandlerAbstract
 
     function getValues(): array
     {
-        return [];
+        $content = [];
+        $languages = $this->getSystemConfiguration()->getLanguages();
+        foreach ($this->getDataProvider()->getData() as $id => $item)
+        {
+            if($item instanceof \ArrayIterator)
+            {
+                $item = $item->getArrayCopy();
+            }
+            $id = $this->_getDocKey($item);
+            if(!isset($content[$id]))
+            {
+                $content[$id][$this->getAttributeCode()] = [];
+            }
+
+            $content[$id][$this->getAttributeCode()] = $this->getLocalizedSchema($item, $languages);
+        }
+
+        return $content;
     }
 
     /**

@@ -15,7 +15,7 @@ class Type extends ModeIntegrator
      * @param string $websiteId
      * @return array
      */
-    public function getDataByFieldsWebsite(array $fields, string $websiteId) : array
+    public function getFetchAllByFieldsWebsite(array $fields, string $websiteId) : array
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $select = $this->adapter->select()

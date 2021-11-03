@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Doc\Schema\Visibility as VisibilitySchema;
 
 /**
  * Class Visibility
@@ -14,7 +15,21 @@ class Visibility extends IntegrationPropertyHandlerAbstract
 
     function getValues(): array
     {
-        return [];
+        $content = [];
+        $languages = $this->getSystemConfiguration()->getLanguages();
+        foreach ($this->getDataProvider()->getData() as $item)
+        {
+            if($item instanceof \ArrayIterator)
+            {
+                $item = $item->getArrayCopy();
+            }
+
+            /** @var VisibilitySchema $schema */
+            $schema = $this->getVisibilitySchema($languages, $item);
+            $content[$this->_getDocKey($item)][$this->getAttributeCode()] = $schema;
+        }
+
+        return $content;
     }
 
     /**

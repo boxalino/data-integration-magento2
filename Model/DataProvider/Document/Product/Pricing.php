@@ -10,8 +10,6 @@ use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 class Pricing extends ModeIntegrator
 {
 
-    use DiIntegrationConfigurationTrait;
-
     /**
      * @var DataProviderResourceModel
      */
@@ -36,15 +34,6 @@ class Pricing extends ModeIntegrator
 
     public function resolve(): void {}
 
-    /**
-     * @return array
-     */
-    protected function getFields() : array
-    {
-         return [
-             new \Zend_Db_Expr("c_p_e_s.entity_id AS {$this->getDiIdField()}")
-         ];
-    }
 
     function getDataDelta() : array
     {

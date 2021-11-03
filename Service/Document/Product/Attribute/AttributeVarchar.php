@@ -24,7 +24,13 @@ class AttributeVarchar extends AttributeAbstract
      */
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getStringAttributeSchema([$item[$attributeCode]], $attributeName);
+        $values = [$item[$attributeCode]];
+        if($this->attribute["frontend_input"] === "multiselect")
+        {
+            $values = explode(",", $item[$attributeCode]);
+        }
+
+        return $this->getStringAttributeSchema($values, $attributeName);
     }
 
     /**
@@ -42,5 +48,6 @@ class AttributeVarchar extends AttributeAbstract
     {
         return "varchar_global";
     }
+
 
 }

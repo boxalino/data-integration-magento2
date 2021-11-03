@@ -10,8 +10,6 @@ use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 class Type extends ModeIntegrator
 {
 
-    use DiIntegrationConfigurationTrait;
-
     /**
      * @var DataProviderResourceModel
      */
@@ -31,7 +29,7 @@ class Type extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getDataByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+        return $this->resourceModel->getFetchAllByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
     }
 
     public function resolve(): void {}
@@ -39,11 +37,11 @@ class Type extends ModeIntegrator
     /**
      * @return array
      */
-    protected function getFields() : array
+    public function getFields() : array
     {
          return [
-             new \Zend_Db_Expr("c_p_e_s.entity_id AS {$this->getDiIdField()}"),
-             new \Zend_Db_Expr("c_p_e_s.type_id AS " . $this->getAttributeCode())
+             $this->getDiIdField() => "c_p_e_s.entity_id",
+             $this->getAttributeCode() => "c_p_e_s.type_id"
          ];
     }
 

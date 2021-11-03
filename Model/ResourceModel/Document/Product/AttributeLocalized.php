@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
-
 /**
  * Class AttributeLocalized
  *
@@ -18,7 +17,7 @@ class AttributeLocalized extends ModeIntegrator
      * @param string $type
      * @return array
      */
-    public function getValuesForLocalizedAttributeByStoreId(array $fields, string $websiteId, int $storeId, int $attributeId, string $type) : array
+    public function getFetchParisForLocalizedAttributeByStoreId(array $fields, string $websiteId, int $storeId, int $attributeId, string $type) : array
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $eavPropertySelect = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_$type");
@@ -34,7 +33,8 @@ class AttributeLocalized extends ModeIntegrator
             )
             ->where('c_p_e_s.entity_id IS NOT NULL');
 
-
         return $this->adapter->fetchPairs($select);
     }
+
+
 }

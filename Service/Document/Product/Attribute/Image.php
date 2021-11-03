@@ -5,25 +5,43 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
  * Class Image
- *
  * The data provider is returning the required data structure required for generating the content for product main image
+ * There are 3 image types (image/base, small_image & thumbnail)
  *
  * @package Boxalino\DataIntegration\Service\Document\Product\Attribute
  */
 class Image extends IntegrationPropertyHandlerAbstract
 {
+
+    use AttributeConfigurationOnDataProviderTrait;
+
     function getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
 
-        /** @var array $item columns: di_id, images, lang1, lang2, lang3 ..  */
-        foreach($this->getDataProvider()->getData() as $item)
+        foreach($this->getDataProvider()->getAttributes() as $attribute)
         {
-            if($item[DocSchemaInterface::FIELD_INTERNAL_ID])
+            $this->setAttribute($attribute);
+            $this->_addAttributeConfigOnDataProviderByAttribute();
+            list($attributeCode, $attributeName) = $this->_getPropertyNameAndAttributeCode();
+
+            /** @var array $item columns: di_id, <attributeCode>, lang1, lang2, lang3 ..  */
+            foreach($this->getDataProvider()->getData() as $item)
             {
-                $schema = $this->getImagesSchema($item, $languages);
-                $content[$item[$this->getDiIdField()]][$this->getResolverType()][] = $schema;
+                if($item instanceof \ArrayIterator)
+                {
+                    $item = $item->getArrayCopy();
+                }
+
+                $id = $this->_getDocKey($item);
+                if(!isset($content[$id]))
+                {
+                    $content[$id][$this->getResolverType()] = [];
+                }
+
+                $schema = $this->getImagesSchema($item, $languages, $attributeCode);
+                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $schema;
             }
         }
 

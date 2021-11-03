@@ -43,4 +43,5 @@ class AttributeText extends AttributeAbstract
         return "text_global";
     }
 
+
 }

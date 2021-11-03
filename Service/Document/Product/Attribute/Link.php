@@ -2,7 +2,6 @@
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Doc\Schema\Repeated;
 
 /**
  * Class Link
@@ -23,7 +22,18 @@ class Link extends IntegrationPropertyHandlerAbstract
         /** @var array $item columns: di_id, link, lang1, lang2, lang3 ..  */
         foreach($this->getDataProvider()->getData() as $item)
         {
-            $content[$item[$this->getDiIdField()]][$this->getAttributeCode()][] = $this->getLocalizedSchema($item, $languages);;
+            if($item instanceof \ArrayIterator)
+            {
+                $item = $item->getArrayCopy();
+            }
+
+            $id = $this->_getDocKey($item);
+            if(!isset($content[$id]))
+            {
+                $content[$id][$this->getAttributeCode()] = [];
+            }
+
+            $content[$id][$this->getAttributeCode()][] = $this->getLocalizedSchema($item, $languages);;
         }
 
         return $content;

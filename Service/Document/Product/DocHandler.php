@@ -9,11 +9,14 @@ use Boxalino\DataIntegrationDoc\Generator\Product\Group;
 use Boxalino\DataIntegrationDoc\Generator\Product\Line;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\FailSyncException;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -39,8 +42,8 @@ class DocHandler extends DocProduct implements
     DiHandlerIntegrationConfigurationInterface
 {
 
-//    use DiIntegrationConfigurationTrait;
-    use DiIntegrateTrait;
+    use DiIntegrationConfigurationTrait;
+//    use DiIntegrateTrait;
     use DocDeltaIntegrationTrait;
     use DocInstantIntegrationTrait;
 
@@ -56,6 +59,26 @@ class DocHandler extends DocProduct implements
                 $this->addPropertyHandler($propertyHandler);
             }
         }
+    }
+
+    /**
+     * Will be extended with content load in batches
+     */
+    public function integrate(): void
+    {
+        try{
+            $this->createDocLines();
+        } catch (NoRecordsFoundException $exception)
+        {
+            //logical exception to break the loop
+            //reset the docs in case the attributeHandlers were not run in the random order
+            $this->resetDocs();
+        } catch (\Throwable $exception)
+        {
+            throw $exception;
+        }
+
+        parent::integrate();
     }
 
     /**
@@ -104,6 +127,7 @@ class DocHandler extends DocProduct implements
         $this->logTime("start" . __FUNCTION__);
         foreach($this->getDocData() as $id => $content)
         {
+            $id = (string)$content[DocSchemaInterface::FIELD_INTERNAL_ID];
             try{
                 if(!isset($content[DocSchemaInterface::DI_DOC_TYPE_FIELD]))
                 {
@@ -126,7 +150,7 @@ class DocHandler extends DocProduct implements
                         DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU,
                         $content
                     );
-
+                    $this->logger->alert(json_encode($sku));
                     $schema->addSkus([$sku]);
                     $productGroups[$id] = $schema;
                     continue;

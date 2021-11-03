@@ -28,6 +28,20 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
      */
     protected $attributeId = 0;
 
+    /**
+     * Access property data (internal flow)
+     *
+     * @return array
+     */
+    abstract function _getData() : array;
+
+    /**
+     * To be extended with the delta filter logic
+     * @return array
+     */
+    abstract function getDataDelta() : array;
+
+
     public function getData() : array
     {
         /** for delta requests */
@@ -61,11 +75,6 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
         return $this->attributeId;
     }
 
-    public function getDataForAttribute() : array
-    {
-        return [];
-    }
-
     /**
      * @param string $code
      * @return DocProductPropertyInterface
@@ -94,9 +103,22 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
         return $this->getSyncCheck() ?? date("Y-m-d H:i", strtotime("-1 hour"));
     }
 
-    abstract function _getData() : array;
+    /**
+     * Review the property handler that uses this data provider in order to access the required return content
+     * @return array
+     */
+    protected function getFields() : array
+    {
+        return [
+            $this->getDiIdField() => "c_p_e_s.entity_id",
+            $this->getAttributeCode() => "c_p_e_a_s.value"
+        ];
+    }
 
-    abstract function getDataDelta() : array;
+    /**
+     * prepare the data provider with additional relevant elements
+     */
+    public function resolve(): void {}
 
 
 }

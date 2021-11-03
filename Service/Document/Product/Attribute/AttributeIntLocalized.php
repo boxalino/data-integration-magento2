@@ -38,4 +38,5 @@ class AttributeIntLocalized extends AttributeAbstract
     }
 
 
+
 }

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Magento\Framework\DB\Select;
+
 /**
  * Class AttributeGlobal
  *
@@ -17,7 +19,35 @@ class AttributeGlobal extends ModeIntegrator
      * @param string $type
      * @return array
      */
-    public function getValuesForGlobalAttribute(array $fields, string $websiteId, array $storeIds, int $attributeId, string $type) : array
+    public function getFetchPairsForGlobalAttribute(array $fields, string $websiteId, array $storeIds, int $attributeId, string $type) : array
+    {
+        $select = $this->_getSqlForGlobalAttribute($fields, $websiteId, $storeIds, $attributeId, $type);
+        return $this->adapter->fetchPairs($select);
+    }
+
+    /**
+     * @param array $fields
+     * @param string $websiteId
+     * @param array $storeIds
+     * @param int $attributeId
+     * @param string $type
+     * @return array
+     */
+    public function getSelectAllForGlobalAttribute(array $fields, string $websiteId, array $storeIds, int $attributeId, string $type) : array
+    {
+        $select = $this->_getSqlForGlobalAttribute($fields, $websiteId, $storeIds, $attributeId, $type);
+        return $this->adapter->fetchAll($select);
+    }
+
+    /**
+     * @param array $fields
+     * @param string $websiteId
+     * @param array $storeIds
+     * @param int $attributeId
+     * @param string $type
+     * @return Select
+     */
+    protected function _getSqlForGlobalAttribute(array $fields, string $websiteId, array $storeIds, int $attributeId, string $type) : Select
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $eavPropertySelect = $this->getEavJoinAttributeSQLByStoresAttrIdTable($attributeId, $storeIds, "catalog_product_entity_$type");
@@ -33,7 +63,8 @@ class AttributeGlobal extends ModeIntegrator
             )
             ->where("c_p_e_s.entity_id IS NOT NULL");
 
-        return $this->adapter->fetchAll($select);
+        return $select;
     }
+
 
 }
