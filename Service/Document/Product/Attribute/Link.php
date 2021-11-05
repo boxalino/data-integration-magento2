@@ -33,7 +33,7 @@ class Link extends IntegrationPropertyHandlerAbstract
                 $content[$id][$this->getAttributeCode()] = [];
             }
 
-            $content[$id][$this->getAttributeCode()][] = $this->getLocalizedSchema($item, $languages);;
+            $content[$id][$this->getAttributeCode()] = $this->getLocalizedSchema($item, $languages);;
         }
 
         return $content;

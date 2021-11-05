@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Doc\Schema\Pricing as PricingSchema;
 
 /**
  * Class Pricing
@@ -17,7 +18,38 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Pricing extends IntegrationPropertyHandlerAbstract
 {
 
-    function getValues(): array
+    public function getValues(): array
+    {
+        $content = [];
+        $currencyFactors = $this->getCurrencyFactorMap();
+        $languages = $this->getSystemConfiguration()->getLanguages();
+        $currencyCodes = $this->getSystemConfiguration()->getCurrencyCodes();
+
+        foreach ($this->getDataProvider()->getData() as $item)
+        {
+            if($item instanceof \ArrayIterator)
+            {
+                $item = $item->getArrayCopy();
+            }
+
+            $id = $this->_getDocKey($item);
+
+            /** @var PricingSchema $schema */
+            $schema = $this->getPricingSchema($languages, $currencyCodes, $currencyFactors,
+                $item[$this->getAttributeCode()],
+                $this->getDataProvider()->getLabelForPriceByRow($item));
+
+            $content[$id][$this->getResolverType()] = $schema;
+        }
+
+        return $content;
+    }
+
+    /**
+     * For multi-currency stores, set the price in each currency based on the currency factor
+     * @return array
+     */
+    public function getCurrencyFactorMap() : array
     {
         return [];
     }

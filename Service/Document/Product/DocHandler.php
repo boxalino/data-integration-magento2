@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Product;
 
-use Boxalino\DataIntegration\Service\Document\DiIntegrateTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
@@ -9,14 +8,12 @@ use Boxalino\DataIntegrationDoc\Generator\Product\Group;
 use Boxalino\DataIntegrationDoc\Generator\Product\Line;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\FailSyncException;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -43,7 +40,6 @@ class DocHandler extends DocProduct implements
 {
 
     use DiIntegrationConfigurationTrait;
-//    use DiIntegrateTrait;
     use DocDeltaIntegrationTrait;
     use DocInstantIntegrationTrait;
 
@@ -143,14 +139,14 @@ class DocHandler extends DocProduct implements
 
                 $schema = $this->getSchemaGeneratorByType($content[DocSchemaInterface::DI_DOC_TYPE_FIELD], $content);
                 $parentId = $content[DocSchemaInterface::DI_PARENT_ID_FIELD];
-                if(is_null($parentId))
+                if(empty($parentId))
                 {
                     $sku = $this->docTypePropDiffDuplicate(
                         DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
                         DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU,
                         $content
                     );
-                    $this->logger->alert(json_encode($sku));
+
                     $schema->addSkus([$sku]);
                     $productGroups[$id] = $schema;
                     continue;
