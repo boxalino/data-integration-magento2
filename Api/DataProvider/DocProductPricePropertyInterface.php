@@ -7,12 +7,12 @@ namespace Boxalino\DataIntegration\Api\DataProvider;
 interface DocProductPricePropertyInterface extends DocProductPropertyInterface
 {
 
-    public function getListPrice(string $id) : array;
+    public function getListPrice(array $item) : array;
 
-    public function getSalesPrice(string $id) : array;
+    public function getSalesPrice(array $item) : array;
 
-    public function getCostPrice(string $id) : array;
+    public function getGrossMarginPrices(array $item) : array;
 
-    public function getOtherPrices(string $id) : array;
+    public function getOtherPrices(array $item) : array;
 
 }
