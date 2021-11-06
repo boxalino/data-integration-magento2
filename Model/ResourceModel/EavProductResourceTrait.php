@@ -15,6 +15,23 @@ trait EavProductResourceTrait
     protected $adapter;
 
     /**
+     * @param array $fields
+     * @param string $websiteId
+     * @return array
+     */
+    public function getFetchAllEntityByFieldsWebsite(array $fields, string $websiteId) : array
+    {
+        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $select = $this->adapter->select()
+            ->from(
+                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+                $fields
+            );
+
+        return $this->adapter->fetchAll($select);
+    }
+
+    /**
      * Default function for accessing product attributes values
      * join them with default store
      * and make a selection on the store id
