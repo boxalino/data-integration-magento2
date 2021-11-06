@@ -98,7 +98,7 @@ class Media extends ModeIntegrator
                 ['joins' => $select],
                 [
                     'entity_id' => 'joins.entity_id',
-                    'value_id' => new \Zend_Db_Expr("IF(joins.store_value IS NULL OR joins.store_value = '', joins.default_value, joins.store_value)")
+                    'value_id' => new \Zend_Db_Expr("IF(joins.store_value IS NULL OR CAST(joins.store_value AS char) = '', joins.default_value, joins.store_value)")
                 ]
             )
             ->where('attribute_id = ?', $attributeId);

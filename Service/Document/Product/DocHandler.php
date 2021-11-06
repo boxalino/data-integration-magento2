@@ -171,7 +171,7 @@ class DocHandler extends DocProduct implements
             /** @var Group $schema by default - on product update event - the main variant is also exported*/
             $schema = $this->getSchemaGeneratorByType(
                 DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
-                [DocSchemaInterface::FIELD_INTERNAL_ID => $parentId]
+                [DocSchemaInterface::FIELD_INTERNAL_ID => (string)$parentId]
             );
             if(isset($productGroups[$parentId]))
             {

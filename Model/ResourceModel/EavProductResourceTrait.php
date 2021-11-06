@@ -51,8 +51,8 @@ trait EavProductResourceTrait
                 [
                     'attribute_id' => 'joins.attribute_id',
                     'entity_id' => 'joins.entity_id',
-                    'store_id' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR joins.store_value = '', 0, joins.store_id)"),
-                    'value' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR joins.store_value = '', joins.default_value, joins.store_value)")
+                    'store_id' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR CAST(joins.store_value AS char) = '', 0, joins.store_id)"),
+                    'value' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR CAST(joins.store_value AS char) = '', joins.default_value, joins.store_value)")
                 ]
             );
     }
@@ -77,7 +77,7 @@ trait EavProductResourceTrait
                 [
                     'attribute_id'=>'joins.attribute_id',
                     'entity_id' => 'joins.entity_id',
-                    'value' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR joins.store_value = '', joins.default_value, joins.store_value)")
+                    'value' => new \Zend_Db_Expr("IF (joins.store_value IS NULL OR CAST(joins.store_value AS char) = '', joins.default_value, joins.store_value)")
                 ]
             );
     }
