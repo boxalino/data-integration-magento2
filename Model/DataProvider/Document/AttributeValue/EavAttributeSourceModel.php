@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValue;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocAttributeListInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocAttributeValueLineInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderInterface;
+use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue\EavAttributeSourceModel as DataProviderResourceModel;
 use \Magento\Framework\ObjectManagerInterface;
-use \Magento\Framework\Data\OptionSourceInterface;
 use \Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
 
 /**
@@ -15,11 +16,13 @@ use \Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
  */
 class EavAttributeSourceModel implements
     DiSchemaDataProviderInterface,
-    DocAttributeValueLineInterface
+    DocAttributeValueLineInterface,
+    DocAttributeListInterface
 {
 
     use DocAttributeValueLineTrait;
     use DiIntegrationConfigurationTrait;
+    use AttributeHelperTrait;
 
     /**
      * @var DataProviderResourceModel
@@ -36,10 +39,10 @@ class EavAttributeSourceModel implements
      */
     public function __construct(
         DataProviderResourceModel $resource,
-        ObjectManagerInterface $objectmanager
+        ObjectManagerInterface $objectManager
     ) {
         $this->resourceModel = $resource;
-        $this->objectManager = $objectmanager;
+        $this->objectManager = $objectManager;
 
         /** @var \ArrayObject attributeNameValuesList */
         $this->attributeNameValuesList = new \ArrayObject();
@@ -48,9 +51,11 @@ class EavAttributeSourceModel implements
     /**
      * @return array
      */
-    public function getData(): array
+    public function getAttributes(): array
     {
-        return $this->resourceModel->getAttributeCodes();
+        return $this->resourceModel->getFetchColAttributeByFieldsFrontendInputTypes(
+            ["attribute_code"], $this->getFrontendInputTypes()
+        );
     }
 
     /**
@@ -58,15 +63,14 @@ class EavAttributeSourceModel implements
      */
     public function resolve() : void
     {
-        $this->resolveSourceModelAttributesData();
+        $this->loadSourceModelAttributesData();
     }
 
     /**
      * @return array
      */
-    public function getResolveByAttributeCode(string $attributeCode) : array
+    public function getData() : array
     {
-        $this->attributeCode = $attributeCode;
         if($this->attributeNameValuesList->offsetExists($this->attributeCode))
         {
             $attributeValues = $this->attributeNameValuesList->offsetGet($this->attributeCode);
@@ -79,10 +83,11 @@ class EavAttributeSourceModel implements
     /**
      * Resolves the localized attribute details for option ids
      */
-    protected function resolveSourceModelAttributesData() : void
+    protected function loadSourceModelAttributesData() : void
     {
-        foreach($this->resourceModel->getSourceModelAttributeCodeMapping() as $attributeCode => $sourceModelClass)
-        {
+        foreach($this->resourceModel->getFetchPairsAttributeByFieldsFrontendInputTypes(
+            ['attribute_code', 'source_model'],$this->getFrontendInputTypes()) as $attributeCode => $sourceModelClass
+        ){
             if(in_array($sourceModelClass, $this->getExcludedSourceModels()))
             {
                 continue;
@@ -93,7 +98,7 @@ class EavAttributeSourceModel implements
             {
                 $this->attributeNameValuesList->offsetSet(
                     $attributeCode,
-                    $this->addValueToAttributeContent(
+                    $this->addSourceModelValueToAttributeContent(
                         $sourceModel->getAllOptions()
                     )
                 );
@@ -125,7 +130,7 @@ class EavAttributeSourceModel implements
      * @param array $data
      * @return \ArrayObject
      */
-    protected function addValueToAttributeContent(array $data) : \ArrayObject
+    protected function addSourceModelValueToAttributeContent(array $data) : \ArrayObject
     {
         $attributeContent = new \ArrayObject();
         foreach($data as $optionData)
@@ -143,6 +148,14 @@ class EavAttributeSourceModel implements
         }
 
         return $attributeContent;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFrontendInputTypes() : array
+    {
+        return ["multiselect", "select"];
     }
 
 

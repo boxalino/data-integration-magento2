@@ -54,6 +54,7 @@ trait AttributeValueListHelperTrait
      * @param array $data
      * @param \ArrayObject $attributeContent
      * @param string $languageCode
+     * @param bool $addId
      */
     protected function addValueToAttributeContent(array $data, \ArrayObject &$attributeContent, string $languageCode, bool $addId = false) : void
     {

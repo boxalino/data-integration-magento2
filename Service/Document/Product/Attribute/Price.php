@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductPricePropertyInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
@@ -18,7 +19,31 @@ class Price extends IntegrationPropertyHandlerAbstract
 
     function getValues(): array
     {
-        return [];
+        $content = [];
+        $currencyFactor = $this->getCurrencyFactorMap();
+        $languages = $this->getSystemConfiguration()->getLanguages();
+        $currencyCodes = $this->getSystemConfiguration()->getCurrencyCodes();
+
+        $dataProvider = $this->getDataProvider();
+        if($dataProvider instanceof DocProductPricePropertyInterface)
+        {
+            foreach ($dataProvider->getData() as $item)
+            {
+                $listPrice = $this->getDataProvider()->getListPrice($item);
+                $salesPrice = $this->getDataProvider()->getSalesPrice($item);
+                if(empty($listPrice) && empty($salesPrice))
+                {
+                    continue;
+                }
+
+                $id = $this->_getDocKey($item);
+
+                $schema = $this->getLocalizedPriceSchema($languages, $currencyCodes, $currencyFactor, $salesPrice, $listPrice);
+                $content[$id][$this->getResolverType()] = $schema;
+            }
+        }
+
+        return $content;
     }
 
     /**
@@ -29,5 +54,13 @@ class Price extends IntegrationPropertyHandlerAbstract
         return DocSchemaInterface::FIELD_PRICE;
     }
 
+    /**
+     * For multi-currency stores, set the price in each currency based on the currency factor
+     * @return array
+     */
+    public function getCurrencyFactorMap() : array
+    {
+        return [];
+    }
 
 }

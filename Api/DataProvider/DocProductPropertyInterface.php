@@ -14,11 +14,11 @@ interface DocProductPropertyInterface extends DiSchemaDataProviderInterface,
     DiHandlerIntegrationConfigurationInterface
 {
 
-    public function setAttributeCode(string $code) : DocProductPropertyInterface;
+    public function setAttributeCode(string $code) : DiSchemaDataProviderInterface;
 
     public function getAttributeCode() : string;
 
-    public function setAttributeId(int $id) : DocProductPropertyInterface;
+    public function setAttributeId(int $id) : DiSchemaDataProviderInterface;
 
     public function getAttributeId() : int;
 

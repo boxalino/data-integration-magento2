@@ -13,10 +13,8 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
     implements DocProductPropertyListInterface
 {
 
-    /**
-     * @var DataProviderResourceModel
-     */
-    protected $resourceModel;
+    use AttributeLocalizedTrait;
+
 
     /**
      * @param DataProviderResourceModel $resource
@@ -24,7 +22,7 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
     public function __construct(
         DataProviderResourceModel $resource
     ) {
-        $this->resourceModel = $resource;
+        $this->localizedResourceModel = $resource;
     }
 
     /**
@@ -36,21 +34,7 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
      */
     public function _getData() : array
     {
-        $attributeContent = new \ArrayObject();
-        foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
-        {
-            $data = $this->resourceModel->getFetchParisForLocalizedAttributeByStoreId(
-                $this->getFields(),
-                $this->getSystemConfiguration()->getWebsiteId(),
-                $storeId,
-                $this->getAttributeId(),
-                $this->getEntityAttributeTableType()
-            );
-
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
-        }
-
-        return $attributeContent->getArrayCopy();
+        return $this->getLocalizedDataForAttribute();
     }
 
     /**
@@ -58,7 +42,7 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
      */
     public function getAttributes(): array
     {
-        return $this->resourceModel->getAttributesByScopeBackendTypeFrontendInput(
+        return $this->localizedResourceModel->getAttributesByScopeBackendTypeFrontendInput(
             $this->getScopeList(),
             $this->getBackendTypeList(),
             $this->getFrontendInputList(),

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavProductResourceTrait;
 use Magento\Framework\DB\Select;
 
 /**
@@ -10,6 +12,9 @@ use Magento\Framework\DB\Select;
  */
 class AttributeGlobal extends ModeIntegrator
 {
+
+    use EavAttributeResourceTrait;
+    use EavProductResourceTrait;
 
     /**
      * @param array $fields

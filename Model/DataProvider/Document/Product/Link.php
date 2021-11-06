@@ -64,7 +64,7 @@ class Link extends ModeIntegrator
         {
             $this->suffix = $this->getProductUrlSuffix($storeId);
 
-            $data = $this->resourceModel->getFetchParisByFieldsWebsiteStore(
+            $data = $this->resourceModel->getFetchPairsByFieldsWebsiteStore(
                 $this->getFields(),
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId

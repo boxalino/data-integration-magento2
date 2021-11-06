@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Attribute;
 
-use Boxalino\DataIntegration\Service\Document\DocSchemaTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
@@ -17,7 +16,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
 class EavAttribute extends IntegrationPropertyHandlerAbstract
 {
     use DiPropertyTrait;
-    use DocSchemaTrait;
 
     public const DI_SCHEMA_RESOLVER_TYPE = "eavAttributes";
 

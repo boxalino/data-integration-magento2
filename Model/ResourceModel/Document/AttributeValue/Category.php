@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
 
 /**
  * Data provider for any category-relevant information
@@ -9,6 +10,9 @@ use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
  */
 class Category extends DiSchemaDataProviderResource
 {
+
+    use EavAttributeResourceTrait;
+
     /**
      * @param string $rootCategoryId
      * @return array
@@ -67,7 +71,7 @@ class Category extends DiSchemaDataProviderResource
      */
     public function getAttributeValueByAttributeTableStoreId(string $attributeName, string $tableName, int $storeId): array
     {
-        $attributeId = $this->getAttributeIdByAttributeCodeAndEntityType(
+        $attributeId = $this->getAttributeIdByAttributeCodeAndEntityTypeId(
             $attributeName,
             \Magento\Catalog\Setup\CategorySetup::CATEGORY_ENTITY_TYPE_ID);
 

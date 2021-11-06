@@ -97,22 +97,5 @@ trait DocAttributeValueLineTrait
         return [];
     }
 
-    /**
-     * @return string
-     */
-    public function getAttributeCode(): string
-    {
-        return $this->attributeCode;
-    }
-
-    /**
-     * @param string $attributeCode
-     * @return void
-     */
-    public function setAttributeCode(string $attributeCode): void
-    {
-        $this->attributeCode = $attributeCode;
-    }
-
 
 }

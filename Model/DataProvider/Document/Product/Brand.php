@@ -34,7 +34,7 @@ class Brand extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByWebsiteAttributeCode(
+        return $this->resourceModel->getFetchAllByWebsiteAttributeId(
             $this->getFields(),
             $this->getSystemConfiguration()->getWebsiteId(),
             $this->getAttributeId()
@@ -59,10 +59,18 @@ class Brand extends ModeIntegrator
      */
     public function resolve(): void
     {
-        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityType(
+        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityTypeId(
             $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
         );
 
+        $this->loadOptionValues();
+    }
+
+    /**
+     * pre-initialize band name translations used for content export
+     */
+    protected function loadOptionValues() : void
+    {
         $this->attributeNameValuesList = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {

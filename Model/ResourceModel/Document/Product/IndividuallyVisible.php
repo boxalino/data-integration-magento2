@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavProductResourceTrait;
+
 /**
  * Class IndividuallyVisible
  * Exports the detail about the SKU being individually visible
@@ -9,6 +12,8 @@ namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
  */
 class IndividuallyVisible extends ModeIntegrator
 {
+    use EavProductResourceTrait;
+    use EavAttributeResourceTrait;
 
     /**
      * @param array $fields

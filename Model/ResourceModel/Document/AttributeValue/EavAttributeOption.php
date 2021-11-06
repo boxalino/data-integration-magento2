@@ -2,6 +2,8 @@
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeOptionResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
 
 /**
  * Data provider for any product eav-attribute relevant information
@@ -10,29 +12,15 @@ use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
 class EavAttributeOption extends DiSchemaDataProviderResource
 {
 
-    /**
-     * @return array
-     */
-    public function getOptionSelectAttributes()
-    {
-        $frontendInputTypes = ["multiselect", "select"];
-        $select = $this->adapter->select()
-            ->from(
-                $this->adapter->getTableName('eav_attribute'),
-                ['attribute_id', 'attribute_code']
-            )
-            ->where('entity_type_id=?', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
-            ->where('frontend_input IN (?)', $frontendInputTypes);
-
-        return $this->adapter->fetchPairs($select);
-    }
+    use EavAttributeOptionResourceTrait;
+    use EavAttributeResourceTrait;
 
     /**
+     * @param array $frontendInputTypes
      * @return array
      */
-    public function getOptionIdAttributeCodeMapping() : array
+    public function getFetchPairsOptionIdAttributeCodeByFrontendInputTypes(array $frontendInputTypes) : array
     {
-        $frontendInputTypes = ["multiselect", "select"];
         $select = $this->adapter->select()
             ->from(
                 ['e_a_o' => $this->adapter->getTableName('eav_attribute_option')],

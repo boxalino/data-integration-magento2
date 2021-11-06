@@ -39,29 +39,5 @@ class Entity extends ModeIntegrator
         return $this->adapter->fetchAll($select);
     }
 
-//    /**
-//     * @param int $limit
-//     * @param int $page
-//     * @param int $websiteId
-//     * @return array
-//     */
-//    public function getEntityByLimitPageWebsiteId(int $limit, int $page, int $websiteId): array
-//    {
-//        $select = $this->adapter->select()
-//            ->from(
-//                ['e' => $this->adapter->getTableName('catalog_product_entity')],
-//                ["*"]
-//            )
-//            ->limit($limit, ($page - 1) * $limit)
-//            ->joinLeft(
-//                ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
-//                'e.entity_id = c_p_w.product_id',
-//                []
-//            )
-//            ->where("c_p_w.website_id= ? " , $websiteId);
-//
-//        return $this->adapter->fetchAll($select);
-//    }
-
 
 }

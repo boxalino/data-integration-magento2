@@ -48,9 +48,9 @@ class Category implements
      */
     public function resolve() : void
     {
-        $this->resolveLocalizedAttributesData();
-        $this->resolveLinkData();
-        $this->resolveParentIdsData();
+        $this->loadLocalizedAttributesData();
+        $this->loadLinkData();
+        $this->loadParentIdsData();
     }
 
     /**
@@ -137,7 +137,7 @@ class Category implements
     /**
      * Adds category localized link data
      */
-    protected function resolveLinkData() : void
+    protected function loadLinkData() : void
     {
         $attributeContent = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
@@ -152,7 +152,7 @@ class Category implements
     /**
      * Adds the parent IDs details
      */
-    protected function resolveParentIdsData() : void
+    protected function loadParentIdsData() : void
     {
         $attributeContent = new \ArrayObject();
         $data = $this->resourceModel->getEntityColumnByRootCategoryId($this->getSystemConfiguration()->getRootCategoryId(), "path");
@@ -168,7 +168,7 @@ class Category implements
     /**
      * Resolves the localized attribute details for category
      */
-    protected function resolveLocalizedAttributesData() : void
+    protected function loadLocalizedAttributesData() : void
     {
         foreach($this->getLocalizedAttributeNameTableMapping() as $attributeCode => $attributeTable)
         {
@@ -196,25 +196,6 @@ class Category implements
             "meta_description" => "catalog_category_entity_text",
             "is_active" => "catalog_category_entity_int"
         ];
-    }
-
-    /**
-     * @param array $data
-     * @param \ArrayObject &$attributeContent
-     * @param string $languageCode
-     */
-    protected function addValueToAttributeContent(array $data, \ArrayObject &$attributeContent, string $languageCode)
-    {
-        foreach($data as $id => $value)
-        {
-            $content = new \ArrayIterator();
-            if($attributeContent->offsetExists($id))
-            {
-                $content = $attributeContent->offsetGet($id);
-            }
-            $content->offsetSet($languageCode, $value);
-            $attributeContent->offsetSet($id, $content);
-        }
     }
 
 

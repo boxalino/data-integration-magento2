@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavProductResourceTrait;
 use Magento\Framework\DB\Select;
 
 /**
@@ -11,6 +13,8 @@ use Magento\Framework\DB\Select;
  */
 class Link extends ModeIntegrator
 {
+    use EavAttributeResourceTrait;
+    use EavProductResourceTrait;
 
     /**
      * @param array $fields
@@ -18,7 +22,7 @@ class Link extends ModeIntegrator
      * @param int $storeId
      * @return array
      */
-    public function getFetchParisByFieldsWebsiteStore(array $fields, string $websiteId, int $storeId) : array
+    public function getFetchPairsByFieldsWebsiteStore(array $fields, string $websiteId, int $storeId) : array
     {
         $mainEntitySelect = $this->getUrlKeyInformationByStoreId($websiteId, $storeId);
         $select = $this->adapter->select()
@@ -39,10 +43,10 @@ class Link extends ModeIntegrator
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
 
-        $urlKeyAttrId = $this->getAttributeIdByAttributeCodeAndEntityType("url_key", \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
+        $urlKeyAttrId = $this->getAttributeIdByAttributeCodeAndEntityTypeId("url_key", \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
         $urlKeySql = $this->getEavJoinAttributeSQLByStoreAttrIdTable((int)$urlKeyAttrId, $storeId, "catalog_product_entity_varchar");
 
-        $visibilityId = $this->getAttributeIdByAttributeCodeAndEntityType('visibility', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
+        $visibilityId = $this->getAttributeIdByAttributeCodeAndEntityTypeId('visibility', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
         $visibilitySql = $this->getEavJoinAttributeSQLByStoreAttrIdTable((int) $visibilityId, $storeId, "catalog_product_entity_int");
 
         $visibilityOptions = implode(',',

@@ -41,7 +41,7 @@ class IndividuallyVisible extends ModeIntegrator
     public function resolve(): void
     {
         $this->setAttributeCode("visibility");
-        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityType(
+        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityTypeId(
             $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
         );
     }

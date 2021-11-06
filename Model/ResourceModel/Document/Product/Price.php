@@ -13,15 +13,11 @@ class Price extends ModeIntegrator
 {
 
     /**
-     * @param $type
-     * @param $key
      * @return array
      */
-    public function getPriceByType(string $type, string $key): array
+    public function getFetchAllByFieldsWebsite(string $type, string $key): array
     {
         $select = $this->getPriceSqlByType($type, $key);
-//            $select->where('c_p_r.parent_id IN(?)', $this->exportIds);
-
         return $this->adapter->fetchAll($select);
     }
 
@@ -32,7 +28,7 @@ class Price extends ModeIntegrator
      */
     public function getPriceSqlByType(string $type, string $key): \Magento\Framework\DB\Select
     {
-        $statusId = $this->getAttributeIdByAttributeCodeAndEntityType('status', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
+        $statusId = $this->getAttributeIdByAttributeCodeAndEntityTypeId('status', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
         $select = $this->adapter->select()
             ->from(
                 array('c_p_r' => $this->adapter->getTableName('catalog_product_relation')),
@@ -54,26 +50,6 @@ class Price extends ModeIntegrator
             ->group(array('parent_id'));
 
         return $select;
-    }
-
-    /**
-     * @param string $type
-     * @param string $websiteId
-     * @return array
-     */
-    public function getIndexedPrice(string $type, string $websiteId): array
-    {
-        $select = $this->adapter->select()
-            ->from(
-                array('c_p_i' => $this->adapter->getTableName('catalog_product_index_price')),
-                ['entity_id', 'value' => $type . "_price"]
-            )
-            ->where('website_id=?', $websiteId)
-            ->group(['entity_id']);
-
-//            $select->where('c_p_i.entity_id IN(?)', $this->exportIds);
-
-        return $this->adapter->fetchAll($select);
     }
 
     /**
@@ -109,9 +85,8 @@ class Price extends ModeIntegrator
             ->where('customer_group_id = ?', $customerGroupId)
             ->group(['entity_id']);
 
-//            $select->where('c_p_i.entity_id IN(?)', $this->exportIds);
-
         return $this->adapter->fetchAll($select);
     }
+
 
 }

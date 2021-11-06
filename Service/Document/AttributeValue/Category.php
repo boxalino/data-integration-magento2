@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
-use Boxalino\DataIntegration\Service\Document\DocSchemaTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
 
@@ -16,8 +15,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
  */
 class Category extends IntegrationPropertyHandlerAbstract
 {
-
-    use DocSchemaTrait;
 
     /**
      * Structure: [property-name => [$schema, $schema], property-name => [], [..]]
@@ -77,7 +74,6 @@ class Category extends IntegrationPropertyHandlerAbstract
 
         return $content;
     }
-
 
     /**
      * @return string

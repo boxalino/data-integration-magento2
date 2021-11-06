@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
+use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValueListHelperTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
@@ -17,16 +18,7 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
     use DocDeltaIntegrationTrait;
     use DocInstantIntegrationTrait;
     use AttributeValueListHelperTrait;
-
-    /**
-     * @var string
-     */
-    protected $attributeCode;
-
-    /**
-     * @var int
-     */
-    protected $attributeId = 0;
+    use AttributeHelperTrait;
 
     /**
      * Access property data (internal flow)
@@ -63,36 +55,6 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
         }
 
         return $this->_getData();
-    }
-
-    public function getAttributeCode(): string
-    {
-        return $this->attributeCode;
-    }
-
-    public function getAttributeId(): int
-    {
-        return $this->attributeId;
-    }
-
-    /**
-     * @param string $code
-     * @return DocProductPropertyInterface
-     */
-    public function setAttributeCode(string $code): DocProductPropertyInterface
-    {
-       $this->attributeCode = $code;
-       return $this;
-    }
-
-    /**
-     * @param int $id
-     * @return DocProductPropertyInterface
-     */
-    public function setAttributeId(int $id): DocProductPropertyInterface
-    {
-        $this->attributeId = $id;
-        return $this;
     }
 
     /**

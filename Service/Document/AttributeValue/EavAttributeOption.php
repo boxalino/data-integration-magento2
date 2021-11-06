@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
-use Boxalino\DataIntegration\Service\Document\DocSchemaTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
@@ -18,7 +17,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
 class EavAttributeOption extends IntegrationPropertyHandlerAbstract
 {
 
-    use DocSchemaTrait;
     use DiPropertyTrait;
 
     /**
@@ -33,7 +31,6 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
             foreach($this->getDataProvider()->getData() as $id => $attributeCode)
             {
                 $this->getDataProvider()->setAttributeCode($attributeCode);
-
                 $attributeName = $this->sanitizePropertyName($attributeCode);
                 if(!isset($content[$attributeName]))
                 {

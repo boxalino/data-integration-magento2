@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocAttributeListInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocAttributeValueLineInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
@@ -48,7 +49,7 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
     }
 
     /**
-     * @return DocAttributeValueLineInterface
+     * @return DocAttributeValueLineInterface | DocAttributeListInterface
      */
     public function getDataProvider() : DocAttributeValueLineInterface
     {

@@ -51,36 +51,4 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
         return $query;
     }
 
-    protected function _getBaseEntityQuery(?array $fields = [])
-    {
-        if(empty($fields))
-        {
-            $fields = ["c_p_e.entity_id",  "c_p_e.updated_at", "c_p_e.created_at"];
-        }
-        $query->select($fields)
-            ->from("product")
-            ->leftJoin('product', 'product_visibility', 'pv', 'product.id = pv.product_id AND pv.sales_channel_id = :channelId')
-            ->andWhere('product.version_id = :live')
-            ->andWhere("JSON_SEARCH(product.category_tree, 'one', :channelRootCategoryId) IS NOT NULL OR pv.product_id IS NOT NULL")
-            ->orderBy("product.product_number", "DESC")
-            ->addOrderBy("product.created_at", "DESC")
-            ->setFirstResult($this->getFirstResultByBatch())
-            ->setMaxResults($this->getSystemConfiguration()->getBatchSize());
-
-        /** for delta requests */
-        if($this->filterByCriteria())
-        {
-            return $this->addDeltaCondition($query);
-        }
-
-        /** for instant syncs */
-        if($this->hasModeEnabled() & $this->filterByIds())
-        {
-            return $this->addInstantCondition($query);
-        }
-
-        return $query;
-    }
-
-
 }

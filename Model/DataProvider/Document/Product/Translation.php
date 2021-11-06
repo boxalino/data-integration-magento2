@@ -35,7 +35,7 @@ class Translation extends AttributeStrategyAbstract
      */
     public function _getData(): array
     {
-        $attributeId = $this->localizedResourceModel->getAttributeIdByAttributeCodeAndEntityType(
+        $attributeId = $this->localizedResourceModel->getAttributeIdByAttributeCodeAndEntityTypeId(
             $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
         if(is_null($attributeId))
         {

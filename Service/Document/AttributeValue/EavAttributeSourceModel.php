@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
-use Boxalino\DataIntegration\Service\Document\DocSchemaTrait;
+use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
@@ -19,8 +19,8 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
 class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
 {
 
-    use DocSchemaTrait;
     use DiPropertyTrait;
+    use AttributeHelperTrait;
 
     /**
      * Structure: [property-name => [$schema, $schema], property-name => [], [..]]
@@ -31,11 +31,13 @@ class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
     {
         $content = [];
         try {
-            foreach($this->getDataProvider()->getData() as $attributeCode)
+            foreach($this->getDataProvider()->getAttributes() as $attributeCode)
             {
+                $this->getDataProvider()->setAttributeCode($attributeCode);
                 $attributeName = $this->sanitizePropertyName($attributeCode);
+
                 $content[$attributeName] = [];
-                foreach($this->getDataProvider()->getResolveByAttributeCode($attributeCode) as $id => $label)
+                foreach($this->getDataProvider()->getData() as $id => $label)
                 {
                     $schema = [];
                     $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $attributeName;
@@ -55,7 +57,6 @@ class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
         {
             $this->logger->alert($exception->getMessage());
         }
-
 
         return $content;
     }

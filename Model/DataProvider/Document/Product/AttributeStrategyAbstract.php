@@ -13,23 +13,16 @@ use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 abstract class AttributeStrategyAbstract extends ModeIntegrator
 {
 
-    /**
-     * @var GlobalDataProviderResourceModel
-     */
-    protected $globalResourceModel;
+    use AttributeLocalizedTrait;
+    use AttributeGlobalTrait;
 
     /**
-     * @var LocalizedDataProviderResourceModel
+     * @var bool
      */
-    protected $localizedResourceModel;
+    protected $isLocalized = true;
 
     /**
-     * @var string
-     */
-    protected $callback;
-
-    /**
-     * @param LocalizedDataProviderResourceModel $globalResource
+     * @param GlobalDataProviderResourceModel $globalResource
      * @param LocalizedDataProviderResourceModel $localizedResource
      */
     public function __construct(
@@ -41,11 +34,22 @@ abstract class AttributeStrategyAbstract extends ModeIntegrator
     }
 
     /**
+     * The entity type as to access attribute information
+     * @return string
+     */
+    abstract function getEntityAttributeTableType() : string;
+
+    /**
      * @return array
      */
     public function _getData(): array
     {
-        return call_user_func([$this, $this->callback]);
+        if($this->isLocalized)
+        {
+            return $this->getLocalizedDataForAttribute();
+        }
+
+        return $this->getGlobalDataForAttributeAsLocalized();
     }
 
     /**
@@ -58,78 +62,32 @@ abstract class AttributeStrategyAbstract extends ModeIntegrator
         {
             return;
         }
+        $this->_setGetDataStrategy($scope);
 
-        $this->setGetDataCallback("getLocalizedDataForAttribute");
-        if(in_array(
-            $scope,
-            [ScopedAttributeInterface::SCOPE_WEBSITE, ScopedAttributeInterface::SCOPE_GLOBAL])
-        ){
-            $this->setGetDataCallback("getGlobalDataForAttributeAsLocalized");
-        }
-
-        $this->setAttributeId((int)$this->globalResourceModel->getAttributeIdByAttributeCodeAndEntityType(
+        $this->setAttributeId((int)$this->globalResourceModel->getAttributeIdByAttributeCodeAndEntityTypeId(
             $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
         );
     }
 
     /**
-     * Used to access attribute data in case of localized
-     *
-     * @return array
+     * @param string $scope
      */
-    public function getLocalizedDataForAttribute() : array
+    protected function _setGetDataStrategy(string $scope) : void
     {
-        $attributeContent = new \ArrayObject();
-        foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
-        {
-            $data = $this->localizedResourceModel->getFetchParisForLocalizedAttributeByStoreId(
-                $this->getFields(),
-                $this->getSystemConfiguration()->getWebsiteId(),
-                $storeId,
-                $this->getAttributeId(),
-                $this->getEntityAttributeTableType()
-            );
-
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
+        if(in_array(
+            $scope,
+            [ScopedAttributeInterface::SCOPE_WEBSITE, ScopedAttributeInterface::SCOPE_GLOBAL])
+        ){
+            $this->setIsLocalized(false);
         }
-
-        return $attributeContent->getArrayCopy();
     }
 
     /**
-     * The entity type as to access attribute information
-     * @return string
+     * @param bool $isLocalized
      */
-    abstract function getEntityAttributeTableType() : string;
-
-    /**
-     * Used to create attribute data response structure (localized) when attribute is global
-     *
-     * @return array
-     */
-    public function getGlobalDataForAttributeAsLocalized() : array
+    protected function setIsLocalized(bool $isLocalized) : void
     {
-        $attributeContent = new \ArrayObject();
-
-        $data = $this->globalResourceModel->getFetchPairsForGlobalAttribute(
-            $this->getFields(),
-            $this->getSystemConfiguration()->getWebsiteId(),
-            $this->getSystemConfiguration()->getStoreIds(),
-            $this->getAttributeId(),
-            $this->getEntityAttributeTableType()
-        );
-
-        foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
-        {
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
-        }
-
-        return $attributeContent->getArrayCopy();
-    }
-
-    protected function setGetDataCallback(string $callback) : void
-    {
-        $this->callback = $callback;
+        $this->isLocalized = $isLocalized;
     }
 
     function getDataDelta() : array

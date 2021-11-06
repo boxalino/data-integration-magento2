@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeOptionResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
+
 /**
  * Class Brand
  * Resource for the "manufacturer" attribute code
@@ -10,6 +13,9 @@ namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 class Brand extends ModeIntegrator
 {
 
+    use EavAttributeOptionResourceTrait;
+    use EavAttributeResourceTrait;
+
     /**
      * Brand data it is mapped 1:1
      * @param array $fields
@@ -17,7 +23,7 @@ class Brand extends ModeIntegrator
      * @param int $attributeId
      * @return array
      */
-    public function getFetchAllByWebsiteAttributeCode(array $fields, string $websiteId, int $attributeId) : array
+    public function getFetchAllByWebsiteAttributeId(array $fields, string $websiteId, int $attributeId) : array
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $attributeOptionAdminValueSelect = $this->getAttributeOptionCodeByAttributeIdSelect($attributeId);

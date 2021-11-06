@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductPricePropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
-use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
+use Boxalino\DataIntegration\Api\DataProvider\DocAttributeListInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocProductAttributeTrait;
@@ -38,7 +39,7 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
     protected $diSchemaDataProviderResolver;
 
     /**
-     * @var DocProductPropertyInterface | DocProductPropertyListInterface
+     * @var DocProductPropertyInterface | DocAttributeListInterface
      */
     protected $dataProvider;
 
@@ -63,7 +64,7 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
     }
 
     /**
-     * @return DocProductPropertyInterface | DocProductPropertyListInterface
+     * @return DocProductPropertyInterface | DocAttributeListInterface | DocProductPricePropertyInterface
      */
     public function getDataProvider() : DocProductPropertyInterface
     {

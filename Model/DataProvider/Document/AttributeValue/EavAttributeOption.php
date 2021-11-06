@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocAttributeValueLineInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderInterface;
+use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue\EavAttributeOption as DataProviderResourceModel;
 
@@ -19,6 +20,7 @@ class EavAttributeOption implements
 
     use DocAttributeValueLineTrait;
     use DiIntegrationConfigurationTrait;
+    use AttributeHelperTrait;
 
     /**
      * @var DataProviderResourceModel
@@ -42,7 +44,7 @@ class EavAttributeOption implements
      */
     public function getData(): array
     {
-        return $this->resourceModel->getOptionIdAttributeCodeMapping();
+        return $this->resourceModel->getFetchPairsOptionIdAttributeCodeByFrontendInputTypes($this->getFrontendInputTypes());
     }
 
     /**
@@ -50,15 +52,16 @@ class EavAttributeOption implements
      */
     public function resolve() : void
     {
-        $this->resolveOptionIdTranslationData();
+        $this->loadOptionIdTranslation();
     }
 
     /**
      * Resolves the localized attribute details for option ids
      */
-    protected function resolveOptionIdTranslationData() : void
+    protected function loadOptionIdTranslation() : void
     {
-        foreach($this->resourceModel->getOptionSelectAttributes() as $attributeId => $attributeCode)
+        foreach($this->resourceModel->getFetchPairsAttributeByFieldsFrontendInputTypes(
+            ['attribute_id', 'attribute_code'], $this->getFrontendInputTypes()) as $attributeId => $attributeCode)
         {
             $attributeContent = new \ArrayObject();
             foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
@@ -69,6 +72,14 @@ class EavAttributeOption implements
 
             $this->attributeNameValuesList->offsetSet($attributeCode, $attributeContent);
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFrontendInputTypes() : array
+    {
+        return ["multiselect", "select"];
     }
 
 

@@ -4,12 +4,10 @@ namespace Boxalino\DataIntegration\Model\ResourceModel;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- *
+ * Generic resource declaration
  */
 class DiSchemaDataProviderResource
 {
-
-    use EavResourceTrait;
 
     /**
      * @param ResourceConnection $resource

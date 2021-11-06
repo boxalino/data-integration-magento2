@@ -100,8 +100,9 @@ class DocHandler extends DocAttribute
     public function getExcludedProperties() : array
     {
         return [
-            "id", "title", "body", "categories", "tags", "categories_text", "scorerTerms", "addedTime", "changedTime",
-            "standardPrice", "discountedPrice", "stockCounter", "viewCounter", "purchaseCounter", "random_*", "sortable_title"
+            "id", "title", "body", "categories", "tags", "categories_text", "scorerTerms", "addedTime", "changedTime", "price",
+            "standardPrice", "discountedPrice", "stockCounter", "viewCounter", "purchaseCounter", "random_*", "sortable_title",
+            "categories", "stock"
         ];
     }
 

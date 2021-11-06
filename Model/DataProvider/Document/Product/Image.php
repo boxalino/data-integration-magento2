@@ -55,7 +55,7 @@ class Image extends ModeIntegrator
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
             $this->placeholder = $this->imagePlaceholdersList[$this->getAttributeCode()][$storeId];
-            $data = $this->resourceModel->getFetchParisForLocalizedAttributeByStoreId(
+            $data = $this->resourceModel->getFetchPairsForLocalizedAttributeByStoreId(
                 $this->getFields(),
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId,
