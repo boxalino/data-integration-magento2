@@ -2,7 +2,6 @@
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Doc\Schema\Product;
 
 /**
  * Class ProductRelation
@@ -25,7 +24,7 @@ class ProductRelation extends IntegrationPropertyHandlerAbstract
             /** @var \ArrayObject $relation */
             foreach($relations as $relation)
             {
-                $content[$id][$this->getResolverType()][] = $this->_getSchemaByArrayObject($relation);
+                $content[$id][$this->getResolverType()][] = $this->getProductRelationSchema($relation);
             }
         }
         return $content;
@@ -37,33 +36,6 @@ class ProductRelation extends IntegrationPropertyHandlerAbstract
     public function getResolverType(): string
     {
         return DocSchemaInterface::FIELD_PRODUCT_RELATIONS;
-    }
-
-    /**
-     * @param \ArrayObject $relation
-     * @return Product
-     */
-    protected function _getSchemaByArrayObject(\ArrayObject $relation) : Product
-    {
-        $schema = new Product();
-        if($relation->offsetExists("type"))
-        {
-            $schema->setType((string)$relation->offsetGet("type"));
-        }
-        if($relation->offsetExists("name"))
-        {
-            $schema->setType((string)$relation->offsetGet("name"));
-        }
-        if($relation->offsetExists("product_group"))
-        {
-            $schema->setType((string)$relation->offsetGet("product_group"));
-        }
-        if($relation->offsetExists("sku"))
-        {
-            $schema->setType((string)$relation->offsetGet("sku"));
-        }
-
-        return $schema;
     }
 
 
