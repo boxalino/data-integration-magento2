@@ -2,10 +2,15 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\ProductRelation as DataProviderResourceModel;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 
 /**
  * Class ProductRelation
+ * The following relations are available in a default M2 setup:
+ * 1. relation (between products at same level, group-group, configurable-configurable, etc)
+ * 2. super_link (between a variant product_id and the main product linked_product_id)
+ * 3. super (between a grouped product_id and a child linked_product_id)
+ * 4. up_sell (between 2 skus / product_group)
+ * 5. cross_sell (between 2 skus / product_group)
  */
 class ProductRelation extends ModeIntegrator
 {
@@ -16,12 +21,18 @@ class ProductRelation extends ModeIntegrator
     private $resourceModel;
 
     /**
+     * @var \ArrayObject
+     */
+    protected $entityIdRelationsList;
+
+    /**
      * @param DataProviderResourceModel $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
     ) {
         $this->resourceModel = $resource;
+        $this->entityIdRelationsList = new \ArrayObject();
     }
 
     /**
@@ -29,15 +40,56 @@ class ProductRelation extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return [];
+        return $this->entityIdRelationsList->getArrayCopy();
     }
 
-    public function resolve(): void {}
+    public function resolve(): void
+    {
+        $this->loadSuperInformation();
+        $this->loadLinkInformation();
+    }
 
+    /**
+     * Loading super link information about the SKUs
+     */
+    protected function loadSuperInformation() : void
+    {
+        $this->_addRelationsByData(
+            $this->resourceModel->getFetchAllSuperLinkByWebsiteId($this->getSystemConfiguration()->getWebsiteId())
+        );
+    }
+
+    /**
+     * Loading link information for the product group
+     */
+    protected function loadLinkInformation()
+    {
+        $this->_addRelationsByData(
+            $this->resourceModel->getFetchAllLinkByWebsiteId($this->getSystemConfiguration()->getWebsiteId())
+        );
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function _addRelationsByData(array $data)
+    {
+        foreach($data as $row)
+        {
+            $entityRelations = new \ArrayObject();
+            if($this->entityIdRelationsList->offsetExists($row["entity_id"]))
+            {
+                $entityRelations = $this->entityIdRelationsList->offsetGet($row["entity_id"]);
+            }
+
+            $entityRelations->append(new \ArrayObject($row));
+            $this->entityIdRelationsList->offsetSet($row['entity_id'], $entityRelations);
+        }
+    }
 
     function getDataDelta() : array
     {
-       return [];
+        return [];
     }
 
 
