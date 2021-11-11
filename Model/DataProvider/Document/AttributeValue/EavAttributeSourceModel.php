@@ -88,7 +88,7 @@ class EavAttributeSourceModel implements
         foreach($this->resourceModel->getFetchPairsAttributeByFieldsFrontendInputTypes(
             ['attribute_code', 'source_model'],$this->getFrontendInputTypes()) as $attributeCode => $sourceModelClass
         ){
-            if(in_array($sourceModelClass, $this->getExcludedSourceModels()))
+            if(in_array($sourceModelClass, $this->getExcludedSourceModels()) || is_null($sourceModelClass))
             {
                 continue;
             }

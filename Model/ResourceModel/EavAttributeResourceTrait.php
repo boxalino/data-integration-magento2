@@ -143,7 +143,6 @@ trait EavAttributeResourceTrait
                 $fields
             )
             ->where('entity_type_id= ?', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
-            ->where('source_model IS NOT NULL')
             ->where('frontend_input IN (?)', $frontendInputTypes);
     }
 
