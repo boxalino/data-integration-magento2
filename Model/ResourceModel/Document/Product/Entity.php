@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Magento\Framework\DB\Select;
+
 /**
  * Class Entity
  * Access the product_groups & sku information from the product table
@@ -18,13 +20,14 @@ class Entity extends ModeIntegrator
     public function getFetchAllByFieldsWebsite(array $fields, string $websiteId)
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $relationParentTypeSelect = $this->getRelationEntityTypeSelect();
         $select = $this->adapter->select()
             ->from(
                 ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
                 $fields
             )
             ->joinLeft(
-                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
+                ['c_p_r' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
                 "c_p_r.child_id = c_p_e.entity_id",
                 []
             )
@@ -37,6 +40,23 @@ class Entity extends ModeIntegrator
             ->group("c_p_e.entity_id");
 
         return $this->adapter->fetchAll($select);
+    }
+
+    /**
+     * @return Select
+     */
+    protected function getRelationEntityTypeSelect() : Select
+    {
+        return $this->adapter->select()
+            ->from(
+                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
+                ["parent_id", "child_id"]
+            )
+            ->joinLeft(
+                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
+                "c_p_r.parent_id = c_p_e.entity_id",
+                ["type_id"]
+            );
     }
 
 

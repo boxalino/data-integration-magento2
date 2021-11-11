@@ -4,10 +4,12 @@ namespace Boxalino\DataIntegration\Service\Document\Product;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
+use Boxalino\DataIntegrationDoc\Generator\DocGeneratorInterface;
 use Boxalino\DataIntegrationDoc\Generator\Product\Group;
 use Boxalino\DataIntegrationDoc\Generator\Product\Line;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegrationDoc\Generator\Product\Sku;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
@@ -137,35 +139,107 @@ class DocHandler extends DocProduct implements
                     continue;
                 }
 
+                /** @var Group | Sku | Line | DocGeneratorInterface $schema */
                 $schema = $this->getSchemaGeneratorByType($content[DocSchemaInterface::DI_DOC_TYPE_FIELD], $content);
-                $parentId = $content[DocSchemaInterface::DI_PARENT_ID_FIELD];
-                if(empty($parentId))
+                $parentIds = array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD]));
+                if(empty($parentIds))
                 {
-                    $sku = $this->docTypePropDiffDuplicate(
-                        DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
-                        DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU,
-                        $content
-                    );
-
-                    $schema->addSkus([$sku]);
-                    $productGroups[$id] = $schema;
+                    $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
                     continue;
                 }
 
-                if(isset($productGroups[$parentId]))
-                {
-                    $productGroups[$parentId] = $productGroups[$parentId]->addSkus([$schema]);
-                    continue;
-                }
-
-                $productSkus[$parentId][] = $schema;
-
+                $this->_treatSkusWithParentIds($id, $schema, $content, $productGroups, $productSkus);
             } catch (\Throwable $exception)
             {
                 $this->logger->info($exception->getMessage());
             }
         }
 
+        $this->_loadSkusOnGroups($productSkus, $productGroups);
+
+        $this->logTime("end" . __FUNCTION__);
+        $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
+
+        return $productGroups;
+    }
+
+
+    /**
+     * Every product without a parent ID must exist both at the level of product_groups and skus
+     * - creates the product as an SKU
+     * - adds it as an SKU to the GROUP schema
+     *
+     * @param string $id
+     * @param Group $schema
+     * @param array $content
+     * @param array $productGroups
+     */
+    protected function _treatProductGroupDocLine(string $id, Group $schema, array $content, array &$productGroups) : void
+    {
+        $sku = $this->docTypePropDiffDuplicate(
+            DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
+            DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU,
+            $content
+        );
+
+        $schema->addSkus([$sku]);
+        $productGroups[$id] = $schema;
+    }
+
+    /**
+     * A product that has multiple parent IDs must exist as a sku on it`s own
+     * and as a reference (duplicate) at the level of the parents
+     *
+     * @param string $id
+     * @param Sku $schema
+     * @param array $content
+     * @param array $productGroups
+     * @param array $productSkus
+     */
+    protected function _treatSkusWithParentIds(string $id, Sku $schema, array $content, array &$productGroups, array &$productSkus) : void
+    {
+        $duplicate = count(array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD]))) > 1;
+        $parentIdTypesList = array_combine(
+            array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD])),
+            array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_TYPE_FIELD]))
+        );
+
+        foreach($parentIdTypesList as $parentId => $parentType)
+        {
+            if($duplicate)
+            {
+                if(!isset($productGroups[$id]))
+                {
+                    /** @var Group $selfGroupSchema */
+                    $selfGroupSchema = $this->getSchemaGeneratorByType(
+                        DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
+                        $content
+                    );
+
+                    $this->_treatProductGroupDocLine($id, $selfGroupSchema, $content, $productGroups);
+                }
+
+                $schema->setInternalId($parentId . "_" . $id)
+                    ->setExternalId($id)
+                    ->setIndividuallyVisible(false);
+            }
+
+            if(isset($productGroups[$parentId]))
+            {
+                $productGroups[$parentId] = $productGroups[$parentId]->addSkus([$schema]);
+                continue;
+            }
+
+            $productSkus[$parentId][] = $schema;
+        }
+    }
+
+    /**
+     * @param array $productSkus
+     * @param array $productGroups
+     */
+    protected function _loadSkusOnGroups(array &$productSkus, array &$productGroups) : void
+    {
         foreach($productSkus as $parentId => $skus)
         {
             /** @var Group $schema by default - on product update event - the main variant is also exported*/
@@ -180,11 +254,6 @@ class DocHandler extends DocProduct implements
 
             $productGroups[$parentId] = $schema->addSkus($skus);
         }
-
-        $this->logTime("end" . __FUNCTION__);
-        $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
-
-        return $productGroups;
     }
 
 
