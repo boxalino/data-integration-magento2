@@ -101,13 +101,12 @@ class ProductRelation extends ModeIntegrator
         return $this->adapter->select()
             ->from(
                 ['c_p_l'=> $this->adapter->getTableName('catalog_product_link')],
-                ['entity_id' => 'product_id', 'sku' => 'linked_product_id', "type"=> 'lt.code']
+                ['entity_id' => 'product_id', 'sku' => 'linked_product_id', "type"=> 'c_p_l_t.code']
             )
             ->joinLeft(
                 ['c_p_l_t' => $this->adapter->getTableName('catalog_product_link_type')],
                 'c_p_l.link_type_id = c_p_l_t.link_type_id', []
-            )
-            ->where('lt.link_type_id = pl.link_type_id');
+            );
     }
 
 
