@@ -19,9 +19,20 @@ trait EavAttributeOptionResourceTrait
      * @param int $storeId
      * @return array
      */
-    public function getAttributeOptionValuesByStoreAndAttributeId(int $attributeId, int $storeId) : array
+    public function getFetchPairsAttributeOptionValuesByStoreAndAttributeId(int $attributeId, int $storeId) : array
     {
-        $select = $this->adapter->select()
+        $select = $this->getAttributeOptionValuesByStoreAndAttributeIdSelect($attributeId, $storeId);
+        return $this->adapter->fetchPairs($select);
+    }
+
+    /**
+     * @param int $attributeId
+     * @param int $storeId
+     * @return Select
+     */
+    public function getAttributeOptionValuesByStoreAndAttributeIdSelect(int $attributeId, int $storeId) : Select
+    {
+        return $this->adapter->select()
             ->from(
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
@@ -37,8 +48,6 @@ trait EavAttributeOptionResourceTrait
                 'c_o.option_id = a_o.option_id AND c_o.store_id = ' . $storeId,
                 []
             )->where('a_o.attribute_id = ?', $attributeId);
-
-        return $this->adapter->fetchPairs($select);
     }
 
     /**

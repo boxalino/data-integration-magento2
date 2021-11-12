@@ -75,5 +75,53 @@ trait AttributeValueListHelperTrait
         }
     }
 
+    /**
+     * @param array $data
+     * @param \ArrayObject $attributeContent
+     * @param string $attributeCode
+     * @param bool $addId
+     * @param bool $hasList
+     */
+    protected function addValueTranslationToAttributeContent(array $data, \ArrayObject &$attributeContent, string $attributeCode, bool $addId = false, bool $hasList = false) : void
+    {
+        foreach($data as $row)
+        {
+            $entityId = $row[$this->getDiIdField()];
+            $optionIds = [$row[$attributeCode]];
+            if($hasList)
+            {
+                $optionIds = explode(",", $row[$attributeCode]);
+            }
+
+            foreach($optionIds as $optionId)
+            {
+                $content = new \ArrayObject();
+                if($attributeContent->offsetExists($entityId))
+                {
+                    $content = $attributeContent->offsetGet($entityId);
+                }
+                if($content->offsetExists($optionId))
+                {
+                    continue;
+                }
+
+                $optionIdContent = new \ArrayIterator();
+                $translation = $this->getDataByCode($attributeCode, $optionId);
+                foreach($translation as $languageCode => $value)
+                {
+                    $optionIdContent->offsetSet($languageCode, $value);
+                }
+                if($addId)
+                {
+                    $optionIdContent->offsetSet(DocSchemaInterface::DI_ID_FIELD, (string)$entityId);
+                    $optionIdContent->offsetSet($attributeCode, (string)$optionId);
+                }
+
+                $content->offsetSet($optionId, $optionIdContent);
+            }
+            $attributeContent->offsetSet($entityId, $content);
+        }
+    }
+
 
 }

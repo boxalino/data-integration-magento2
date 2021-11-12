@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
-use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Brand as DataProviderResourceModel;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeOption as DataProviderResourceModel;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
@@ -74,7 +74,7 @@ class Brand extends ModeIntegrator
         $this->attributeNameValuesList = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
-            $data = $this->resourceModel->getAttributeOptionValuesByStoreAndAttributeId($this->getAttributeId(), $storeId);
+            $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($this->getAttributeId(), $storeId);
             $this->addValueToAttributeContent($data, $this->attributeNameValuesList, $languageCode);
         }
     }

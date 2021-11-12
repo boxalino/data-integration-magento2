@@ -52,7 +52,8 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
             $this->getScopeList(),
             $this->getBackendTypeList(),
             $this->getFrontendInputList(),
-            $this->getUseOrConditional()
+            $this->getUseOrConditional(),
+            $this->getExcludeConditionals()
         );
     }
 
@@ -64,6 +65,8 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
         return [ScopedAttributeInterface::SCOPE_GLOBAL, ScopedAttributeInterface::SCOPE_WEBSITE];
     }
 
+    abstract function getEntityAttributeTableType() : string;
+    
     abstract function getBackendTypeList() : array;
 
     abstract function getFrontendInputList() : array;
@@ -73,7 +76,10 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
         return false;
     }
 
-    abstract function getEntityAttributeTableType() : string;
+    protected function getExcludeConditionals() : array
+    {
+        return [];
+    }
 
     function getDataDelta() : array
     {

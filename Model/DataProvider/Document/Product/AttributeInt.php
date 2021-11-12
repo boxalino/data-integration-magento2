@@ -14,12 +14,17 @@ class AttributeInt extends AttributeGlobalAbstract
 
     public function getFrontendInputList() : array
     {
-        return ["boolean", "text", NULL];
+        return ["select", "boolean", "text", NULL];
     }
 
     public function getEntityAttributeTableType() : string
     {
         return "int";
+    }
+
+    public function getExcludeConditionals(): array
+    {
+        return ['e_a.source_model != "Magento\\Eav\\Model\\Entity\\Attribute\\Source\\Table"'];
     }
 
 }

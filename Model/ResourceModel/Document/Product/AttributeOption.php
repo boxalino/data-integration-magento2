@@ -3,21 +3,23 @@ namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
 use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeOptionResourceTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavProductResourceTrait;
 
 /**
- * Class Brand
- * Resource for the "manufacturer" attribute code
+ * Class AttributeOption
  *
  * @package Boxalino\DataIntegration\Model\ResourceModel\Document\Product
  */
-class Brand extends ModeIntegrator
+class AttributeOption extends ModeIntegrator
 {
 
-    use EavAttributeOptionResourceTrait;
+    use EavProductResourceTrait;
     use EavAttributeResourceTrait;
+    use EavAttributeOptionResourceTrait;
 
     /**
-     * Brand data it is mapped 1:1
+     * For attribute-options that have content with same label on all storeviews (ex: brand names)
+     *
      * @param array $fields
      * @param string $websiteId
      * @param int $attributeId
@@ -42,6 +44,35 @@ class Brand extends ModeIntegrator
                 "c_p_e_a_s.option_id = c_p_e_i.value",
                 []
             );
+
+        return $this->adapter->fetchAll($select);
+    }
+
+    /**
+     * For every fetched property - adds translation and connection to product
+     * 
+     * @param array $fields
+     * @param string $websiteId
+     * @param int $storeId
+     * @param int $attributeId
+     * @param string type
+     * @return array
+     */
+    public function getFetchAllForLocalizedAttributeByStoreId(array $fields, string $websiteId, int $storeId, int $attributeId, string $type) : array
+    {
+        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $eavPropertySelect = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_$type");
+        $select = $this->adapter->select()
+            ->from(
+                ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $eavPropertySelect->__toString() . ' )')],
+                $fields
+            )
+            ->joinLeft(
+                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+                "c_p_e_s.entity_id = c_p_e_a_s.entity_id",
+                []
+            )
+            ->where('c_p_e_s.entity_id IS NOT NULL');
 
         return $this->adapter->fetchAll($select);
     }

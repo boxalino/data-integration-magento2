@@ -90,7 +90,11 @@ class EavAttribute implements
 
     public function isLocalized(array $row): bool
     {
-        return $this->isMultivalue($row) || !$row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::KEY_IS_GLOBAL];
+        return $this->isMultivalue($row)
+            || !$row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::KEY_IS_GLOBAL]
+            || ($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT]=== "select"
+                && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::BACKEND_TYPE] === "int"
+            );
     }
 
     public function getFormat(array $row): string

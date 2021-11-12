@@ -27,7 +27,6 @@ class EavAttribute extends IntegrationPropertyHandlerAbstract
     public function getValues() : array
     {
         $content = [];
-        $content[DocSchemaInterface::FIELD_CATEGORIES] = [];
         try {
             foreach($this->getDataProvider()->getData() as $row)
             {

@@ -66,7 +66,7 @@ class EavAttributeOption implements
             $attributeContent = new \ArrayObject();
             foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
             {
-                $data = $this->resourceModel->getAttributeOptionValuesByStoreAndAttributeId($attributeId, $storeId);
+                $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($attributeId, $storeId);
                 $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
             }
 

@@ -19,11 +19,10 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
      *
      * @return array
      */
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
-
         foreach($this->getDataProvider()->getAttributes() as $attribute)
         {
             $this->setAttribute($attribute);
@@ -38,20 +37,35 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
             /** @var array $item columns di_id, <attributeCode> with value */
             foreach($this->getDataProvider()->getData() as $id => $item)
             {
+                $itemList = [$item];
                 if($item instanceof \ArrayIterator)
                 {
-                    $item = $item->getArrayCopy();
+                    $itemList = [$item->getArrayCopy()];
                 }
 
-                $id = $this->_getDocKey($item);
-                if(!isset($content[$id][$this->getDocSchemaPropertyNode()]))
+                if($item instanceof \ArrayObject)
                 {
-                    $content[$id][$this->getDocSchemaPropertyNode()] = [];
+                    $isSingleValue = false;
+                    $itemList = $item->getArrayCopy();
                 }
 
-                $content[$id][$this->getDocSchemaPropertyNode()][] =
-                    $this->getSchema($item, $languages, $attributeName, $attributeCode);
+                foreach($itemList as $item)
+                {
 
+                    if($item instanceof \ArrayIterator)
+                    {
+                        $item = $item->getArrayCopy();
+                    }
+
+                    $id = $this->_getDocKey($item);
+                    if(!isset($content[$id][$this->getDocSchemaPropertyNode()]))
+                    {
+                        $content[$id][$this->getDocSchemaPropertyNode()] = [];
+                    }
+
+                    $content[$id][$this->getDocSchemaPropertyNode()][] =
+                        $this->getSchema($item, $languages, $attributeName, $attributeCode);
+                }
             }
         }
 
@@ -100,7 +114,6 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
             DocSchemaInterface::FIELD_DESCRIPTION,
             DocSchemaInterface::FIELD_SHORT_DESCRIPTION,
             DocSchemaInterface::FIELD_LINK,
-            DocSchemaInterface::FIELD_STATUS,
             DocSchemaInterface::FIELD_VISIBILITY,
             DocSchemaInterface::FIELD_CATEGORIES,
             DocSchemaInterface::FIELD_STOCK,

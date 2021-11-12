@@ -46,7 +46,8 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
             $this->getScopeList(),
             $this->getBackendTypeList(),
             $this->getFrontendInputList(),
-            $this->getUseOrConditional()
+            $this->getUseOrConditional(),
+            $this->getExcludeConditionals()
         );
     }
 
@@ -72,6 +73,11 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
     protected function getUseOrConditional() : bool
     {
         return false;
+    }
+
+    protected function getExcludeConditionals() : array
+    {
+        return [];
     }
 
     function getDataDelta() : array

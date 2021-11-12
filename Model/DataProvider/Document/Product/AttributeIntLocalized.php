@@ -22,4 +22,9 @@ class AttributeIntLocalized extends AttributeLocalizedAbstract
         return "int";
     }
 
+    public function getExcludeConditionals(): array
+    {
+        return ['e_a.source_model != \'Magento\\\Eav\\\Model\\\Entity\\\Attribute\\\Source\\\Table\''];
+    }
+
 }

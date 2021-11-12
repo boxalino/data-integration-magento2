@@ -53,6 +53,7 @@ trait EavAttributeResourceTrait
         array $backendType = [],
         array $frontendInput = [],
         bool $orConditional = false,
+        array $excludeConditions = [],
         int $entityTypeId = \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID): array
     {
         $conditions = [];
@@ -92,6 +93,11 @@ trait EavAttributeResourceTrait
             ->where('e_a.entity_type_id = ?', $entityTypeId);
 
         foreach($conditions as $condition)
+        {
+            $select->where($condition);
+        }
+
+        foreach($excludeConditions as $condition)
         {
             $select->where($condition);
         }
