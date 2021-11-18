@@ -33,7 +33,7 @@ class Translation extends IntegrationPropertyHandlerAbstract
         parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
     }
 
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

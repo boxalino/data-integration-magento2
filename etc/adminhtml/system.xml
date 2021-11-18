@@ -117,7 +117,7 @@
 
         <section id="boxalino_di_I" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>separator-top</class>
-            <label>General</label>
+            <label>Instant Data Sync</label>
             <tab>boxalino_di</tab>
             <resource>Boxalino_DataIntegration::configuration</resource>
 

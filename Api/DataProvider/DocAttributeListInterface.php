@@ -19,12 +19,26 @@ interface DocAttributeListInterface extends DiSchemaDataProviderInterface
      */
     public function getAttributes() : array;
 
+    /**
+     * @param string $code
+     * @return DiSchemaDataProviderInterface
+     */
     public function setAttributeCode(string $code) : DiSchemaDataProviderInterface;
 
+    /**
+     * @return string
+     */
     public function getAttributeCode() : string;
 
+    /**
+     * @param int $id
+     * @return DiSchemaDataProviderInterface
+     */
     public function setAttributeId(int $id) : DiSchemaDataProviderInterface;
 
+    /**
+     * @return int
+     */
     public function getAttributeId() : int;
 
 }

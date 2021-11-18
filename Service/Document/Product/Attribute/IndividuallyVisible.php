@@ -14,7 +14,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class IndividuallyVisible extends IntegrationPropertyHandlerAbstract
 {
 
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         foreach($this->getDataProvider()->getData() as $id=>$value)

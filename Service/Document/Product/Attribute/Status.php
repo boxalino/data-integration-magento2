@@ -12,7 +12,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Status extends IntegrationPropertyHandlerAbstract
 {
 
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

@@ -14,7 +14,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Link extends IntegrationPropertyHandlerAbstract
 {
 
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

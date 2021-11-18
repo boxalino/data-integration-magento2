@@ -5,6 +5,7 @@ use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as DataProviderResourceModel;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Filesystem\DirectoryList;
 
 /**
  * Class Image
@@ -35,15 +36,22 @@ class Image extends ModeIntegrator
     protected $placeholder;
 
     /**
+     * @var DirectoryList
+     */
+    protected $directory;
+
+    /**
      * @param DataProviderResourceModel $resource
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         DataProviderResourceModel $resource,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        DirectoryList $directoryList
     ) {
         $this->resourceModel = $resource;
         $this->scopeConfig = $scopeConfig;
+        $this->directory = $directoryList;
     }
 
     /**
@@ -87,10 +95,11 @@ class Image extends ModeIntegrator
      */
     protected function getFields() : array
     {
+        $mediaPath = $this->getMediaAbsoluteUrl();
         return [
             $this->getDiIdField() => "c_p_e_s.entity_id",
             $this->getAttributeCode() =>
-                new \Zend_Db_Expr("IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', '$this->placeholder', c_p_e_a_s.value)")
+                new \Zend_Db_Expr("CONCAT('$mediaPath', IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', '$this->placeholder', c_p_e_a_s.value))")
         ];
     }
 
@@ -111,16 +120,25 @@ class Image extends ModeIntegrator
             {
                 $attributeCode = $attribute["attribute_code"];
                 $this->imagePlaceholdersList[$attributeCode][$storeId] = $this->scopeConfig->getValue(
-                    "catalog/placeholder/{$attributeCode}_placeholder",
-                    ScopeInterface::SCOPE_STORE,
-                    $storeId) ?? "{$attributeCode}_placeholder";
+                        "catalog/placeholder/{$attributeCode}_placeholder",
+                        ScopeInterface::SCOPE_STORE,
+                        $storeId) ?? "{$attributeCode}_placeholder";
             }
         }
     }
 
+    /**
+     * @return string
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function getMediaAbsoluteUrl() : string
+    {
+        return $this->directory->getUrlPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA) . "/catalog/product";
+    }
+
     function getDataDelta() : array
     {
-       return [];
+        return [];
     }
 
 

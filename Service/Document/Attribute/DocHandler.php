@@ -37,6 +37,7 @@ class DocHandler extends DocAttribute
                 $this->addPropertyHandler($propertyHandler);
             }
         }
+        
     }
 
     public function integrate(): void
@@ -64,6 +65,12 @@ class DocHandler extends DocAttribute
                     $this->_createDocLinesByHandler($handler);
                 }
             }
+
+            /**
+             * other properties outside of product table & properties
+             */
+            $this->addConfiguredProperties();
+            
         } catch (\Throwable $exception)
         {
             $this->getLogger()->info($exception->getMessage());
@@ -101,8 +108,7 @@ class DocHandler extends DocAttribute
     {
         return [
             "id", "title", "body", "categories", "tags", "categories_text", "scorerTerms", "addedTime", "changedTime", "price",
-            "standardPrice", "discountedPrice", "stockCounter", "viewCounter", "purchaseCounter", "random_*", "sortable_title",
-            "categories", "stock"
+            "standardPrice", "discountedPrice", "stockCounter", "viewCounter", "purchaseCounter", "random_*", "sortable_title"
         ];
     }
 

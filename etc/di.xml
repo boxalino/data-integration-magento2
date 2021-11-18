@@ -27,4 +27,7 @@
 
     <!-- doc_product INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
     <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface" type="Boxalino\DataIntegration\Service\Document\Product\DocHandler"/>
+
+    <!-- doc_order INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
+    <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface" type="Boxalino\DataIntegration\Service\Document\Order\DocHandler"/>
 </config>

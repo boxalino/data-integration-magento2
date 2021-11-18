@@ -13,9 +13,11 @@ class DiSchemaDataProviderResource
      * @param ResourceConnection $resource
      */
     public function __construct(
-        ResourceConnection $resource
+        ResourceConnection $resource,
+        \Magento\Framework\App\DeploymentConfig $deploymentConfig
     ) {
         $this->adapter = $resource->getConnection();
+        $this->deploymentConfig = $deploymentConfig;
     }
 
 

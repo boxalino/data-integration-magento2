@@ -12,7 +12,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Type extends IntegrationPropertyHandlerAbstract
 {
 
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         foreach($this->getDataProvider()->getData() as $item)

@@ -28,7 +28,7 @@ class Entity extends IntegrationPropertyHandlerAbstract
         parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
     }
 
-    function getValues(): array
+    public function getValues(): array
     {
         $content = [];
         foreach($this->getDataProvider()->getData() as $item)
