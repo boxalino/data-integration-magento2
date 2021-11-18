@@ -90,7 +90,7 @@ trait AttributeValueListHelperTrait
             $optionIds = [$row[$attributeCode]];
             if($hasList)
             {
-                $optionIds = explode(",", $row[$attributeCode]);
+                $optionIds = array_filter(explode(",", $row[$attributeCode]), 'strlen');
             }
 
             foreach($optionIds as $optionId)

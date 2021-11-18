@@ -27,7 +27,7 @@ class AttributeVarchar extends AttributeAbstract
         $values = [$item[$attributeCode]];
         if($this->attribute["frontend_input"] === "multiselect")
         {
-            $values = explode(",", $item[$attributeCode]);
+            $values = array_filter(explode(",", $item[$attributeCode]),'strlen');
         }
 
         return $this->getStringAttributeSchema($values, $attributeName);

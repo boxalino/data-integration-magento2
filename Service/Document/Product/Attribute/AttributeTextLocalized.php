@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringLocalizedAttribute;
 
 /**
  * Class AttributeTextLocalized
@@ -17,7 +18,7 @@ class AttributeTextLocalized extends AttributeAbstract
 
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedLocalizedSchema($item, $languages, $attributeName, $this->getDiIdField());
+        return $this->getRepeatedGenericLocalizedSchema($item, $languages, $attributeName, new StringLocalizedAttribute(), null);
     }
 
     /**

@@ -66,7 +66,8 @@ class AttributeGlobal extends ModeIntegrator
                 "c_p_e_s.entity_id = c_p_e_a_s.entity_id",
                 []
             )
-            ->where("c_p_e_s.entity_id IS NOT NULL");
+            ->where("c_p_e_s.entity_id IS NOT NULL")
+            ->where("c_p_e_a_s.value IS NOT NULL");
 
         return $select;
     }

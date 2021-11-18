@@ -33,7 +33,7 @@ class AttributeDatetimeLocalized extends AttributeAbstract
      */
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedGenericLocalizedSchema($item, $languages, $attributeName, new DatetimeLocalizedAttribute(), $this->getDiIdField());
+        return $this->getRepeatedGenericLocalizedSchema($item, $languages, $attributeName, new DatetimeLocalizedAttribute(), null);
     }
 
     /**

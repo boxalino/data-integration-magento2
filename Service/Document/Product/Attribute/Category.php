@@ -35,7 +35,7 @@ class Category extends IntegrationPropertyHandlerAbstract
 
             /** @var CategorySchema $schema */
             $schema =  $this->getCategoryAttributeSchema(
-                explode(",", $item[$this->getAttributeCode()]),
+                array_filter(explode(",", $item[$this->getAttributeCode()]), 'strlen'),
                 $languages
             );
 

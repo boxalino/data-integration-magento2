@@ -64,7 +64,13 @@ class Entity extends ModeIntegrator
         $options["coupon_rule_name"] = [$item["coupon_rule_name"]];
         $options["tax_title"] = [$item["s_o_t_title"]];
         $options["shipment_carrier_title"] = [$item["s_s_t_title"]];
-        $options["payment_title"] = [json_decode($item["s_o_p_additional_information"], true)["method_title"]];
+        if(!empty($item["s_o_p_additional_information"]))
+        {
+            if(isset(json_decode($item["s_o_p_additional_information"], true)["method_title"]))
+            {
+                $options["payment_title"] = [json_decode($item["s_o_p_additional_information"], true)["method_title"]];
+            }
+        }
 
         return $options;
     }
@@ -268,7 +274,7 @@ class Entity extends ModeIntegrator
     {
         if(isset($row["s_o_t_percent"]))
         {
-            return (float) round($row["s_o_t_percent"],2);
+            return (float) round($row["s_o_t_percent"], 2);
         }
 
         return null;
@@ -280,7 +286,7 @@ class Entity extends ModeIntegrator
      */
     public function getTaxAmnt(array $row): ?float
     {
-        return (float) round($row["tax_amount"],2);
+        return (float) round($row["tax_amount"], 2);
     }
 
     /**
@@ -375,7 +381,7 @@ class Entity extends ModeIntegrator
      */
     public function getIsGift(array $row): ?bool
     {
-        return (bool) $row["gift_message_id"];
+        return isset($row["gift_message_id"]) ? (bool)$row["gift_message_id"] : null;
     }
 
     /**
@@ -424,7 +430,7 @@ class Entity extends ModeIntegrator
      */
     public function getConfirmation(array $row): ?string
     {
-        if($row["status"] === "processing" || $row["state"]==="processing")
+        if($row["status"] === "processing" || $row["state"] === "processing")
         {
             return (string)$row["updated_at"];
         }
@@ -493,7 +499,7 @@ class Entity extends ModeIntegrator
      */
     public function getStatus(array $row): ?float
     {
-        if($row["state"]==="complete" || $row["state"]==="closed")
+        if($row["state"] === "complete" || $row["state"] === "closed")
         {
             return 1;
         }
