@@ -24,7 +24,7 @@ class AttributeInt extends AttributeGlobalAbstract
 
     public function getExcludeConditionals(): array
     {
-        return ['e_a.source_model != "Magento\\Eav\\Model\\Entity\\Attribute\\Source\\Table"'];
+        return ['e_a.source_model IS NULL'];
     }
 
 }

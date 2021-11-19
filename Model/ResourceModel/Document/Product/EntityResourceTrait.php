@@ -48,10 +48,9 @@ trait EntityResourceTrait
             )
             ->joinLeft(
                 ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
-                'e.entity_id = c_p_w.product_id',
+                'e.entity_id = c_p_w.product_id AND c_p_w.website_id = ' . $websiteId,
                 []
-            )
-            ->where("c_p_w.website_id= ? " , $websiteId);
+            );
 
         return $select;
     }

@@ -11,23 +11,70 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <!-- BOXALINO-DI logger configuration -->
+    <virtualType name="Boxalino\DataIntegration\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileName" xsi:type="string">/var/log/boxalino-di.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Boxalino\DataIntegration\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">Boxalino DI Logger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <!-- GENERAL CONFIGURATIONS -->
     <preference for="Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface" type="Boxalino\DataIntegration\Helper\Di\Configuration"/>
     <preference for="Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface" type="Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolver"/>
+    <type name="Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolver">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
 
     <!-- doc_language INTEGRATION -->
     <!-- doc_languages generator : creates the doc_language and exports Website configured languages -->
     <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocLanguagesHandlerInterface" type="Boxalino\DataIntegration\Service\Document\Language\DocHandler"/>
+    <type name="Boxalino\DataIntegration\Service\Document\Language\DocHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
 
     <!-- doc_attribute_value INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
     <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttributeValuesHandlerInterface" type="Boxalino\DataIntegration\Service\Document\AttributeValue\DocHandler"/>
+    <type name="Boxalino\DataIntegration\Service\Document\AttributeValue\DocHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
 
     <!-- doc_attribute INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
     <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttributeHandlerInterface" type="Boxalino\DataIntegration\Service\Document\Attribute\DocHandler"/>
+    <type name="Boxalino\DataIntegration\Service\Document\Attribute\DocHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
 
     <!-- doc_product INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
     <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface" type="Boxalino\DataIntegration\Service\Document\Product\DocHandler"/>
+    <type name="Boxalino\DataIntegration\Service\Document\Product\DocHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
 
     <!-- doc_order INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
     <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface" type="Boxalino\DataIntegration\Service\Document\Order\DocHandler"/>
+    <type name="Boxalino\DataIntegration\Service\Document\Order\DocHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+
 </config>

@@ -137,6 +137,34 @@ trait EavAttributeResourceTrait
     }
 
     /**
+     * @param string $field
+     * @param string $attributeCode
+     * @param int $entityTypeId
+     * @return string|null
+     */
+    public function getAttributeFieldByAttrCode(
+        string $field,
+        string $attributeCode,
+        int $entityTypeId = \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID) : ?string
+    {
+        $select = $this->adapter->select()
+            ->from(
+                ['e_a' => $this->adapter->getTableName('eav_attribute')],
+                [$field]
+            )
+            ->where('e_a.entity_type_id = ?', $entityTypeId)
+            ->where('e_a.attribute_code= ?', $attributeCode);
+
+        $value = $this->adapter->fetchOne($select);
+        if(is_bool($value))
+        {
+            return NULL;
+        }
+
+        return $value;
+    }
+
+    /**
      * @param array $fields
      * @param array $frontendInputTypes
      * @return Select

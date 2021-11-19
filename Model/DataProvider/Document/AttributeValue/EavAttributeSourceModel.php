@@ -8,7 +8,6 @@ use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue\EavAttributeSourceModel as DataProviderResourceModel;
 use \Magento\Framework\ObjectManagerInterface;
-use \Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
 
 /**
  * Data provider for any product eav-attribute-option relevant information
@@ -23,16 +22,12 @@ class EavAttributeSourceModel implements
     use DocAttributeValueLineTrait;
     use DiIntegrationConfigurationTrait;
     use AttributeHelperTrait;
+    use EavAttributeSourceModelTrait;
 
     /**
      * @var DataProviderResourceModel
      */
     private $resourceModel;
-
-    /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
 
     /**
      * @param DataProviderResourceModel $resource
@@ -88,66 +83,22 @@ class EavAttributeSourceModel implements
         foreach($this->resourceModel->getFetchPairsAttributeByFieldsFrontendInputTypes(
             ['attribute_code', 'source_model'],$this->getFrontendInputTypes()) as $attributeCode => $sourceModelClass
         ){
-            if(in_array($sourceModelClass, $this->getExcludedSourceModels()) || is_null($sourceModelClass))
+            if(is_null($sourceModelClass))
             {
                 continue;
             }
 
-            $sourceModel = $this->createSourceModel($sourceModelClass);
-            if($sourceModel instanceof SourceInterface)
+            $content = $this->getSourceModelClassOptions($sourceModelClass, true, $this->getSystemConfiguration()->getLanguages());
+            if(is_null($content))
             {
-                $this->attributeNameValuesList->offsetSet(
-                    $attributeCode,
-                    $this->addSourceModelValueToAttributeContent(
-                        $sourceModel->getAllOptions()
-                    )
-                );
+                continue;
             }
+
+            $this->attributeNameValuesList->offsetSet(
+                $attributeCode,
+                $content
+            );
         }
-    }
-
-    /**
-     * Default / already exported otherwise source models which are ignored from processing
-     *
-     * @return string[]
-     */
-    protected function getExcludedSourceModels() : array
-    {
-        return ["Magento\Eav\Model\Entity\Attribute\Source\Table"];
-    }
-
-    /**
-     * @param string $class
-     * @return mixed
-     */
-    protected function createSourceModel(string $class)
-    {
-        return $this->objectManager->create($class);
-    }
-
-    /**
-     * The labels are translated in front-end via __()
-     * @param array $data
-     * @return \ArrayObject
-     */
-    protected function addSourceModelValueToAttributeContent(array $data) : \ArrayObject
-    {
-        $attributeContent = new \ArrayObject();
-        foreach($data as $optionData)
-        {
-            if($optionData['value'])
-            {
-                $content = new \ArrayIterator();
-                foreach($this->getSystemConfiguration()->getLanguages() as $languageCode)
-                {
-                    $content->offsetSet($languageCode, (string)$optionData['label']);
-                }
-
-                $attributeContent->offsetSet($optionData['value'], $content);
-            }
-        }
-
-        return $attributeContent;
     }
 
     /**

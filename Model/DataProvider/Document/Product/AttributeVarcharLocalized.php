@@ -31,4 +31,5 @@ class AttributeVarcharLocalized extends AttributeLocalizedAbstract
         return ['e_a.backend_model != \'Magento\\\Eav\\\Model\\\Entity\\\Attribute\\\Backend\\\ArrayBackend\' OR e_a.backend_model IS NULL'];
     }
 
+
 }

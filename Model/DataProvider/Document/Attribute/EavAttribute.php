@@ -6,6 +6,7 @@ use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Attribute\EavAttribute as DataProviderResourceModel;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Magento\Eav\Api\Data\AttributeGroupInterface;
+use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 
 /**
  * EavAttribute Magento2 logic for identifying attribute settings
@@ -91,9 +92,13 @@ class EavAttribute implements
     public function isLocalized(array $row): bool
     {
         return $this->isMultivalue($row)
-            || !$row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::KEY_IS_GLOBAL]
-            || ($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT]=== "select"
+            || in_array(
+                $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::KEY_IS_GLOBAL],
+                [ScopedAttributeInterface::SCOPE_STORE]
+            )
+            || ($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT] === "select"
                 && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::BACKEND_TYPE] === "int"
+                && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::SOURCE_MODEL] === "Magento\\Eav\\Model\\Entity\\Attribute\\Source\\Table"
             );
     }
 
@@ -105,8 +110,10 @@ class EavAttribute implements
             return "datetime";
         }
 
-        if($backendType === "decimal")
-        {
+        if($backendType === "decimal" ||
+            ($backendType === "int" && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT]==="boolean") ||
+            ($backendType === "int" && empty($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::SOURCE_MODEL]))
+        ){
             return "numeric";
         }
 

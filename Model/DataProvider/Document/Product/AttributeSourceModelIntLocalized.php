@@ -2,11 +2,11 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 /**
- * Class AttributeIntLocalized
+ * Class AttributeSourceModelIntLocalized
  */
-class AttributeIntLocalized extends AttributeLocalizedAbstract
+class AttributeSourceModelIntLocalized extends AttributeLocalizedAbstract
 {
-
+    
     public function getBackendTypeList() : array
     {
         return ["int"];
@@ -14,7 +14,7 @@ class AttributeIntLocalized extends AttributeLocalizedAbstract
 
     public function getFrontendInputList() : array
     {
-        return ["select", "boolean", "text", NULL];
+        return ["select"];
     }
 
     public function getEntityAttributeTableType() : string
@@ -24,7 +24,8 @@ class AttributeIntLocalized extends AttributeLocalizedAbstract
 
     public function getExcludeConditionals(): array
     {
-        return ['e_a.source_model IS NULL'];
+        return ['e_a.source_model != \'Magento\\\Eav\\\Model\\\Entity\\\Attribute\\\Source\\\Table\''];
     }
 
+    
 }

@@ -22,7 +22,7 @@ class EavAttribute extends DiSchemaDataProviderResource
             ->joinLeft(
                 ['e_a' => $this->adapter->getTableName('eav_attribute')],
                 'c_e_a.attribute_id = e_a.attribute_id',
-                ['attribute_code', 'backend_type', 'frontend_input', 'frontend_label']
+                ['attribute_code', 'backend_type', 'frontend_input', 'frontend_label', 'source_model', 'backend_model', 'backend_table']
             )
             ->joinLeft(
                 ['e_e_a' => $this->adapter->getTableName('eav_entity_attribute')],
