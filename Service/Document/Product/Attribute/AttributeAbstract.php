@@ -120,7 +120,7 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
             DocSchemaInterface::FIELD_IMAGES,
             DocSchemaInterface::FIELD_BRANDS,
             DocSchemaInterface::FIELD_SUPPLIERS,
-            "name"
+            "name", "image"
         ];
     }
 

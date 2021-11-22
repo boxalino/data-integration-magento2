@@ -49,7 +49,9 @@ class Entity extends ModeIntegrator
              'c_p_e.entity_id',
              "c_p_e.sku",
              "c_p_e.created_at",
-             "c_p_e.updated_at"
+             "c_p_e.updated_at",
+             "c_p_e.type_id",
+             "c_p_e.has_options"
          ];
     }
 

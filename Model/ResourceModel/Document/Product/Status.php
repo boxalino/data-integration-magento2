@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\EavProductResourceTrait;
+use Magento\Framework\DB\Select;
+
 /**
  * Class Status
  *
@@ -8,26 +12,49 @@ namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
  */
 class Status extends ModeIntegrator
 {
+    use EavAttributeResourceTrait;
+    use EavProductResourceTrait;
+
+    /**
+     * @param array $fields
+     * @param string $websiteId
+     * @param int $storeId
+     * @return array
+     */
+    public function getFetchPairsByFieldsWebsiteStore(array $fields, string $websiteId, int $storeId) : array
+    {
+        $mainEntitySelect = $this->getStatusParentDependabilityByStore($websiteId, $storeId);
+        $select = $this->adapter->select()
+            ->from(
+                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+                $fields
+            );
+
+        return $this->adapter->fetchPairs($select);
+    }
+
     /**
      * Query for setting the product status value based on the parent properties and product visibility
      * Fixes the issue when parent product is enabled but child product is disabled.
      *
+     * @param string $websiteId
      * @param int $storeId
      * @return \Magento\Framework\DB\Select
      */
-    public function getStatusParentDependabilityByStore(int $storeId) : \Magento\Framework\DB\Select
+    public function getStatusParentDependabilityByStore(string $websiteId, int $storeId) : Select
     {
-        $statusId = $this->getAttributeIdByAttributeCodeAndEntityType('status', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
-        $visibilityId = $this->getAttributeIdByAttributeCodeAndEntityType('visibility', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
+        $statusId = (int)$this->getAttributeIdByAttributeCodeAndEntityTypeId('status', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
+        $visibilityId = (int)$this->getAttributeIdByAttributeCodeAndEntityTypeId('visibility', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
 
-        $parentsCountSql = $this->getAttributeParentCountSqlByAttrIdValueStoreId($statusId,  \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED, $storeId);
-        $childCountSql = $this->getParentAttributeChildCountSqlByAttrIdValueStoreId($statusId,  \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED, $storeId);
+        $parentsCountSql = $this->getAttributeParentCountSqlByAttrIdValueStoreId($websiteId, $statusId,  \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED, $storeId);
+        $childCountSql = $this->getParentAttributeChildCountSqlByAttrIdValueStoreId($websiteId, $statusId,  \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED, $storeId);
 
+        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $statusSql = $this->getEavJoinAttributeSQLByStoreAttrIdTable($statusId, $storeId, "catalog_product_entity_int");
         $visibilitySql = $this->getEavJoinAttributeSQLByStoreAttrIdTable($visibilityId, $storeId, "catalog_product_entity_int");
         $select = $this->adapter->select()
             ->from(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
+                ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 ['c_p_e.entity_id', 'c_p_e.type_id']
             )
             ->joinLeft(
@@ -46,10 +73,13 @@ class Status extends ModeIntegrator
                 ['entity_visibility'=>'c_p_e_v.value']
             );
 
-//        if(!empty($this->exportIds) && $this->isDelta) $select->where('c_p_e.entity_id IN(?)', $this->exportIds);
         $configurableType = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
         $groupedType = \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
-        $visibilityOptions = implode(',', [\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH, \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_CATALOG, \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH]);
+        $visibilityOptions = implode(',', [
+            \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+            \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_CATALOG,
+            \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH]
+        );
         $finalSelect = $this->adapter->select()
             ->from(
                 ["entity_select" => new \Zend_Db_Expr("( ". $select->__toString() . " )")],
@@ -82,5 +112,82 @@ class Status extends ModeIntegrator
 
         return $finalSelect;
     }
+
+    /**
+     * Getting count of parent products that have a certain value for an attribute
+     * Used for validation of child values
+     * 
+     * @param string $websiteId
+     * @param int $attributeId
+     * @param int $value
+     * @param int $storeId
+     * @return Select
+     */
+    protected function getAttributeParentCountSqlByAttrIdValueStoreId(string $websiteId, int $attributeId, int $value, int $storeId) : \Magento\Framework\DB\Select
+    {
+        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $storeAttributeValue = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_int");
+        $select = $this->adapter->select()
+            ->from(
+                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
+                ['c_p_r.parent_id']
+            )
+            ->joinLeft(
+                ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+                'c_p_e.entity_id = c_p_r.child_id',
+                ['c_p_e.entity_id']
+            )
+            ->join(['t_d' => new \Zend_Db_Expr("( ". $storeAttributeValue->__toString() . ' )')],
+                't_d.entity_id = c_p_r.parent_id',
+                ['t_d.value']
+            );
+
+        return $this->adapter->select()
+            ->from(
+                ["parent_select"=> new \Zend_Db_Expr("( ". $select->__toString() . ' )')],
+                ["count" => new \Zend_Db_Expr("COUNT(parent_select.parent_id)"), 'entity_id']
+            )
+            ->where("parent_select.value = ?", $value)
+            ->group("parent_select.entity_id");
+    }
+
+    /**
+     * Getting count of child products that have a certain value for an attribute
+     * Used for validation of parent values
+     *
+     * @param string $websiteId
+     * @param int $attributeId
+     * @param int $value
+     * @param int $storeId
+     * @return Select
+     */
+    protected function getParentAttributeChildCountSqlByAttrIdValueStoreId(string $websiteId, int $attributeId, int $value, int $storeId) : Select
+    {
+        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $storeAttributeValue = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_int");
+        $select = $this->adapter->select()
+            ->from(
+                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
+                ['c_p_r.child_id']
+            )
+            ->joinLeft(
+                ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+                'c_p_e.entity_id = c_p_r.parent_id',
+                ['c_p_e.entity_id']
+            )
+            ->join(['t_d' => new \Zend_Db_Expr("( ". $storeAttributeValue->__toString() . ' )')],
+                't_d.entity_id = c_p_r.child_id',
+                ['t_d.value']
+            )
+            ->where('t_d.value = ?', $value);
+
+        return $this->adapter->select()
+            ->from(
+                ["child_select"=> new \Zend_Db_Expr("( ". $select->__toString() . ' )')],
+                ["child_count" => new \Zend_Db_Expr("COUNT(child_select.child_id)"), 'entity_id']
+            )
+            ->group("child_select.entity_id");
+    }
+
 
 }

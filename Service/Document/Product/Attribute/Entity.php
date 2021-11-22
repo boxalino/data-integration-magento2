@@ -22,7 +22,9 @@ class Entity extends IntegrationPropertyHandlerAbstract
             "entity_id" => DocSchemaInterface::FIELD_INTERNAL_ID,
             DocSchemaInterface::FIELD_SKU => DocSchemaInterface::FIELD_SKU,
             "created_at" => DocSchemaInterface::FIELD_CREATION,
-            "updated_at"=> DocSchemaInterface::FIELD_UPDATE
+            "updated_at"=> DocSchemaInterface::FIELD_UPDATE,
+            "type_id" => DocSchemaInterface::FIELD_STRING,
+            "has_options" => DocSchemaInterface::FIELD_NUMERIC
         ]
     ){
         parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
@@ -49,6 +51,28 @@ class Entity extends IntegrationPropertyHandlerAbstract
                     {
                         $content[$id][$docAttributeName] = (string)$value;
                         continue;
+                    }
+
+                    if(in_array($docAttributeName, $this->getProductMultivalueSchemaTypes()))
+                    {
+                        if(!isset($content[$id][$docAttributeName]))
+                        {
+                            $content[$id][$docAttributeName]  = [];
+                        }
+
+                        if(in_array($docAttributeName, $this->getTypedSchemaProperties()))
+                        {
+                            $typedProperty = $this->getAttributeSchema($docAttributeName);
+                            if($typedProperty)
+                            {
+                                $typedProperty->setName($propertyName)
+                                    ->addValue($value);
+
+                                $content[$id][$docAttributeName][] = $typedProperty;
+                            }
+
+                            continue;
+                        }
                     }
                 }
 
