@@ -1,27 +1,27 @@
 <?php declare(strict_types=1);
-namespace Boxalino\DataIntegration\Service\Document\Order;
+namespace Boxalino\DataIntegration\Service\Document\User;
 
 use Boxalino\DataIntegration\Service\Document\DiIntegrateTypedSchemaTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
-use Boxalino\DataIntegrationDoc\Doc\Order;
+use Boxalino\DataIntegrationDoc\Doc\User;
 
 /**
  * Class Entity
- * Access the order main information for the order entity
+ * Access the customer main information for the doc_user content
  *
- * @package Boxalino\DataIntegration\Service\Document\Order
+ * @package Boxalino\DataIntegration\Service\Document\User
  */
 class Entity extends IntegrationPropertyHandlerAbstract
 {
-
-    use DiIntegrateTypedSchemaTrait;
     
+    use DiIntegrateTypedSchemaTrait;
+
     /**
      * @return array
      */
     public function getValues(): array
     {
-       return $this->getValuesForEntityTypedSchema();
+        return $this->getValuesForEntityTypedSchema();
     }
 
     /**
@@ -29,7 +29,7 @@ class Entity extends IntegrationPropertyHandlerAbstract
      */
     public function getPropertyHandlerSchema() : DocPropertiesInterface
     {
-        return new Order();
+        return new User();
     }
 
     /**

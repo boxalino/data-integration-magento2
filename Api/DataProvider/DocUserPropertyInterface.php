@@ -6,16 +6,14 @@ use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfiguration
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 
 /**
- * Interface DocOrderPropertyInterface
- * doc_order properties data handler
+ * Interface DocUserPropertyInterface
+ * Handling the main user information for the doc_user line
  */
-interface DocOrderPropertyInterface extends DiSchemaDataProviderInterface,
-    DocSchemaTypedInterface,
+interface DocUserPropertyInterface extends DiSchemaDataProviderInterface, 
     DocDeltaIntegrationInterface,
-    DiHandlerIntegrationConfigurationInterface
+    DiHandlerIntegrationConfigurationInterface,
+    DocSchemaContactInterface,
+    DocSchemaTypedInterface
 {
 
-    
-    
-    
 }

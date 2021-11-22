@@ -7,7 +7,7 @@ use Magento\Framework\DB\Select;
  * Class Contact
  * Access the data about order addresses (billing and shipping)
  *
- * @package Boxalino\DataIntegration\Model\ResourceModel\Document\Product
+ * @package Boxalino\DataIntegration\Model\ResourceModel\Document\Order
  */
 class Contact extends ModeIntegrator
 {

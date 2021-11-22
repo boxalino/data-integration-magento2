@@ -7,7 +7,7 @@ use Magento\Framework\DB\Select;
  * Class Item
  * Access the data about order items
  *
- * @package Boxalino\DataIntegration\Model\ResourceModel\Document\Product
+ * @package Boxalino\DataIntegration\Model\ResourceModel\Document\Order
  */
 class Item extends ModeIntegrator
 {

@@ -77,4 +77,12 @@
         </arguments>
     </type>
 
+    <!-- doc_user INTEGRATION (propertyHandlers and dataProviders must be declared definition) -->
+    <preference for="Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocUserHandlerInterface" type="Boxalino\DataIntegration\Service\Document\User\DocHandler"/>
+    <type name="Boxalino\DataIntegration\Service\Document\User\DocHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+
 </config>
