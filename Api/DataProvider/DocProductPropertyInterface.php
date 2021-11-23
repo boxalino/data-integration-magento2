@@ -14,6 +14,8 @@ interface DocProductPropertyInterface extends DiSchemaDataProviderInterface,
     DiHandlerIntegrationConfigurationInterface
 {
 
+    public const DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX = "__";
+
     /**
      * @param string $code
      * @return DiSchemaDataProviderInterface
