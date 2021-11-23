@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderInterface;
 
 /**
@@ -55,5 +56,19 @@ trait AttributeHelperTrait
         return $this;
     }
 
+    /**
+     * Creating the dynamic property name
+     * @param bool $contextual
+     * @return string
+     */
+    public function getDocPropertyNameByContext(bool $contextual = true) : string
+    {
+        if($contextual)
+        {
+            return $this->attributeCode;
+        }
+
+        return DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->attributeCode;
+    }
 
 }

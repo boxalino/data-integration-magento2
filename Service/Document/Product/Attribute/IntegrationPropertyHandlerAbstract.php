@@ -4,6 +4,7 @@ namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPricePropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocAttributeListInterface;
+use Boxalino\DataIntegration\Api\DataProvider\DocProductVisibilityPropertyInterface;
 use Boxalino\DataIntegration\Service\Document\BaseIntegrationPropertyHandlerAbstract;
 use Boxalino\DataIntegrationDoc\Doc\DocProductAttributeTrait;
 
@@ -19,12 +20,12 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
     use DocProductAttributeTrait;
 
     /**
-     * @var DocProductPropertyInterface | DocAttributeListInterface
+     * @var DocProductPropertyInterface | DocAttributeListInterface | DocProductPricePropertyInterface | DocProductVisibilityPropertyInterface
      */
     protected $dataProvider;
 
     /**
-     * @return DocProductPropertyInterface | DocAttributeListInterface | DocProductPricePropertyInterface
+     * @return DocProductPropertyInterface | DocAttributeListInterface | DocProductPricePropertyInterface | DocProductVisibilityPropertyInterface
      */
     public function getDataProvider() : DocProductPropertyInterface
     {

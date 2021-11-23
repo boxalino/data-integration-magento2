@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductVisibilityPropertyInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Visibility as DataProviderResourceModel;
 
 /**
@@ -11,12 +12,18 @@ use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Visibility as 
  * This is done in order to have the custom grouped/configurable child properties filterable via product_group representation
  */
 class Visibility extends ModeIntegrator
+    implements DocProductVisibilityPropertyInterface
 {
-    
+
     /**
      * @var DataProviderResourceModel
      */
     private $resourceModel;
+
+    /**
+     * @var \ArrayObject
+     */
+    protected $attributeNameValuesList;
 
     /**
      * @param DataProviderResourceModel $resource
@@ -25,6 +32,7 @@ class Visibility extends ModeIntegrator
         DataProviderResourceModel $resource
     ) {
         $this->resourceModel = $resource;
+        $this->attributeNameValuesList = new \ArrayObject();
     }
 
     /**
@@ -32,11 +40,50 @@ class Visibility extends ModeIntegrator
      */
     public function _getData(): array
     {
+        return $this->resourceModel->getFetchAllEntityByFieldsWebsite(
+            [$this->getDiIdField() => "c_p_e_s.entity_id"],
+            $this->getSystemConfiguration()->getWebsiteId()
+        );
+    }
+
+    /**
+     * @param array $item
+     * @return array
+     */
+    public function getContextVisibility(array $item) : array
+    {
+        return $this->getDataByCode($this->getDocPropertyNameByContext(), $item[$this->getDiIdField()]);
+    }
+
+    /**
+     * @param array $item
+     * @return array
+     */
+    public function getSelfVisibility(array $item) : array
+    {
+        return $this->getDataByCode($this->getDocPropertyNameByContext(false), $item[$this->getDiIdField()]);
+    }
+
+    /**
+     * Pre-loading visibility data for each contexts (self and context)
+     */
+    public function resolve(): void
+    {
+        $this->_loadVisibilityData($this->getDocPropertyNameByContext(), $this->getContextVisibilityFields());
+        $this->_loadVisibilityData($this->getDocPropertyNameByContext(false), $this->getSelfVisibilityFields());
+    }
+
+    /**
+     * @param string $attributeName
+     * @param array $fields
+     */
+    protected function _loadVisibilityData(string $attributeName, array $fields) : void
+    {
         $attributeContent = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
             $data = $this->resourceModel->getFetchPairsByFieldsWebsiteStore(
-                $this->getFields(),
+                $fields,
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId
             );
@@ -44,17 +91,17 @@ class Visibility extends ModeIntegrator
             $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
         }
 
-        return $attributeContent->getArrayCopy();
+        $this->attributeNameValuesList->offsetSet($attributeName, $attributeContent);
     }
 
     /**
      * @return array
      */
-    protected function getFields() : array
+    protected function getContextVisibilityFields() : array
     {
         $configurableType = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
         $groupedType = \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
-        
+
         return [
             $this->getDiIdField() => "c_p_e_s.entity_id",
             $this->getAttributeCode() => new \Zend_Db_Expr("
@@ -68,9 +115,24 @@ class Visibility extends ModeIntegrator
         ];
     }
 
+    /**
+     * @return array
+     */
+    protected function getSelfVisibilityFields() : array
+    {
+        return [
+            $this->getDiIdField() => "c_p_e_s.entity_id",
+            $this->getAttributeCode() => "c_p_e_s.entity_value"
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function getDataDelta() : array
     {
         return [];
     }
+
 
 }

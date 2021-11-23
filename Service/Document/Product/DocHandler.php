@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Product;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
@@ -210,6 +211,7 @@ class DocHandler extends DocProduct implements
             {
                 if(!isset($productGroups[$id]))
                 {
+                    $this->_fixPropertyForDuplicateDoc($content, DocSchemaInterface::FIELD_VISIBILITY);
                     /** @var Group $selfGroupSchema */
                     $selfGroupSchema = $this->getSchemaGeneratorByType(
                         DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
@@ -253,6 +255,20 @@ class DocHandler extends DocProduct implements
             }
 
             $productGroups[$parentId] = $schema->addSkus($skus);
+        }
+    }
+
+    /**
+     * @param array $content
+     * @param string $propertyName
+     * @return void
+     */
+    protected function _fixPropertyForDuplicateDoc(array &$content, string $propertyName) : void
+    {
+        $replacePropertyName = DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $propertyName;
+        if(isset($content[$replacePropertyName]))
+        {
+            $content[$propertyName] = $content[$replacePropertyName];
         }
     }
 

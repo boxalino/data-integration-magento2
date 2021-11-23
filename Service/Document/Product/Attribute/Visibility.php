@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
+use Boxalino\DataIntegration\Api\DataProvider\DocProductVisibilityPropertyInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\Schema\Visibility as VisibilitySchema;
 
@@ -17,19 +19,28 @@ class Visibility extends IntegrationPropertyHandlerAbstract
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
-        foreach ($this->getDataProvider()->getData() as $item)
+        /** @var DocProductVisibilityPropertyInterface $datProvider */
+        $datProvider = $this->getDataProvider();
+        foreach ($datProvider->getData() as $item)
         {
-            if($item instanceof \ArrayIterator)
-            {
-                $item = $item->getArrayCopy();
-            }
+            $content[$this->_getDocKey($item)][$this->getAttributeCode()] =
+                $this->getSchemaByItem($languages, $datProvider->getContextVisibility($item));
 
-            /** @var VisibilitySchema $schema */
-            $schema = $this->getVisibilitySchema($languages, $item);
-            $content[$this->_getDocKey($item)][$this->getAttributeCode()] = $schema;
+            $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()] =
+                $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item));
         }
 
         return $content;
+    }
+
+    /**
+     * @param array $languages
+     * @param array $data
+     * @return VisibilitySchema
+     */
+    protected function getSchemaByItem(array $languages, array $data) : VisibilitySchema
+    {
+        return $this->getVisibilitySchema($languages, $data);
     }
 
     /**
