@@ -146,7 +146,20 @@ class DocHandler extends DocProduct implements
                 if(empty($parentIds))
                 {
                     $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
+                }
+
+                if(empty($parentIds) && empty($content[DocSchemaInterface::DI_AS_VARIANT]))
+                {
                     continue;
+                }
+
+                if($content[DocSchemaInterface::DI_AS_VARIANT] === DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP)
+                {
+                    if(empty($parentIds))
+                    {
+                        continue;
+                    }
+                    $this->_treatVariantSchema($id, $content[DocSchemaInterface::DI_AS_VARIANT], $content, $productGroups);
                 }
 
                 $this->_treatSkusWithParentIds($id, $schema, $content, $productGroups, $productSkus);
@@ -162,29 +175,6 @@ class DocHandler extends DocProduct implements
         $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
 
         return $productGroups;
-    }
-
-
-    /**
-     * Every product without a parent ID must exist both at the level of product_groups and skus
-     * - creates the product as an SKU
-     * - adds it as an SKU to the GROUP schema
-     *
-     * @param string $id
-     * @param Group $schema
-     * @param array $content
-     * @param array $productGroups
-     */
-    protected function _treatProductGroupDocLine(string $id, Group $schema, array $content, array &$productGroups) : void
-    {
-        $sku = $this->docTypePropDiffDuplicate(
-            DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
-            DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU,
-            $content
-        );
-
-        $schema->addSkus([$sku]);
-        $productGroups[$id] = $schema;
     }
 
     /**
@@ -211,16 +201,11 @@ class DocHandler extends DocProduct implements
             {
                 if(!isset($productGroups[$id]))
                 {
-                    $this->_fixPropertyForDuplicateDoc($content, DocSchemaInterface::FIELD_VISIBILITY);
-                    /** @var Group $selfGroupSchema */
-                    $selfGroupSchema = $this->getSchemaGeneratorByType(
-                        DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
-                        $content
-                    );
-
-                    $this->_treatProductGroupDocLine($id, $selfGroupSchema, $content, $productGroups);
+                    $this->_treatVariantSchema($id, DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP, $content, $productGroups);
                 }
 
+                /** @var Sku DocGeneratorInterface $schema */
+                $schema = $this->getSchemaGeneratorByType($content[DocSchemaInterface::DI_DOC_TYPE_FIELD], $content);
                 $schema->setInternalId($parentId . "_" . $id)
                     ->setExternalId($id)
                     ->setIndividuallyVisible(false);
@@ -228,7 +213,10 @@ class DocHandler extends DocProduct implements
 
             if(isset($productGroups[$parentId]))
             {
-                $productGroups[$parentId] = $productGroups[$parentId]->addSkus([$schema]);
+                /** @var Group $parent */
+                $schema->setVisibility($productGroups[$parentId]->getVisibility());
+                $productGroups[$parentId]->addSkus([$schema]);
+
                 continue;
             }
 
@@ -254,8 +242,57 @@ class DocHandler extends DocProduct implements
                 $schema = $productGroups[$parentId];
             }
 
+            foreach($skus as &$sku)
+            {
+                try{
+                    /** @var Sku $sku */
+                    $sku->setVisibility($schema->getVisibility());
+                } catch (\Throwable $exception)
+                {
+                }
+            }
+
             $productGroups[$parentId] = $schema->addSkus($skus);
         }
+    }
+
+    /**
+     * Required for the use-case of a product being both a child and a parent
+     * (ex: configurable products build up of other configurable products)
+     *
+     * @param string $id
+     * @param string $docType
+     * @param array $content
+     * @param array $productGroups
+     */
+    protected function _treatVariantSchema(string $id, string $docType, array $content, array &$productGroups) : void
+    {
+        $content = $this->_fixPropertyForDuplicateDoc($content, DocSchemaInterface::FIELD_VISIBILITY);
+        $schema = $this->getSchemaGeneratorByType($docType, $content);
+
+        $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
+    }
+
+    /**
+     * Every product without a parent ID must exist both at the level of product_groups and skus
+     * - creates the product as an SKU
+     * - adds it as an SKU to the GROUP schema
+     *
+     * @param string $id
+     * @param Group $schema
+     * @param array $content
+     * @param array $productGroups
+     */
+    protected function _treatProductGroupDocLine(string $id, Group $schema, array $content, array &$productGroups) : void
+    {
+        $sku = $this->docTypePropDiffDuplicate(
+            DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
+            DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU,
+            $content
+        );
+
+        $schema->addSkus([$sku]);
+        $productGroups[$id] = $schema;
     }
 
     /**
@@ -263,13 +300,15 @@ class DocHandler extends DocProduct implements
      * @param string $propertyName
      * @return void
      */
-    protected function _fixPropertyForDuplicateDoc(array &$content, string $propertyName) : void
+    protected function _fixPropertyForDuplicateDoc(array $content, string $propertyName) : array
     {
         $replacePropertyName = DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $propertyName;
         if(isset($content[$replacePropertyName]))
         {
             $content[$propertyName] = $content[$replacePropertyName];
         }
+
+        return $content;
     }
 
 

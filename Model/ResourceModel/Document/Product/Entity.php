@@ -32,6 +32,11 @@ class Entity extends ModeIntegrator
                 []
             )
             ->joinLeft(
+                ['c_p_r_p' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
+                "c_p_r_p.parent_id = c_p_e.entity_id",
+                []
+            )
+            ->joinLeft(
                 ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 "c_p_e_s.entity_id=c_p_e.entity_id",
                 []
