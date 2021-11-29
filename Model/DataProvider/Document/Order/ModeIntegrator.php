@@ -2,19 +2,28 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Order;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocOrderPropertyInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 
 /**
+ * Abstract class ModeIntegrator
+ * Holds the logic for various integration modes (instant, delta, full)
+ * 
  * @package Boxalino\DataIntegration\Model\DataProvider\Document\Order
  */
 abstract class ModeIntegrator implements DocOrderPropertyInterface
 {
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
-    use DocInstantIntegrationTrait;
+    use DocMviewDeltaIntegrationTrait;
+
+    /**
+     * @var DiSchemaDataProviderResourceInterface
+     */
+    protected $resourceModel;
 
     /**
      * Access property data (internal flow)
@@ -24,12 +33,8 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
     abstract function _getData() : array;
 
     /**
-     * To be extended with the delta filter logic
      * @return array
      */
-    abstract function getDataDelta() : array;
-
-
     public function getData() : array
     {
         /** for delta requests */
@@ -51,6 +56,31 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
         }
 
         return $this->_getData();
+    }
+
+    /**
+     * To be extended with the delta filter logic
+     * @return array
+     */
+    public function getDataDelta() : array
+    {
+        $this->getResourceModel()->useDelta(true);
+        if(count($this->getIds()) > 0)
+        {
+            $this->getResourceModel()->useDateIdsConditionals(true);
+            $this->getResourceModel()->addIdsConditional($this->getIds());
+        }
+        $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
+
+        return $this->_getData();
+    }
+
+    /**
+     * @return DiSchemaDataProviderResourceInterface
+     */
+    public function getResourceModel() : DiSchemaDataProviderResourceInterface
+    {
+        return $this->resourceModel;
     }
 
     /**

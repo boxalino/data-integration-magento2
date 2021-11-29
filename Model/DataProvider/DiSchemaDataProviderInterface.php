@@ -4,7 +4,8 @@ namespace Boxalino\DataIntegration\Model\DataProvider;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 
 /**
- *
+ * Interface DiSchemaDataProviderInterface
+ * To be used by any property Data Provider source
  */
 interface DiSchemaDataProviderInterface
     extends DiIntegrationConfigurationInterface
@@ -21,4 +22,5 @@ interface DiSchemaDataProviderInterface
      */
     public function resolve(): void;
 
+    
 }

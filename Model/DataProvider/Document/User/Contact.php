@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\User\Contact as DataProviderResourceModel;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
@@ -12,11 +13,6 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Contact extends ModeIntegrator
     implements DocUserPropertyInterface
 {
-
-    /**
-     * @var DataProviderResourceModel
-     */
-    protected $resourceModel;
 
     /**
      * @param DataProviderResourceModel $resource
@@ -33,7 +29,7 @@ class Contact extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByFieldsWebsiteId($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+        return $this->getResourceModel()->getFetchAllByFieldsWebsiteId($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
     }
 
     /**
@@ -430,12 +426,6 @@ class Contact extends ModeIntegrator
     public function getFax(array $item): ?string
     {
         return $item["fax"];
-    }
-
-
-    public function getDataDelta() : array
-    {
-        return [];
     }
 
 

@@ -20,15 +20,7 @@ trait EntityResourceTrait
      */
     public function getEntityByStoreIds(array $storeIds): array
     {
-        $select = $this->adapter->select()
-            ->from(
-                ['s_o' => $this->adapter->getTableName('sales_order')],
-                ["*"]
-            )
-            ->where("s_o.store_id IN (?) " , $storeIds)
-            ->orWhere("s_o.store_id = 0");
-
-        return $this->adapter->fetchAll($select);
+        return $this->adapter->fetchAll($this->getEntityByStoreIdsSelect($storeIds));
     }
 
     /**
@@ -42,8 +34,22 @@ trait EntityResourceTrait
                 ['s_o' => $this->adapter->getTableName('sales_order')],
                 ["*"]
             )
-            ->where("s_o.store_id IN (?) " , $storeIds)
-            ->orWhere("s_o.store_id = 0");
+            ->where("s_o.store_id IN (?) OR s_o.store_id = 0" , $storeIds);
+
+        if($this->useDateIdsConditionals)
+        {
+            return $this->addDateIdsConditions($select);
+        }
+        
+        if($this->delta)
+        {
+            $select->where($this->getDeltaDateConditional());
+        }
+
+        if($this->instant)
+        {
+            $select = $this->addInstantCondition($select);
+        }
 
         return $select;
     }

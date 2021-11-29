@@ -16,11 +16,6 @@ class Entity extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
      * @param DataProviderResourceModel $resource
      */
     public function __construct(
@@ -34,7 +29,7 @@ class Entity extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
+        return $this->getResourceModel()->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
     }
 
     /**
@@ -543,11 +538,6 @@ class Entity extends ModeIntegrator
         return (float) $row["shipping_incl_tax"];
     }
 
-
-    public function getDataDelta() : array
-    {
-        return [];
-    }
 
 
 }

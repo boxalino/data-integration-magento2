@@ -47,36 +47,21 @@ trait DiIntegrateTrait
 
         if(count($this->docs))
         {
-            $this->integrateByChunk();
-            return;
-        }
-
-        if($this->getSystemConfiguration()->getChunk())
-        {
+            $document = $this->getDocContent();
+            $this->loadByChunk($document);
             $this->loadBq();
             if($this->getSystemConfiguration()->isTest())
             {
                 $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");
             }
+
             return;
         }
 
         throw new FailSyncException("Boxalino DI: no {$this->getDocType()} content viable for sync since " . $this->getSyncCheck());
     }
 
-    /**
-     * Synchronize content based on the batch size
-     */
-    public function integrateByChunk()
-    {
-        $chunk = (int)$this->getSystemConfiguration()->getChunk();
-        $document = $this->getDocContent();
-        $this->loadByChunk($document);
-
-        $this->getSystemConfiguration()->setChunk($chunk+1);
-        $this->integrate();
-    }
-
+    /** these functions are already included in any DocHandler element */
     abstract public function getDocContent() : string;
     abstract public function loadByChunk(string $document) : void;
     abstract public function getLogger() : LoggerInterface;

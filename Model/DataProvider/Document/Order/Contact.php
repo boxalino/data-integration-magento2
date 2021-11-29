@@ -13,12 +13,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface
 class Contact extends ModeIntegrator
     implements DocOrderContactPropertyInterface
 {
-
-    /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
+    
     /**
      * @param DataProviderResourceModel $resource
      */
@@ -33,7 +28,7 @@ class Contact extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
+        return $this->getResourceModel()->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
     }
 
     /**
@@ -443,12 +438,6 @@ class Contact extends ModeIntegrator
     public function getFax(array $item): ?string
     {
         return $item["fax"];
-    }
-
-
-    public function getDataDelta() : array
-    {
-        return [];
     }
 
 

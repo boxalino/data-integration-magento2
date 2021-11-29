@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Order;
 
+use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
+use Boxalino\DataIntegration\Service\Document\DiIntegrateTrait;
+use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Doc\Order;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Generator\DocGeneratorInterface;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\FailSyncException;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface;
@@ -14,7 +18,6 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrder;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,12 +31,14 @@ class DocHandler extends DocOrder implements
     DocOrderHandlerInterface,
     DiIntegrationConfigurationInterface,
     DiHandlerIntegrationConfigurationInterface,
-    DocDeltaIntegrationInterface
+    DocDeltaIntegrationInterface,
+    DocMviewDeltaIntegrationInterface
 {
 
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
-    use DocInstantIntegrationTrait;
+    use DocMviewDeltaIntegrationTrait;
+    use DiIntegrateTrait;
 
     public function __construct(
         LoggerInterface $logger,
@@ -49,26 +54,6 @@ class DocHandler extends DocOrder implements
         }
     }
 
-    /**
-     * Will be extended with content load in batches
-     */
-    public function integrate(): void
-    {
-        try{
-            $this->createDocLines();
-        } catch (NoRecordsFoundException $exception)
-        {
-            //logical exception to break the loop
-            //reset the docs in case the attributeHandlers were not run in the random order
-            $this->resetDocs();
-        } catch (\Throwable $exception)
-        {
-            throw $exception;
-        }
-
-        parent::integrate();
-    }
-    
     /**
      * @return $this
      */

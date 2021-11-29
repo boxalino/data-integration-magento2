@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceTrait;
 use Magento\Framework\App\ResourceConnection;
 
 /**
  * Generic resource declaration
  */
-class DiSchemaDataProviderResource
+class DiSchemaDataProviderResource implements DiSchemaDataProviderResourceInterface
 {
+    use DiSchemaDataProviderResourceTrait;
+    use BaseResourceTrait;
 
     /**
      * @param ResourceConnection $resource

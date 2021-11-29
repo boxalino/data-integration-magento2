@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document;
 
+use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
@@ -77,13 +78,17 @@ trait DiIntegrationConfigurationTrait
                 $handler->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             }
 
-            try{
+            try{                
                 if($handler instanceof DocDeltaIntegrationInterface)
                 {
                     if($handler->filterByCriteria())
                     {
                         $handler->setSyncCheck($this->getSyncCheck());
                     }
+                }
+                if($handler instanceof DocMviewDeltaIntegrationInterface)
+                {
+                    $handler->setMviewIds($this->getIds());
                 }
             } catch (\Throwable $exception)
             {

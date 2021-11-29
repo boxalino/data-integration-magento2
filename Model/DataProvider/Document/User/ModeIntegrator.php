@@ -2,10 +2,11 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 
 /**
  * @package Boxalino\DataIntegration\Model\DataProvider\Document\User
@@ -14,7 +15,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
 {
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
-    use DocInstantIntegrationTrait;
+    use DocMviewDeltaIntegrationTrait;
 
 
     /**
@@ -23,17 +24,17 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
     protected $attributeValueNameList;
 
     /**
+     * @var DiSchemaDataProviderResourceInterface
+     */
+    protected $resourceModel;
+
+    /**
      * Access property data (internal flow)
+     * Can be used as base for additional logics (delta, instant, etc)
      *
      * @return array
      */
     abstract function _getData() : array;
-
-    /**
-     * To be extended with the delta filter logic
-     * @return array
-     */
-    abstract function getDataDelta() : array;
 
     /**
      * @return int
@@ -65,6 +66,32 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
     }
 
     /**
+     * To be extended with the delta filter logic
+     * 
+     * @return array
+     */
+    public function getDataDelta() : array
+    {
+        $this->getResourceModel()->useDelta(true);
+        if(count($this->getIds()) > 0)
+        {
+            $this->getResourceModel()->useDateIdsConditionals(true);
+            $this->getResourceModel()->addIdsConditional($this->getIds());
+        }
+        $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
+
+        return $this->_getData();
+    }
+
+    /**
+     * @return DiSchemaDataProviderResourceInterface
+     */
+    public function getResourceModel() : DiSchemaDataProviderResourceInterface
+    {
+        return $this->resourceModel;
+    }
+
+    /**
      * @return string
      */
     protected function _getDeltaSyncCheckDate() : string
@@ -73,7 +100,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
     }
 
     /**
-     * pre-load the varchar,int,datetime custom attributes
+     * pre-load the varchar,int,datetime custom user attributes
      */
     public function resolve(): void
     {
@@ -189,5 +216,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
 
         return $return;
     }
+
+
 
 }

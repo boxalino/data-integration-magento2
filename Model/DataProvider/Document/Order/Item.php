@@ -15,11 +15,6 @@ class Item extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
      * @param DataProviderResourceModel $resource
      */
     public function __construct(
@@ -33,7 +28,7 @@ class Item extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
+        return $this->getResourceModel()->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
     }
 
     /**
@@ -218,12 +213,6 @@ class Item extends ModeIntegrator
 
         return "ordered";
     }
-
-
-    public function getDataDelta() : array
-    {
-        return [];
-    }
-
+    
 
 }

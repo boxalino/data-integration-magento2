@@ -20,19 +20,7 @@ trait EntityResourceTrait
      */
     public function getEntityByWebsiteId(string $websiteId): array
     {
-        $select = $this->adapter->select()
-            ->from(
-                ['e' => $this->adapter->getTableName('catalog_product_entity')],
-                ["*"]
-            )
-            ->joinLeft(
-                ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
-                'e.entity_id = c_p_w.product_id',
-                []
-            )
-            ->where("c_p_w.website_id= ? " , $websiteId);
-
-        return $this->adapter->fetchAll($select);
+        return $this->adapter->fetchAll($this->getEntityByWebsiteIdSelect($websiteId));
     }
 
     /**
@@ -50,8 +38,24 @@ trait EntityResourceTrait
                 ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
                 'e.entity_id = c_p_w.product_id AND c_p_w.website_id = ' . $websiteId,
                 []
-            );
+            )
+            ->where("c_p_w.website_id= ? " , $websiteId);
 
+        if($this->useDateIdsConditionals)
+        {
+            return $this->addDateIdsConditions($select);
+        }
+        
+        if($this->delta)
+        {
+            $select->where($this->getDeltaDateConditional());
+        }
+
+        if($this->instant)
+        {
+            $select = $this->addInstantCondition($select);
+        }
+        
         return $select;
     }
 

@@ -2,6 +2,9 @@
 namespace Boxalino\DataIntegration\Service\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
+use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
+use Boxalino\DataIntegration\Service\Document\DiIntegrateTrait;
+use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
@@ -11,12 +14,10 @@ use Boxalino\DataIntegrationDoc\Generator\Product\Line;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Generator\Product\Sku;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -39,12 +40,14 @@ class DocHandler extends DocProduct implements
     DocProductHandlerInterface,
     DocDeltaIntegrationInterface,
     DiIntegrationConfigurationInterface,
-    DiHandlerIntegrationConfigurationInterface
+    DiHandlerIntegrationConfigurationInterface,
+    DocMviewDeltaIntegrationInterface
 {
 
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
-    use DocInstantIntegrationTrait;
+    use DocMviewDeltaIntegrationTrait;
+    use DiIntegrateTrait;
 
     public function __construct(
         LoggerInterface $logger,
@@ -58,26 +61,6 @@ class DocHandler extends DocProduct implements
                 $this->addPropertyHandler($propertyHandler);
             }
         }
-    }
-
-    /**
-     * Will be extended with content load in batches
-     */
-    public function integrate(): void
-    {
-        try{
-            $this->createDocLines();
-        } catch (NoRecordsFoundException $exception)
-        {
-            //logical exception to break the loop
-            //reset the docs in case the attributeHandlers were not run in the random order
-            $this->resetDocs();
-        } catch (\Throwable $exception)
-        {
-            throw $exception;
-        }
-
-        parent::integrate();
     }
 
     /**

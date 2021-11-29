@@ -35,11 +35,12 @@ class Mview
 
     /**
      * Run when the MVIEW is in use (Update by Schedule)
-     * Exports the tagged products in "boxalino_di_delta_cl"/"boxalino_di_instant_cl" table to Boxalino
+     * Exports the tagged content in "boxalino_di_delta_*_cl"/"boxalino_di_instant_*_cl" table to Boxalino
      */
     public function update()
     {
         $this->mviewProcessor->update('boxalino_di');
     }
+
 
 }

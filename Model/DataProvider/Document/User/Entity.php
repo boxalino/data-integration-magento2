@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserLineInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\User\Entity as DataProviderResourceModel;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
@@ -13,11 +14,6 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Entity extends ModeIntegrator
     implements DocUserLineInterface
 {
-
-    /**
-     * @var DataProviderResourceModel
-     */
-    protected $resourceModel;
 
     /**
      * @param DataProviderResourceModel $resource
@@ -34,7 +30,7 @@ class Entity extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByFieldsWebsiteId($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+        return $this->getResourceModel()->getFetchAllByFieldsWebsiteId($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
     }
 
     /**
@@ -423,12 +419,6 @@ class Entity extends ModeIntegrator
     public function getFax(array $item): ?string
     {
         return $item["billing_fax"];
-    }
-
-
-    public function getDataDelta() : array
-    {
-        return [];
     }
 
 

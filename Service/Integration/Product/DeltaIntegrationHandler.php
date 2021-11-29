@@ -4,6 +4,7 @@ namespace Boxalino\DataIntegration\Service\Integration\Product;
 use Boxalino\DataIntegration\Service\Integration\Mode\Delta;
 use Boxalino\DataIntegration\Service\Integration\Type\ProductTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\ProductDeltaIntegrationHandlerInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\ProductInstantIntegrationHandlerInterface;
 
 /**
  * Class DeltaIntegrationHandler

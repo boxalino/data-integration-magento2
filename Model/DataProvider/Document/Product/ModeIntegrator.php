@@ -5,9 +5,9 @@ use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValueListHelperTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 
 /**
  * @package Boxalino\DataIntegration\Model\Document\Product
@@ -16,7 +16,7 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
 {
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
-    use DocInstantIntegrationTrait;
+    use DocMviewDeltaIntegrationTrait;
     use AttributeValueListHelperTrait;
     use AttributeHelperTrait;
 
@@ -31,7 +31,18 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
      * To be extended with the delta filter logic
      * @return array
      */
-    abstract function getDataDelta() : array;
+    public function getDataDelta() : array
+    {
+        $this->getResourceModel()->useDelta(true);
+        if(count($this->getIds()) > 0)
+        {
+            $this->getResourceModel()->useDateIdsConditionals(true);
+            $this->getResourceModel()->addIdsConditional($this->getIds());
+        }
+        $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
+
+        return $this->_getData();
+    }
 
 
     public function getData() : array

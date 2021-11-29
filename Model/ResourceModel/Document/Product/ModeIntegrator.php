@@ -22,15 +22,14 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      *
      * If the integration for delta is supported via MVIEW - it will also apply a filter by IDs
      *
-     * @param string $dateCriteria
      * @return string
      */
-    public function getDeltaDateConditional(string $dateCriteria, array $conditionalFields = ["c_p_e.updated_at", "c_p_e.created_at"]) : string
+    public function getDeltaDateConditional(array $conditionalFields = ["e.updated_at", "e.created_at"]) : string
     {
         $conditions = [];
         foreach($conditionalFields as $field)
         {
-            $conditions[] = " STR_TO_DATE($field, '%Y-%m-%d %H:%i') > '$dateCriteria' ";
+            $conditions[] = " STR_TO_DATE($field, '%Y-%m-%d %H:%i') > '$this->dateConditional' ";
         }
 
         return implode("OR", $conditions);
@@ -41,14 +40,31 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      * (as a general rule - the filter is by IDs provided from the MVIEW)
      *
      * @param Select $query
-     * @param array $ids
      * @param string $field
      * @return Select
      */
-    protected function addInstantCondition(Select $query, array $ids, string $field = "c_p_e.entity_id") : Select
+    public function addInstantCondition(Select $query, string $field = "e.entity_id") : Select
     {
-        $query->andWhere("$field IN (?)", $ids);
+        $query->andWhere("$field IN (?)", $this->idsConditional);
         return $query;
     }
 
+    /**
+     * For the delta updates that use the MVIEW
+     * 
+     * @param Select $query
+     * @return Select
+     */
+    public function addDateIdsConditions(Select $query) : Select
+    {
+        $conditions = [
+            $this->getDeltaDateConditional(),
+            $this->adapter->quoteInto("e.entity_id IN (?)" , $this->idsConditional)
+        ];
+
+        $query->andWhere(implode(" OR ", $conditions));
+        return $query;
+    }
+
+    
 }

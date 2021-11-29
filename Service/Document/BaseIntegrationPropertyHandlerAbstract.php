@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document;
 
+use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
@@ -20,11 +21,13 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
     implements \JsonSerializable,
     DocSchemaPropertyHandlerInterface,
     DiIntegrationConfigurationInterface,
-    DocDeltaIntegrationInterface
+    DocDeltaIntegrationInterface,
+    DocMviewDeltaIntegrationInterface
 {
 
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
+    use DocMviewDeltaIntegrationTrait;
     use DiPropertyTrait;
 
     /**

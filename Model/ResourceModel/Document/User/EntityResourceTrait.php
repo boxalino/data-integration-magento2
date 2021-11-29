@@ -23,14 +23,7 @@ trait EntityResourceTrait
      */
     public function getEntityByWebsiteId(string $websiteId): array
     {
-        $select = $this->adapter->select()
-            ->from(
-                ['c_e' => $this->adapter->getTableName('customer_entity')],
-                ["*"]
-            )
-            ->where("c_e.website_id IN (?) " , $websiteId);
-
-        return $this->adapter->fetchAll($select);
+        return $this->adapter->fetchAll($this->getEntityByWebsiteIdSelect($websiteId));
     }
 
     /**
@@ -46,6 +39,21 @@ trait EntityResourceTrait
             )
             ->where("c_e.website_id IN (?) " , $websiteId);
 
+        if($this->useDateIdsConditionals)
+        {
+            return $this->addDateIdsConditions($select);
+        }
+
+        if($this->delta)
+        {
+            $select->where($this->getDeltaDateConditional());
+        }
+        
+        if($this->instant)
+        {
+            $select = $this->addInstantCondition($select);
+        }
+        
         return $select;
     }
 
@@ -92,4 +100,5 @@ trait EntityResourceTrait
         return $this->adapter->fetchAll($select);
     }
 
+    
 }
