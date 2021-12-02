@@ -71,10 +71,5 @@ class AttributeOption extends ModeIntegrator
         return ["select"];
     }
 
-    public function getDataDelta(): array
-    {
-        return [];
-    }
-
 
 }

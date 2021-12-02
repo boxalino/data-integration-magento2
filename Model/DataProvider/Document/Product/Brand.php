@@ -84,10 +84,5 @@ class Brand extends ModeIntegrator
         return "manufacturer";
     }
 
-    function getDataDelta() : array
-    {
-        return [];
-    }
-
 
 }

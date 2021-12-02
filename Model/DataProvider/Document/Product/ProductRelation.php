@@ -87,10 +87,5 @@ class ProductRelation extends ModeIntegrator
         }
     }
 
-    function getDataDelta() : array
-    {
-        return [];
-    }
-
 
 }

@@ -55,10 +55,5 @@ class Pricing extends ModeIntegrator
         ];
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
-
 
 }

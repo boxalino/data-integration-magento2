@@ -81,10 +81,5 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
         return [];
     }
 
-    function getDataDelta() : array
-    {
-        return [];
-    }
-
 
 }

@@ -81,10 +81,6 @@ abstract class AttributeOptionAbstract extends ModeIntegrator
         }
     }
 
-    public function getDataDelta(): array
-    {
-        return [];
-    }
 
 
 }

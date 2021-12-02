@@ -43,10 +43,5 @@ class Category extends ModeIntegrator
          ];
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
-
 
 }

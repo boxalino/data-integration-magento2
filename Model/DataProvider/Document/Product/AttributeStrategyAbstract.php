@@ -90,10 +90,5 @@ abstract class AttributeStrategyAbstract extends ModeIntegrator
         $this->isLocalized = $isLocalized;
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
-
 
 }

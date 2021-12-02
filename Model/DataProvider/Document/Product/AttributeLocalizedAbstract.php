@@ -80,10 +80,5 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
         return [];
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
-
 
 }

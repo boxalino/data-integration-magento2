@@ -59,10 +59,5 @@ class IndividuallyVisible extends ModeIntegrator
          ];
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
-
 
 }

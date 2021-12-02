@@ -121,10 +121,6 @@ class Link extends ModeIntegrator
         return $this->productUrlSuffix[$storeId];
     }
 
-    function getDataDelta() : array
-    {
-        return [];
-    }
 
 
 }

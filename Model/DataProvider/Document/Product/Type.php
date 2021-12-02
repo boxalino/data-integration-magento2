@@ -45,10 +45,6 @@ class Type extends ModeIntegrator
          ];
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
 
 
 }

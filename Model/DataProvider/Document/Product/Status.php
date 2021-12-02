@@ -61,10 +61,6 @@ class Status extends ModeIntegrator
         ];
     }
 
-    public function getDataDelta() : array
-    {
-        return [];
-    }
 
 
 }

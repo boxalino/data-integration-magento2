@@ -48,10 +48,5 @@ class Stock extends ModeIntegrator
        ];
     }
 
-    function getDataDelta() : array
-    {
-       return [];
-    }
-
 
 }

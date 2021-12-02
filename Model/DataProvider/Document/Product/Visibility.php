@@ -126,13 +126,6 @@ class Visibility extends ModeIntegrator
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getDataDelta() : array
-    {
-        return [];
-    }
 
 
 }

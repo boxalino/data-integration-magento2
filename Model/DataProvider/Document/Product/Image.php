@@ -136,10 +136,5 @@ class Image extends ModeIntegrator
         return $this->directory->getUrlPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA) . "/catalog/product";
     }
 
-    function getDataDelta() : array
-    {
-        return [];
-    }
-
 
 }

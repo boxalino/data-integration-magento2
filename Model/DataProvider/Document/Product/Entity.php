@@ -56,9 +56,5 @@ class Entity extends ModeIntegrator
          ];
     }
 
-    public function getDataDelta() : array
-    {
-        return [];
-    }
 
 }
