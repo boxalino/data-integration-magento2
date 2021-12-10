@@ -125,7 +125,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      */
     public function getStringOptions(array $item) : array
     {
-        return $this->_getOptionsByBackendTypeList(["varchar","text"]);
+        return $this->_getOptionsByBackendTypeList(["varchar","text"], $item);
     }
 
     /**
@@ -136,7 +136,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      */
     public function getNumericOptions(array $item) : array
     {
-        return $this->_getOptionsByBackendTypeList(["int","decimal"]);
+        return $this->_getOptionsByBackendTypeList(["int","decimal"], $item);
     }
 
     /**
@@ -147,14 +147,15 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      */
     public function getDateTimeOptions(array $item) : array
     {
-        return $this->_getOptionsByBackendTypeList(["datetime"]);
+        return $this->_getOptionsByBackendTypeList(["datetime"], $item);
     }
 
     /**
      * @param array $backendTypeList
+     * @param array $item
      * @return array
      */
-    protected function _getOptionsByBackendTypeList(array $backendTypeList) : array
+    protected function _getOptionsByBackendTypeList(array $backendTypeList, array $item) : array
     {
         $options = [];
         foreach($backendTypeList as $type)

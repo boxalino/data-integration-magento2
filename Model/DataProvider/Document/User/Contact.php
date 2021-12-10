@@ -60,7 +60,7 @@ class Contact extends ModeIntegrator
     public function getDateTimeOptions(array $item) : array
     {
         return array_merge(
-            $this->_getOptionsByBackendTypeList(["datetime"]),
+            $this->_getOptionsByBackendTypeList(["datetime"], $item),
             [
                 'created_at' => [$item["created_at"]],
                 'updated_at' => [$item["updated_at"]]
