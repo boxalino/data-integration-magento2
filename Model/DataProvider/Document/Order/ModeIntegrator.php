@@ -43,18 +43,6 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
             return $this->getDataDelta();
         }
 
-        /** for instant updates */
-        if($this->filterByIds())
-        {
-            if($this->hasModeEnabled())
-            {
-                /** @todo to be extended when instant option has been added */
-                return [];
-            }
-
-            throw new ModeDisabledException("Boxalino DI: instant mode not active. Skipping sync.");
-        }
-
         return $this->_getData();
     }
 
