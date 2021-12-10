@@ -77,10 +77,10 @@ trait EntityResourceTrait
      * @param string $attributeCode
      * @param int $entityTypeId
      * @param string $type
-     * @param array $storeIds
+     * @param string $websiteId
      * @return array
      */
-    public function getFetchAllAttributeContent(string $attributeCode, int $entityTypeId, string $type, array $storeIds) : array
+    public function getFetchAllAttributeContent(string $attributeCode, int $entityTypeId, string $type, string $websiteId) : array
     {
         $attributeId = $this->getAttributeIdByAttributeCodeAndEntityTypeId($attributeCode, $entityTypeId);
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);

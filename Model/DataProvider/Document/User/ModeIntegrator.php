@@ -92,11 +92,11 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      */
     public function resolve(): void
     {
-        $storeIds = $this->getSystemConfiguration()->getStoreIds();
+        $websiteId = $this->getSystemConfiguration()->getWebsiteId();
         foreach($this->resourceModel->getFetchPairsAttributes($this->getEntityTypeId()) as $code => $table)
         {
             $attributeContent = new \ArrayObject();
-            foreach($this->resourceModel->getFetchAllAttributeContent($code, $this->getEntityTypeId(), $table) as $row)
+            foreach($this->resourceModel->getFetchAllAttributeContent($code, $this->getEntityTypeId(), $table, $websiteId) as $row)
             {
                 $availableDiData = new \ArrayObject();
                 if($attributeContent->offsetExists($row["entity_id"]))
