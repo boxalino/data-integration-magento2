@@ -51,6 +51,9 @@ trait EntityResourceTrait
             $select = $this->addInstantCondition($select);
         }
 
+        $select->order("s_o.entity_id DESC")
+            ->limitPage((int)$this->getChunk(), (int)$this->getBatch());
+
         return $select;
     }
 

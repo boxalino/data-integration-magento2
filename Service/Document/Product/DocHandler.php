@@ -294,5 +294,13 @@ class DocHandler extends DocProduct implements
         return $content;
     }
 
+    /**
+     * @return bool
+     */
+    public function chunk() : bool
+    {
+        return false;
+    }
+
 
 }

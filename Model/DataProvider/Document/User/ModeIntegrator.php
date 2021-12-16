@@ -76,6 +76,9 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      */
     public function getResourceModel() : DiSchemaDataProviderResourceInterface
     {
+        $this->resourceModel->setBatchSize((int)$this->getSystemConfiguration()->getBatchSize());
+        $this->resourceModel->setChunk((int)$this->getSystemConfiguration()->getChunk());
+
         return $this->resourceModel;
     }
 

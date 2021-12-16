@@ -30,16 +30,12 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
      */
     public function getDataProvider() : DocOrderPropertyInterface
     {
-        if(is_null($this->dataProvider))
-        {
-            $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
-            $this->dataProvider->setSystemConfiguration($this->getSystemConfiguration());
-            $this->dataProvider->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
-            $this->dataProvider->setSyncCheck($this->getSyncCheck());
-            $this->dataProvider->setMviewIds($this->getIds());
-
-            $this->dataProvider->resolve();
-        }
+        $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
+        $this->dataProvider->setSystemConfiguration($this->getSystemConfiguration());
+        $this->dataProvider->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
+        $this->dataProvider->setSyncCheck($this->getSyncCheck());
+        $this->dataProvider->setMviewIds($this->getIds());
+        $this->dataProvider->resolve();
 
         return $this->dataProvider;
     }

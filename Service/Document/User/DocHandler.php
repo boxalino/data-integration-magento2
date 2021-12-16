@@ -31,7 +31,6 @@ class DocHandler extends DocUser implements
     DocMviewDeltaIntegrationInterface
 {
 
-    use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use DiIntegrateTrait;
@@ -73,6 +72,14 @@ class DocHandler extends DocUser implements
         }
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function chunk() : bool
+    {
+        return true;
     }
 
 

@@ -30,6 +30,16 @@ trait DiSchemaDataProviderResourceTrait
     protected $idsConditional = [];
 
     /**
+     * @var int
+     */
+    protected $batchSize = 0;
+
+    /**
+     * @var int
+     */
+    protected $chunk = 1;
+
+    /**
      * @param string $dateCriteria
      * @param array|string[] $conditionalFields
      */
@@ -71,6 +81,39 @@ trait DiSchemaDataProviderResourceTrait
     public function useDateIdsConditionals(bool $value) : void
     {
         $this->useDateIdsConditionals = $value;
+    }
+
+    /**
+     * @param int $batchSize
+     * @return void
+     */
+    public function setBatchSize(int $batchSize) : void
+    {
+        $this->batchSize = $batchSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBatch() : int
+    {
+        return $this->batchSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChunk(): int
+    {
+        return $this->chunk+1;
+    }
+
+    /**
+     * @param int $chunk
+     */
+    public function setChunk(int $chunk): void
+    {
+        $this->chunk = $chunk;
     }
 
 

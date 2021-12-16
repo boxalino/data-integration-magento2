@@ -36,5 +36,16 @@ interface DiSchemaDataProviderResourceInterface
      */
     public function useDateIdsConditionals(bool $value) : void;
 
+    /**
+     * @param int $batchSize
+     * @return void
+     */
+    public function setBatchSize(int $batchSize) : void;
+
+    /**
+     * @param int $chunk
+     */
+    public function setChunk(int $chunk): void;
+
 
 }
