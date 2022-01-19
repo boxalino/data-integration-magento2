@@ -13,7 +13,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface
 class Contact extends ModeIntegrator
     implements DocOrderContactPropertyInterface
 {
-    
+
     /**
      * @param DataProviderResourceModel $resource
      */
@@ -194,7 +194,7 @@ class Contact extends ModeIntegrator
      */
     public function getDateOfBirth(array $item): ?string
     {
-        return $item["c_e_dob"];
+        return $this->sanitizeDateTimeValue($item["c_e_dob"]);
     }
 
     /**
@@ -203,7 +203,7 @@ class Contact extends ModeIntegrator
      */
     public function getAccountCreation(array $item): ?string
     {
-        return $item["c_e_created_at"];
+        return $this->sanitizeDateTimeValue($item["c_e_created_at"]);
     }
 
     /**

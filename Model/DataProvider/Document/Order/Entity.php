@@ -405,7 +405,7 @@ class Entity extends ModeIntegrator
      */
     public function getCreation(array $row): ?string
     {
-        return (string) $row["created_at"];
+        return (string) $this->sanitizeDateTimeValue($row["created_at"]);
     }
 
     /**
@@ -414,7 +414,7 @@ class Entity extends ModeIntegrator
      */
     public function getLastUpdate(array $row): ?string
     {
-        return (string) $row["updated_at"];
+        return (string) $this->sanitizeDateTimeValue($row["updated_at"]);
     }
 
     /**
@@ -452,7 +452,7 @@ class Entity extends ModeIntegrator
      */
     public function getSent(array $row): ?string
     {
-        return (string) $row["s_s_t_created_at"] ?? null;
+        return $this->sanitizeDateTimeValue((string)$row["s_s_t_created_at"]) ?? null;
     }
 
     /**

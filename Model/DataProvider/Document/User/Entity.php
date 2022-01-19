@@ -52,7 +52,7 @@ class Entity extends ModeIntegrator
     {
         return \Magento\Customer\Api\CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER;
     }
-    
+
     /**
      * @param array $item
      * @return string|null
@@ -167,7 +167,7 @@ class Entity extends ModeIntegrator
      */
     public function getDateOfBirth(array $item): ?string
     {
-        return $item["dob"];
+        return $this->sanitizeDateTimeValue($item["dob"]);
     }
 
     /**
@@ -176,7 +176,7 @@ class Entity extends ModeIntegrator
      */
     public function getAccountCreation(array $item): ?string
     {
-        return $item["created_at"];
+        return $this->sanitizeDateTimeValue($item["created_at"]);
     }
 
     /**

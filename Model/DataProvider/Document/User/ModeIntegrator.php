@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
+use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
@@ -16,6 +17,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
+    use DataValidationTrait;
 
 
     /**

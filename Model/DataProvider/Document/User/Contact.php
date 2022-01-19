@@ -62,8 +62,8 @@ class Contact extends ModeIntegrator
         return array_merge(
             $this->_getOptionsByBackendTypeList(["datetime"], $item),
             [
-                'created_at' => [$item["created_at"]],
-                'updated_at' => [$item["updated_at"]]
+                'created_at' => [$this->sanitizeDateTimeValue($item["created_at"])],
+                'updated_at' => [$this->sanitizeDateTimeValue($item["updated_at"])]
             ]
         );
     }

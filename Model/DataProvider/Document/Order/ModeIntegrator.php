@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Order;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocOrderPropertyInterface;
+use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
@@ -19,6 +20,7 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
+    use DataValidationTrait;
 
     /**
      * @var DiSchemaDataProviderResourceInterface

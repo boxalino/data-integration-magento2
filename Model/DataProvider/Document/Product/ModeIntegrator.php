@@ -4,6 +4,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValueListHelperTrait;
+use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
@@ -19,6 +20,7 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
     use DocMviewDeltaIntegrationTrait;
     use AttributeValueListHelperTrait;
     use AttributeHelperTrait;
+    use DataValidationTrait;
 
     /**
      * Access property data (internal flow)
