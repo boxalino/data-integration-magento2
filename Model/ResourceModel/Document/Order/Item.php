@@ -73,7 +73,7 @@ class Item extends ModeIntegrator
             )
             ->joinLeft(
                 ['s_o_i_configurable' => $this->adapter->getTableName("sales_order_item")],
-                "s_o_i.parent_item_id = s_o_i_configurable.item_id AND s_o_i.product_type='$configurableProductType'",
+                "s_o.entity_id = s_o_i_configurable.order_id AND s_o_i.parent_item_id = s_o_i_configurable.item_id AND s_o_i.product_type='$configurableProductType'",
                 $fieldsForConfigurable
             )
             ->where("s_o.entity_id IS NOT NULL")
@@ -107,12 +107,12 @@ class Item extends ModeIntegrator
             )
             ->joinLeft(
                 ['s_o_i_grouped' => $this->adapter->getTableName("sales_order_item")],
-                "s_o_i_grouped.product_type='$groupedProductType' AND s_o_i_grouped.parent_item_id=s_o_i.item_id",
+                "s_o.entity_id = s_o_i_grouped.order_id AND s_o_i_grouped.product_type='$groupedProductType' AND s_o_i_grouped.parent_item_id=s_o_i.item_id",
                 []
             )
             ->joinLeft(
                 ['s_o_i_configurable' => $this->adapter->getTableName("sales_order_item")],
-                "s_o_i.item_id = s_o_i_configurable.parent_item_id AND s_o_i.product_type='$configurableProductType'",
+                "s_o.entity_id = s_o_i_configurable.order_id AND s_o_i.item_id = s_o_i_configurable.parent_item_id AND s_o_i.product_type='$configurableProductType'",
                 ["main_product_id"=>"s_o_i_configurable.product_id"]
             )
             ->where("s_o.entity_id IS NOT NULL")
