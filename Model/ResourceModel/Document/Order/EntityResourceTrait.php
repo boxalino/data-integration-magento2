@@ -51,7 +51,8 @@ trait EntityResourceTrait
             $select = $this->addInstantCondition($select);
         }
 
-        $select->order("s_o.entity_id DESC")
+        /** @heldchen fix: must use ASC as in production systems there will be new orders while exporting */
+        $select->order("s_o.entity_id ASC")
             ->limitPage((int)$this->getChunk(), (int)$this->getBatch());
 
         return $select;
