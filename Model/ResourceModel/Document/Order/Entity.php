@@ -25,9 +25,9 @@ class Entity extends ModeIntegrator
     public function getFetchAllByFieldsStoreIds(array $fields, array $storeIds)
     {
         $mainEntitySelect = $this->getEntityByStoreIdsSelect($storeIds);
-        $taxSelect = $this->appendPrefixToColumnsGroupBySelect("sales_order_tax", "s_o_t", "order_id");
-        $paymentSelect = $this->appendPrefixToColumnsGroupBySelect("sales_order_payment", "s_o_p", "parent_id");
-        $shipmentTrackSelect = $this->appendPrefixToColumnsGroupBySelect("sales_shipment_track", "s_s_t", "parent_id");
+        $taxSelect = $this->appendPrefixToColumnsSelect("sales_order_tax", "s_o_t");
+        $paymentSelect = $this->appendPrefixToColumnsSelect("sales_order_payment", "s_o_p");
+        $shipmentTrackSelect = $this->appendPrefixToColumnsSelect("sales_shipment_track", "s_s_t");
         $select = $this->adapter->select()
             ->from(
                 ['s_o' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
