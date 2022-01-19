@@ -66,6 +66,8 @@ class DocHandler extends DocUser implements
 
                 $this->addDocLine($doc);
             }
+
+            $this->resetDocData();
         } catch (\Throwable $exception)
         {
             $this->logger->info($exception->getMessage());

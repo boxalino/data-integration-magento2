@@ -69,6 +69,8 @@ class DocHandler extends DocOrder implements
 
                 $this->addDocLine($doc);
             }
+
+            $this->resetDocData();
         } catch (\Throwable $exception)
         {
             $this->logger->info($exception->getMessage());

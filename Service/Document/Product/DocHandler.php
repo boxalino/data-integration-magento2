@@ -95,6 +95,8 @@ class DocHandler extends DocProduct implements
         $this->logTime("end" . __FUNCTION__);
         $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
 
+        $this->resetDocData();
+
         return $this;
     }
 

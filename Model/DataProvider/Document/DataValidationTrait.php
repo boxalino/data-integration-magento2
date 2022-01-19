@@ -14,13 +14,18 @@ trait DataValidationTrait
      */
     public function sanitizeDateTimeValue(?string $date) : ?string
     {
-        list($month, $day, $year) = explode("-", (new \DateTime($date))->format('m-d-Y'));
-        if(checkdate((int)$month, (int)$day, (int)$year))
-        {
-            return (new \DateTime($date))->format("Y-m-d");
-        }
+        try{
+            list($month, $day, $year) = explode("-", (new \DateTime($date))->format('m-d-Y'));
+            if(checkdate((int)$month, (int)$day, (int)$year))
+            {
+                return (new \DateTime($date))->format("Y-m-d");
+            }
 
-        return null;
+            return null;
+        } catch (\Throwable $exception)
+        {
+            return null;
+        }
     }
 
 
