@@ -70,6 +70,7 @@ class DocHandler extends DocOrder implements
                 $this->addDocLine($doc);
             }
 
+            $this->addSeekConditionToBatch();
             $this->resetDocData();
         } catch (\Throwable $exception)
         {
@@ -85,6 +86,23 @@ class DocHandler extends DocOrder implements
     public function chunk() : bool
     {
         return true;
+    }
+
+    /**
+     * The SEEK condition is set in order to avoid the use of OFFSET in SQL
+     *
+     * @return void
+     */
+    public function addSeekConditionToBatch() : void
+    {
+        /** @var Order | DocHandlerInterface | DocGeneratorInterface | null $lastRecord */
+        $lastRecord = $this->getLastDoc();
+        if(is_null($lastRecord))
+        {
+            return;
+        }
+
+        $this->getSystemConfiguration()->setChunk((string) $lastRecord->getInternalId());
     }
 
 

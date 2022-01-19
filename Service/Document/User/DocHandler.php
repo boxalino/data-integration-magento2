@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
  * Generates the content for the doc_user document
  * https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/252182638/doc_user
  *
- * @package Boxalino\DataIntegration\Service\Document\Order
+ * @package Boxalino\DataIntegration\Service\Document\User
  */
 class DocHandler extends DocUser implements
     DocUserHandlerInterface,
@@ -67,6 +67,7 @@ class DocHandler extends DocUser implements
                 $this->addDocLine($doc);
             }
 
+            $this->addSeekConditionToBatch();
             $this->resetDocData();
         } catch (\Throwable $exception)
         {
@@ -84,5 +85,20 @@ class DocHandler extends DocUser implements
         return true;
     }
 
+    /**
+     * The SEEK condition is set in order to avoid the use of OFFSET in SQL
+     *
+     * @return void
+     */
+    public function addSeekConditionToBatch() : void
+    {
+        /** @var User | DocHandlerInterface | DocGeneratorInterface | null $lastRecord */
+        $lastRecord = $this->getLastDoc();
+        if(is_null($lastRecord))
+        {
+            return;
+        }
+        $this->getSystemConfiguration()->setChunk((string)$lastRecord->getInternalId());
+    }
 
 }

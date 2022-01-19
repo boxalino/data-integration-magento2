@@ -40,7 +40,7 @@ trait EntityResourceTrait
         {
             return $this->addDateIdsConditions($select);
         }
-        
+
         if($this->delta)
         {
             $select->where($this->getDeltaDateConditional());
@@ -52,8 +52,9 @@ trait EntityResourceTrait
         }
 
         /** @heldchen fix: must use ASC as in production systems there will be new orders while exporting */
-        $select->order("s_o.entity_id ASC")
-            ->limitPage((int)$this->getChunk(), (int)$this->getBatch());
+        $select->where("s_o.entity_id > ?", $this->getChunk())
+            ->order("s_o.entity_id ASC")
+            ->limit((int)$this->getBatch());
 
         return $select;
     }

@@ -89,11 +89,9 @@ trait DiIntegrateTrait
      */
     public function integrateByChunk()
     {
-        $chunk = (int)$this->getSystemConfiguration()->getChunk();
         $document = $this->getDocContent();
         $this->loadByChunk($document);
 
-        $this->getSystemConfiguration()->setChunk($chunk+1);
         $this->integrate();
     }
 

@@ -48,14 +48,16 @@ trait EntityResourceTrait
         {
             $select->where($this->getDeltaDateConditional());
         }
-        
+
         if($this->instant)
         {
             $select = $this->addInstantCondition($select);
         }
 
-        $select->order("c_e.entity_id DESC")
-            ->limitPage((int)$this->getChunk(), (int)$this->getBatch());
+        /** using a SEEK strategy for batching data */
+        $select->where("c_e.entity_id > ?", $this->getChunk())
+            ->order("c_e.entity_id ASC")
+            ->limit((int)$this->getBatch());
 
         return $select;
     }
@@ -103,5 +105,5 @@ trait EntityResourceTrait
         return $this->adapter->fetchAll($select);
     }
 
-    
+
 }

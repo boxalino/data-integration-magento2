@@ -43,9 +43,9 @@ interface DiSchemaDataProviderResourceInterface
     public function setBatchSize(int $batchSize) : void;
 
     /**
-     * @param int $chunk
+     * @param string $chunk
      */
-    public function setChunk(int $chunk): void;
+    public function setChunk(string $chunk): void;
 
 
 }

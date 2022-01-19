@@ -35,9 +35,9 @@ trait DiSchemaDataProviderResourceTrait
     protected $batchSize = 0;
 
     /**
-     * @var int
+     * @var string
      */
-    protected $chunk = 1;
+    protected $chunk = 0;
 
     /**
      * @param string $dateCriteria
@@ -101,17 +101,17 @@ trait DiSchemaDataProviderResourceTrait
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getChunk(): int
+    public function getChunk(): string
     {
-        return $this->chunk+1;
+        return $this->chunk;
     }
 
     /**
-     * @param int $chunk
+     * @param string $chunk
      */
-    public function setChunk(int $chunk): void
+    public function setChunk(string $chunk): void
     {
         $this->chunk = $chunk;
     }
