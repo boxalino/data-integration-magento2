@@ -57,7 +57,11 @@ class Item extends ModeIntegrator
         $options["description"] = [$item["description"]];
         $options["free_shipping"] = [$item["free_shipping"]];
 
-        $itemOptions = json_decode($item["product_options"], true);
+        try{
+            $itemOptions = json_decode($item["product_options"], true);
+        } catch (\Throwable $exception) {
+            $itemOptions = [];
+        }
         if ($item["product_type"] === \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE)
         {
             $options["name"] = [$itemOptions["simple_name"]];

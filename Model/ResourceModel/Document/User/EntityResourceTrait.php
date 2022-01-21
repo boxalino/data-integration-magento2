@@ -105,5 +105,5 @@ trait EntityResourceTrait
         return $this->adapter->fetchAll($select);
     }
 
-
+    
 }

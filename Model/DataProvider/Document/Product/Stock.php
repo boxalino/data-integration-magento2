@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Stock as DataProviderResourceModel;
 
 /**
@@ -12,12 +13,7 @@ class Stock extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -30,7 +26,7 @@ class Stock extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByFieldsWebsite(
+        return $this->getResourceModel()->getFetchAllByFieldsWebsite(
             $this->getFields(), $this->getSystemConfiguration()->getWebsiteId()
         );
     }

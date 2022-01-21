@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as GlobalDataProviderResourceModel;
 
 /**
@@ -10,7 +11,7 @@ trait AttributeGlobalTrait
 {
 
     /**
-     * @var GlobalDataProviderResourceModel
+     * @var GlobalDataProviderResourceModel | DiSchemaDataProviderResourceInterface
      */
     protected $globalResourceModel;
 

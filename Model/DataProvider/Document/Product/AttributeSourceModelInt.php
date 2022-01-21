@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValue\EavAttributeSourceModelTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as DataProviderResourceModel;
 use Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
 use Magento\Framework\ObjectManagerInterface;
@@ -16,6 +17,10 @@ class AttributeSourceModelInt extends AttributeGlobalAbstract
 
     protected $attributeOptions;
 
+    /**
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
+     * @param ObjectManagerInterface $objectManager
+     */
     public function __construct(
         DataProviderResourceModel $resource,
         ObjectManagerInterface $objectManager

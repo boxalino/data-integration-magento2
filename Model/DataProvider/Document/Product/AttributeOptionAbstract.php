@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeOption as DataProviderResourceModel;
 
 /**
@@ -14,7 +15,7 @@ abstract class AttributeOptionAbstract extends ModeIntegrator
     use AttributeOptionTrait;
 
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -34,13 +35,21 @@ abstract class AttributeOptionAbstract extends ModeIntegrator
     }
 
     /**
+     * @return DiSchemaDataProviderResourceInterface
+     */
+    public function getResourceModel(): DiSchemaDataProviderResourceInterface
+    {
+        return $this->optionResourceModel;
+    }
+
+    /**
      * Looping through attribute-option properties
      *
      * @return array
      */
     public function getAttributes(): array
     {
-        return $this->optionResourceModel->getAttributesByScopeBackendTypeFrontendInput(
+        return $this->getResourceModel()->getAttributesByScopeBackendTypeFrontendInput(
             [],
             $this->getBackendTypeList(),
             $this->getFrontendInputList(),

@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductVisibilityPropertyInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Visibility as DataProviderResourceModel;
 
 /**
@@ -16,17 +17,12 @@ class Visibility extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
      * @var \ArrayObject
      */
     protected $attributeNameValuesList;
 
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -40,7 +36,7 @@ class Visibility extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllEntityByFieldsWebsite(
+        return $this->getResourceModel()->getFetchAllEntityByFieldsWebsite(
             [$this->getDiIdField() => "c_p_e_s.entity_id"],
             $this->getSystemConfiguration()->getWebsiteId()
         );
@@ -69,6 +65,8 @@ class Visibility extends ModeIntegrator
      */
     public function resolve(): void
     {
+        $this->_resolveDataDelta();
+        
         $this->_loadVisibilityData($this->getDocPropertyNameByContext(), $this->getContextVisibilityFields());
         $this->_loadVisibilityData($this->getDocPropertyNameByContext(false), $this->getSelfVisibilityFields());
     }
@@ -82,7 +80,7 @@ class Visibility extends ModeIntegrator
         $attributeContent = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
-            $data = $this->resourceModel->getFetchPairsByFieldsWebsiteStore(
+            $data = $this->getResourceModel()->getFetchPairsByFieldsWebsiteStore(
                 $fields,
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId

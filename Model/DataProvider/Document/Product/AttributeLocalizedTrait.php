@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as LocalizedDataProviderResourceModel;
 
 /**
@@ -10,7 +11,7 @@ trait AttributeLocalizedTrait
 {
 
     /**
-     * @var LocalizedDataProviderResourceModel
+     * @var LocalizedDataProviderResourceModel | DiSchemaDataProviderResourceInterface
      */
     protected $localizedResourceModel;
 

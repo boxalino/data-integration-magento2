@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as DataProviderResourceModel;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 
@@ -15,9 +16,8 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
 
     use AttributeLocalizedTrait;
 
-
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -38,11 +38,19 @@ abstract class AttributeLocalizedAbstract extends ModeIntegrator
     }
 
     /**
+     * @return DiSchemaDataProviderResourceInterface
+     */
+    public function getResourceModel(): DiSchemaDataProviderResourceInterface
+    {
+        return $this->localizedResourceModel;
+    }
+
+    /**
      * @return array
      */
     public function getAttributes(): array
     {
-        return $this->localizedResourceModel->getAttributesByScopeBackendTypeFrontendInput(
+        return $this->getResourceModel()->getAttributesByScopeBackendTypeFrontendInput(
             $this->getScopeList(),
             $this->getBackendTypeList(),
             $this->getFrontendInputList(),

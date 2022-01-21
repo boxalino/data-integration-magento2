@@ -13,7 +13,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface
 class Contact extends ModeIntegrator
     implements DocOrderContactPropertyInterface
 {
-
+    
     /**
      * @param DataProviderResourceModel $resource
      */

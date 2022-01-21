@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\ProductRelation as DataProviderResourceModel;
 
 /**
@@ -16,17 +17,12 @@ class ProductRelation extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
      * @var \ArrayObject
      */
     protected $entityIdRelationsList;
 
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -45,6 +41,8 @@ class ProductRelation extends ModeIntegrator
 
     public function resolve(): void
     {
+        $this->_resolveDataDelta();
+        
         $this->loadSuperInformation();
         $this->loadLinkInformation();
     }
@@ -55,7 +53,7 @@ class ProductRelation extends ModeIntegrator
     protected function loadSuperInformation() : void
     {
         $this->_addRelationsByData(
-            $this->resourceModel->getFetchAllSuperLinkByWebsiteId($this->getSystemConfiguration()->getWebsiteId())
+            $this->getResourceModel()->getFetchAllSuperLinkByWebsiteId($this->getSystemConfiguration()->getWebsiteId())
         );
     }
 
@@ -65,7 +63,7 @@ class ProductRelation extends ModeIntegrator
     protected function loadLinkInformation()
     {
         $this->_addRelationsByData(
-            $this->resourceModel->getFetchAllLinkByWebsiteId($this->getSystemConfiguration()->getWebsiteId())
+            $this->getResourceModel()->getFetchAllLinkByWebsiteId($this->getSystemConfiguration()->getWebsiteId())
         );
     }
 

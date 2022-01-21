@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as GlobalDataProviderResourceModel;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as LocalizedDataProviderResourceModel;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
@@ -22,8 +23,8 @@ abstract class AttributeStrategyAbstract extends ModeIntegrator
     protected $isLocalized = true;
 
     /**
-     * @param GlobalDataProviderResourceModel $globalResource
-     * @param LocalizedDataProviderResourceModel $localizedResource
+     * @param GlobalDataProviderResourceModel | DiSchemaDataProviderResourceInterface $globalResource
+     * @param LocalizedDataProviderResourceModel | DiSchemaDataProviderResourceInterface $localizedResource
      */
     public function __construct(
         GlobalDataProviderResourceModel $globalResource,
@@ -50,6 +51,19 @@ abstract class AttributeStrategyAbstract extends ModeIntegrator
         }
 
         return $this->getGlobalDataForAttributeAsLocalized();
+    }
+
+    /**
+     * @return DiSchemaDataProviderResourceInterface
+     */
+    public function getResourceModel(): DiSchemaDataProviderResourceInterface
+    {
+        if($this->isLocalized)
+        {
+            return $this->localizedResourceModel;
+        }
+        
+        return $this->globalResourceModel;
     }
 
     /**

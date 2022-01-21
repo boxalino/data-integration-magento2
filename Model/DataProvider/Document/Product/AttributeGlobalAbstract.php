@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as DataProviderResourceModel;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 
@@ -18,7 +19,7 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
     protected $resourceModel;
 
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -34,7 +35,7 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getSelectAllForGlobalAttribute(
+        return $this->getResourceModel()->getSelectAllForGlobalAttribute(
             $this->getFields(),
             $this->getSystemConfiguration()->getWebsiteId(),
             $this->getSystemConfiguration()->getStoreIds(),
@@ -48,7 +49,7 @@ abstract class AttributeGlobalAbstract extends ModeIntegrator
      */
     public function getAttributes(): array
     {
-        return $this->resourceModel->getAttributesByScopeBackendTypeFrontendInput(
+        return $this->getResourceModel()->getAttributesByScopeBackendTypeFrontendInput(
             $this->getScopeList(),
             $this->getBackendTypeList(),
             $this->getFrontendInputList(),

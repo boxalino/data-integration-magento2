@@ -12,7 +12,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegration
 /**
  * Abstract class ModeIntegrator
  * Holds the logic for various integration modes (instant, delta, full)
- * 
+ *
  * @package Boxalino\DataIntegration\Model\DataProvider\Document\Order
  */
 abstract class ModeIntegrator implements DocOrderPropertyInterface
@@ -66,6 +66,8 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
     }
 
     /**
+     * The chunk is the last added record, used as a filter logic
+     *
      * @return DiSchemaDataProviderResourceInterface
      */
     public function getResourceModel() : DiSchemaDataProviderResourceInterface
@@ -127,5 +129,7 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
 
         return $return;
     }
+
+
 
 }

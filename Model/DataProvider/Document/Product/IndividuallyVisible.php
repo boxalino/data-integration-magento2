@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\IndividuallyVisible as DataProviderResourceModel;
 
 /**
@@ -11,12 +12,7 @@ class IndividuallyVisible extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -29,7 +25,7 @@ class IndividuallyVisible extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchPairsByFieldsWebsiteStoreAttrIdTable(
+        return $this->getResourceModel()->getFetchPairsByFieldsWebsiteStoreAttrIdTable(
             $this->getFields(),
             $this->getSystemConfiguration()->getWebsiteId(),
             $this->getAttributeId(),
@@ -41,7 +37,7 @@ class IndividuallyVisible extends ModeIntegrator
     public function resolve(): void
     {
         $this->setAttributeCode("visibility");
-        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityTypeId(
+        $this->setAttributeId((int)$this->getResourceModel()->getAttributeIdByAttributeCodeAndEntityTypeId(
             $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
         );
     }

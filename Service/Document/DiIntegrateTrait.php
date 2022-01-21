@@ -67,7 +67,7 @@ trait DiIntegrateTrait
             return;
         }
 
-        throw new FailSyncException("Boxalino DI: no {$this->getDocType()} content viable for sync since " . $this->getSyncCheck());
+        throw new NoRecordsFoundException("No {$this->getDocType()} content viable for sync since " . $this->getSyncCheck());
     }
 
     /**

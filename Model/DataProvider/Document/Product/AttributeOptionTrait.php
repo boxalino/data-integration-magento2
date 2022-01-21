@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValueListHelperTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeOption as LocalizedDataProviderResourceModel;
 
 /**
@@ -13,7 +14,7 @@ trait AttributeOptionTrait
     use AttributeValueListHelperTrait;
 
     /**
-     * @var LocalizedDataProviderResourceModel
+     * @var LocalizedDataProviderResourceModel | DiSchemaDataProviderResourceInterface
      */
     protected $optionResourceModel;
 

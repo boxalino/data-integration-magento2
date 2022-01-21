@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeOption as DataProviderResourceModel;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
@@ -12,12 +13,7 @@ class Brand extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      */
     public function __construct(
         DataProviderResourceModel $resource
@@ -34,7 +30,7 @@ class Brand extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->resourceModel->getFetchAllByWebsiteAttributeId(
+        return $this->getResourceModel()->getFetchAllByWebsiteAttributeId(
             $this->getFields(),
             $this->getSystemConfiguration()->getWebsiteId(),
             $this->getAttributeId()
@@ -59,7 +55,7 @@ class Brand extends ModeIntegrator
      */
     public function resolve(): void
     {
-        $this->setAttributeId((int)$this->resourceModel->getAttributeIdByAttributeCodeAndEntityTypeId(
+        $this->setAttributeId((int)$this->getResourceModel()->getAttributeIdByAttributeCodeAndEntityTypeId(
             $this->getAttributeCode(),\Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID)
         );
 
@@ -74,7 +70,7 @@ class Brand extends ModeIntegrator
         $this->attributeNameValuesList = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
-            $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($this->getAttributeId(), $storeId);
+            $data = $this->getResourceModel()->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($this->getAttributeId(), $storeId);
             $this->addValueToAttributeContent($data, $this->attributeNameValuesList, $languageCode);
         }
     }

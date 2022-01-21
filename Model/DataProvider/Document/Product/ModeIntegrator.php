@@ -5,6 +5,7 @@ use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValueListHelperTrait;
 use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
@@ -23,6 +24,11 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
     use DataValidationTrait;
 
     /**
+     * @var DiSchemaDataProviderResourceInterface
+     */
+    protected $resourceModel;
+
+    /**
      * Access property data (internal flow)
      *
      * @return array
@@ -35,17 +41,35 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
      */
     public function getDataDelta() : array
     {
-        $this->getResourceModel()->useDelta(true);
-        if(count($this->getIds()) > 0)
-        {
-            $this->getResourceModel()->useDateIdsConditionals(true);
-            $this->getResourceModel()->addIdsConditional($this->getIds());
-        }
-        $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
-
+        $this->_resolveDataDelta();
         return $this->_getData();
     }
 
+    /**
+     * In case processing is required at the level of resolve
+     * @return void
+     */
+    protected function _resolveDataDelta() : void
+    {
+        if($this->filterByCriteria())
+        {
+            $this->getResourceModel()->useDelta(true);
+            if(count($this->getIds()) > 0)
+            {
+                $this->getResourceModel()->useDateIdsConditionals(true);
+                $this->getResourceModel()->addIdsConditional($this->getIds());
+            }
+            $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
+        }
+    }
+
+    /**
+     * @return DiSchemaDataProviderResourceInterface
+     */
+    public function getResourceModel() : DiSchemaDataProviderResourceInterface
+    {
+        return $this->resourceModel;
+    }
 
     public function getData() : array
     {

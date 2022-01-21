@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as DataProviderResourceModel;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -21,11 +22,6 @@ class Image extends ModeIntegrator
     protected $imagePlaceholdersList;
 
     /**
-     * @var DataProviderResourceModel
-     */
-    private $resourceModel;
-
-    /**
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
@@ -41,8 +37,9 @@ class Image extends ModeIntegrator
     protected $directory;
 
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      * @param ScopeConfigInterface $scopeConfig
+     * @param DirectoryList $directoryList
      */
     public function __construct(
         DataProviderResourceModel $resource,
@@ -63,7 +60,7 @@ class Image extends ModeIntegrator
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
             $this->placeholder = $this->imagePlaceholdersList[$this->getAttributeCode()][$storeId];
-            $data = $this->resourceModel->getFetchPairsForLocalizedAttributeByStoreId(
+            $data = $this->getResourceModel()->getFetchPairsForLocalizedAttributeByStoreId(
                 $this->getFields(),
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId,
@@ -83,7 +80,7 @@ class Image extends ModeIntegrator
      */
     public function getAttributes() : array
     {
-        return $this->resourceModel->getAttributesByScopeBackendTypeFrontendInput(
+        return $this->getResourceModel()->getAttributesByScopeBackendTypeFrontendInput(
             [],
             ["varchar"],
             ["media_image"]

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\Link as DataProviderResourceModel;
 use Magento\CatalogUrlRewrite\Model\ProductUrlPathGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -21,11 +22,6 @@ class Link extends ModeIntegrator
 {
 
     /**
-     * @var DataProviderResourceModel
-     */
-    protected $resourceModel;
-
-    /**
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
@@ -43,7 +39,7 @@ class Link extends ModeIntegrator
     protected $suffix;
 
     /**
-     * @param DataProviderResourceModel $resource
+     * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
@@ -64,7 +60,7 @@ class Link extends ModeIntegrator
         {
             $this->suffix = $this->getProductUrlSuffix($storeId);
 
-            $data = $this->resourceModel->getFetchPairsByFieldsWebsiteStore(
+            $data = $this->getResourceModel()->getFetchPairsByFieldsWebsiteStore(
                 $this->getFields(),
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId

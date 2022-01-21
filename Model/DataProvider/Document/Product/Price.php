@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\Product;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPricePropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as GlobalDataProviderResourceModel;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as LocalizedDataProviderResourceModel;
 
@@ -18,6 +19,10 @@ class Price extends AttributeStrategyAbstract
      */
     protected $priceAttributes = [];
 
+    /**
+     * @param GlobalDataProviderResourceModel | DiSchemaDataProviderResourceInterface $globalResource
+     * @param LocalizedDataProviderResourceModel | DiSchemaDataProviderResourceInterface $localizedResource
+     */
     public function __construct(
         GlobalDataProviderResourceModel $globalResource,
         LocalizedDataProviderResourceModel $localizedResource
@@ -50,6 +55,7 @@ class Price extends AttributeStrategyAbstract
         foreach($this->getAttributes() as $attribute)
         {
             $this->_setGetDataStrategy($attribute['is_global']);
+            $this->_resolveDataDelta();
             $this->setAttributeId((int)$attribute['attribute_id']);
             $this->setAttributeCode($attribute['attribute_code']);
             if($this->isLocalized)
