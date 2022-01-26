@@ -37,7 +37,7 @@ trait DiSchemaDataProviderResourceTrait
     /**
      * @var string
      */
-    protected $chunk = 0;
+    protected $chunk = "0";
 
     /**
      * @param string $dateCriteria
@@ -105,7 +105,7 @@ trait DiSchemaDataProviderResourceTrait
      */
     public function getChunk(): string
     {
-        return $this->chunk;
+        return (string)$this->chunk;
     }
 
     /**
