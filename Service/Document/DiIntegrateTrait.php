@@ -77,6 +77,8 @@ trait DiIntegrateTrait
     {
         $document = $this->getDocContent();
         $this->loadByChunk($document);
+        unset($document);
+
         $this->loadBq();
         if($this->getSystemConfiguration()->isTest())
         {
@@ -91,6 +93,7 @@ trait DiIntegrateTrait
     {
         $document = $this->getDocContent();
         $this->loadByChunk($document);
+        unset($document);
 
         $this->integrate();
     }
