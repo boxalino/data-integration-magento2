@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
 use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\ModeIntegratorConditionalsTrait;
 use Magento\Framework\DB\Select;
 
 /**
@@ -15,6 +16,7 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
 {
 
     use EntityResourceTrait;
+    use ModeIntegratorConditionalsTrait;
 
     /**
      * As a daily basis, the products can be exported for the past hour only
@@ -26,13 +28,11 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      */
     public function getDeltaDateConditional(array $conditionalFields = ["e.updated_at", "e.created_at"]) : string
     {
-        $conditions = [];
-        foreach($conditionalFields as $field)
-        {
-            $conditions[] = " STR_TO_DATE($field, '%Y-%m-%d %H:%i') > '$this->dateConditional' ";
-        }
-
-        return implode("OR", $conditions);
+        return $this->getResourceDateConditional(
+            ["e.updated_at", "e.created_at"],
+            $this->dateConditional,
+            true
+        );
     }
 
     /**
@@ -43,28 +43,21 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      * @param string $field
      * @return Select
      */
-    public function addInstantCondition(Select $query, string $field = "e.entity_id") : Select
+    public function addInstantConditional(Select $query, string $field = "e.entity_id") : Select
     {
-        $query->andWhere("$field IN (?)", $this->idsConditional);
-        return $query;
+        return $this->addResourceIdsConditional($query, "e.entity_id", $this->idsConditional);
     }
 
     /**
      * For the delta updates that use the MVIEW
-     * 
+     *
      * @param Select $query
      * @return Select
      */
-    public function addDateIdsConditions(Select $query) : Select
+    public function addDeltaIdsConditional(Select $query) : Select
     {
-        $conditions = [
-            $this->getDeltaDateConditional(),
-            $this->adapter->quoteInto("e.entity_id IN (?)" , $this->idsConditional)
-        ];
-
-        $query->andWhere(implode(" OR ", $conditions));
-        return $query;
+        return $this->addResourceIdsConditional($query, "e.entity_id", $this->idsConditional);
     }
 
-    
+
 }

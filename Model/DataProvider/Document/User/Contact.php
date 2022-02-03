@@ -27,14 +27,6 @@ class Contact extends ModeIntegrator
     /**
      * @return array
      */
-    public function _getData(): array
-    {
-        return $this->getResourceModel()->getFetchAllByFieldsWebsiteId($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
-    }
-
-    /**
-     * @return array
-     */
     protected function getFields() : array
     {
         return [

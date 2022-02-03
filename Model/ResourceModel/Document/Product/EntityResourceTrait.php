@@ -41,9 +41,9 @@ trait EntityResourceTrait
             )
             ->where("c_p_w.website_id= ? " , $websiteId);
 
-        if($this->useDateIdsConditionals)
+        if($this->useDeltaIdsConditionals)
         {
-            return $this->addDateIdsConditions($select);
+            return $this->addDeltaIdsConditional($select);
         }
         
         if($this->delta)
@@ -53,7 +53,7 @@ trait EntityResourceTrait
 
         if($this->instant)
         {
-            $select = $this->addInstantCondition($select);
+            $select = $this->addInstantConditional($select);
         }
         
         return $select;

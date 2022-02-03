@@ -7,7 +7,7 @@ namespace Boxalino\DataIntegration\Model\ResourceModel\Document;
 trait DiSchemaDataProviderResourceTrait
 {
 
-    protected $useDateIdsConditionals = false;
+    protected $useDeltaIdsConditionals = false;
 
     /**
      * @var bool
@@ -78,9 +78,9 @@ trait DiSchemaDataProviderResourceTrait
     /**
      * @param bool $value
      */
-    public function useDateIdsConditionals(bool $value) : void
+    public function useDeltaIdsConditionals(bool $value) : void
     {
-        $this->useDateIdsConditionals = $value;
+        $this->useDeltaIdsConditionals = $value;
     }
 
     /**

@@ -36,9 +36,9 @@ trait EntityResourceTrait
             )
             ->where("s_o.store_id IN (?) OR s_o.store_id = 0" , $storeIds);
 
-        if($this->useDateIdsConditionals)
+        if($this->useDeltaIdsConditionals)
         {
-            return $this->addDateIdsConditions($select);
+            return $this->addDeltaIdsConditional($select);
         }
 
         if($this->delta)
@@ -48,7 +48,7 @@ trait EntityResourceTrait
 
         if($this->instant)
         {
-            $select = $this->addInstantCondition($select);
+            $select = $this->addInstantConditional($select);
         }
 
         /** @heldchen fix: must use ASC as in production systems there will be new orders while exporting */

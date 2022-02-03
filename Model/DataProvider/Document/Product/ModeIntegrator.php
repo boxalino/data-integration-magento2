@@ -56,7 +56,7 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
             $this->getResourceModel()->useDelta(true);
             if(count($this->getIds()) > 0)
             {
-                $this->getResourceModel()->useDateIdsConditionals(true);
+                $this->getResourceModel()->useDeltaIdsConditionals(true);
                 $this->getResourceModel()->addIdsConditional($this->getIds());
             }
             $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());

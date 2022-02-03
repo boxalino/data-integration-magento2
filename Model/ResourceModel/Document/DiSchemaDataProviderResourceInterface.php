@@ -34,7 +34,7 @@ interface DiSchemaDataProviderResourceInterface
     /**
      * @param bool $value
      */
-    public function useDateIdsConditionals(bool $value) : void;
+    public function useDeltaIdsConditionals(bool $value) : void;
 
     /**
      * @param int $batchSize

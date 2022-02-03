@@ -67,6 +67,7 @@ trait DiIntegrateTypedSchemaTrait
                 }
 
                 $content[$id][$this->getResolverType()][] = $schema;
+                unset($schema);
             } catch (\Throwable $exception)
             {
                 $this->logger->debug("Boxalino DI: Error on " . get_called_class() . " content export: " . $exception->getMessage());
@@ -110,7 +111,7 @@ trait DiIntegrateTypedSchemaTrait
                     continue;
                 }
 
-                $content[$id][$propertyName] = $dataProvider->get($propertyName, $item);
+                $content[$id][$propertyName] = $propertyValue;
             }
         }
 

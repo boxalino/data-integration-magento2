@@ -39,9 +39,9 @@ trait EntityResourceTrait
             )
             ->where("c_e.website_id IN (?) " , $websiteId);
 
-        if($this->useDateIdsConditionals)
+        if($this->useDeltaIdsConditionals)
         {
-            return $this->addDateIdsConditions($select);
+            return $this->addDeltaIdsConditions($select);
         }
 
         if($this->delta)

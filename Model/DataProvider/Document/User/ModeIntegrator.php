@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
+use Boxalino\DataIntegration\Model\DataProvider\Document\DocPropertyAccessorTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
@@ -18,6 +19,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
     use DocDeltaIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use DataValidationTrait;
+    use DocPropertyAccessorTrait;
 
 
     /**
@@ -36,13 +38,20 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      *
      * @return array
      */
-    abstract function _getData() : array;
+    public function _getData(): array
+    {
+        return $this->getResourceModel()->getFetchAllByFieldsWebsiteId($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+    }
 
     /**
      * @return int
      */
     abstract function getEntityTypeId() : int;
 
+    /**
+     * @return array
+     */
+    abstract protected function getFields() : array;
 
     public function getData() : array
     {
@@ -65,7 +74,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
         $this->getResourceModel()->useDelta(true);
         if(count($this->getIds()) > 0)
         {
-            $this->getResourceModel()->useDateIdsConditionals(true);
+            $this->getResourceModel()->useDeltaIdsConditionals(true);
             $this->getResourceModel()->addIdsConditional($this->getIds());
         }
         $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
@@ -89,7 +98,13 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
      */
     protected function _getDeltaSyncCheckDate() : string
     {
-        return $this->getSyncCheck() ?? date("Y-m-d H:i", strtotime("-1 week"));
+        $syncCheck = $this->getSyncCheck();
+        if(empty($syncCheck))
+        {
+            return date("Y-m-d H:i", strtotime("-1 week"));
+        }
+
+        return date("Y-m-d H:i", strtotime("-5 minutes", strtotime($syncCheck)));
     }
 
     /**
@@ -119,6 +134,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
             }
 
             $this->attributeValueNameList->offsetSet($table, $attributeContent);
+            unset($attrContent); unset($availableDiData);
         }
     }
 
@@ -182,33 +198,6 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
         }
 
         return $options;
-    }
-
-    /**
-     * Identify the getter function for the requested property name
-     *
-     * @param string $propertyName
-     * @param array $row
-     * @return mixed
-     */
-    public function get(string $propertyName, array $row)
-    {
-        $functionSuffix = preg_replace('/\s+/', '', ucwords(implode(" ", explode("_", $propertyName))));
-        $functionName = "get" . $functionSuffix;
-        $methods = get_class_methods($this);
-        $return = null;
-        if(in_array($functionName, $methods))
-        {
-            try{
-                $return = $this->$functionName($row);
-            } catch (\Throwable $exception)
-            {
-                throw $exception;
-                // do nothing
-            }
-        }
-
-        return $return;
     }
 
 

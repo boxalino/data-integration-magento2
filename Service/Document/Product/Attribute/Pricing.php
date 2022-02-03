@@ -23,7 +23,7 @@ class Pricing extends IntegrationPropertyHandlerAbstract
         $content = [];
         $currencyFactors = $this->getCurrencyFactorMap();
         $languages = $this->getSystemConfiguration()->getLanguages();
-        $currencyCodes = $this->getSystemConfiguration()->getCurrencyCodes();
+        $currencyCodes = array_unique($this->getSystemConfiguration()->getCurrencyCodes());
 
         foreach ($this->getDataProvider()->getData() as $item)
         {

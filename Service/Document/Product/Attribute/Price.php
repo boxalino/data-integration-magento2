@@ -22,7 +22,7 @@ class Price extends IntegrationPropertyHandlerAbstract
         $content = [];
         $currencyFactor = $this->getCurrencyFactorMap();
         $languages = $this->getSystemConfiguration()->getLanguages();
-        $currencyCodes = $this->getSystemConfiguration()->getCurrencyCodes();
+        $currencyCodes = array_unique($this->getSystemConfiguration()->getCurrencyCodes());
 
         $dataProvider = $this->getDataProvider();
         if($dataProvider instanceof DocProductPricePropertyInterface)

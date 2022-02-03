@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Order;
 
-use Boxalino\DataIntegration\Model\ResourceModel\BaseResourceTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\ModeIntegratorConditionalsTrait;
 use Magento\Framework\DB\Select;
 
 /**
@@ -16,6 +16,7 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
 {
 
     use EntityResourceTrait;
+    use ModeIntegratorConditionalsTrait;
 
     /**
      * On a daily basis, the orders can be exported for the past week
@@ -25,15 +26,13 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      *
      * @return string
      */
-    public function getDeltaDateConditional(array $conditionalFields = ["s_o.updated_at", "s_o.created_at"]) : string
+    public function getDeltaDateConditional() : string
     {
-        $conditions = [];
-        foreach($conditionalFields as $field)
-        {
-            $conditions[] = " STR_TO_DATE($field, '%Y-%m-%d %H:%i') > '$this->dateConditional' ";
-        }
-
-        return implode("OR", $conditions);
+        return $this->getResourceDateConditional(
+            ["s_o.updated_at", "s_o.created_at"],
+            $this->dateConditional,
+            true
+        );
     }
 
     /**
@@ -41,13 +40,11 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      * (as a general rule - the filter is by IDs provided from the MVIEW)
      *
      * @param Select $query
-     * @param string $field
      * @return Select
      */
-    public function addInstantCondition(Select $query, string $field = "s_o.entity_id") : Select
+    public function addInstantConditional(Select $query) : Select
     {
-        $query->andWhere("$field IN (?)", $this->idsConditional);
-        return $query;
+        return $this->addResourceIdsConditional($query, "s_o.entity_id", $this->idsConditional);
     }
 
     /**
@@ -56,15 +53,10 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
      * @param Select $query
      * @return Select
      */
-    public function addDateIdsConditions(Select $query) : Select
+    public function addDeltaIdsConditional(Select $query) : Select
     {
-        $conditions = [
-            $this->getDeltaDateConditional(),
-            $this->adapter->quoteInto("s_o.entity_id IN (?)" , $this->idsConditional)
-        ];
-
-        $query->andWhere(implode(" OR ", $conditions));
-        return $query;
+        return $this->addResourceIdsConditional($query, "s_o.entity_id", $this->idsConditional);
     }
+
 
 }

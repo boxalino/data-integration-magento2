@@ -27,14 +27,6 @@ class Entity extends ModeIntegrator
     /**
      * @return array
      */
-    public function _getData(): array
-    {
-        return $this->getResourceModel()->getFetchAllByFieldsStoreIds($this->getFields(), $this->getSystemConfiguration()->getStoreIds());
-    }
-
-    /**
-     * @return array
-     */
     protected function getFields() : array
     {
         return [
