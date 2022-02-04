@@ -30,8 +30,7 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
     {
         return $this->getResourceDateConditional(
             ["e.updated_at", "e.created_at"],
-            $this->dateConditional,
-            true
+            $this->dateConditional
         );
     }
 
