@@ -7,7 +7,9 @@ use Boxalino\DataIntegration\Api\DataProvider\DocSchemaTypedInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\Schema\Order\Product as OrderProductSchema;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
+use Laminas\Di\Exception\MissingPropertyException;
 
 /**
  * Trait DiIntegrateTypedSchemaTrait
@@ -28,6 +30,11 @@ trait DiIntegrateTypedSchemaTrait
         foreach($dataProvider->getData() as $item)
         {
             $id = $this->_getDocKey($item);
+            if(!$id)
+            {
+                continue;
+            }
+
             if(!isset($content[$id]))
             {
                 $content[$id] = [];
@@ -85,8 +92,25 @@ trait DiIntegrateTypedSchemaTrait
         $propertyNames = $this->getSchemaPropertyNames();
         foreach($dataProvider->getData() as $item)
         {
-            $id = $this->_getDocKey($item);
-            $content[$id] = [];
+            try{
+                $id = $this->_getDocKey($item);
+                $content[$id] = [];
+
+                foreach($propertyNames as $propertyName)
+                {
+                    $propertyValue = $dataProvider->get($propertyName, $item);
+                    if(is_null($propertyValue))
+                    {
+                        continue;
+                    }
+
+                    $content[$id][$propertyName] = $propertyValue;
+                }
+            } catch (MissingRequiredPropertyException $exception)
+            {
+                unset($content[$id]);
+                continue;
+            }
 
             foreach($dataProvider->getStringOptions($item) as $optionLabel => $optionValues)
             {
@@ -101,17 +125,6 @@ trait DiIntegrateTypedSchemaTrait
             foreach($dataProvider->getDateTimeOptions($item) as $optionLabel => $optionValues)
             {
                 $content[$id][DocSchemaInterface::FIELD_DATETIME][] = $this->getDatetimeAttributeSchema($optionValues, $optionLabel);
-            }
-
-            foreach($propertyNames as $propertyName)
-            {
-                $propertyValue = $dataProvider->get($propertyName, $item);
-                if(is_null($propertyValue))
-                {
-                    continue;
-                }
-
-                $content[$id][$propertyName] = $propertyValue;
             }
         }
 

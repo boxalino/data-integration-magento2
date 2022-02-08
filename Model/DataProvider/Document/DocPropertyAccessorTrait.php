@@ -2,6 +2,9 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document;
 
 
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
+use Laminas\Di\Exception\MissingPropertyException;
+
 /**
  * Helper trait in accessing document properties
  * The call is divided as to avoid the lazy loading of the object on each get_class_methods
@@ -32,6 +35,11 @@ trait DocPropertyAccessorTrait
                 $return = $this->$functionName($row);
             } catch (\Throwable $exception)
             {
+                if($exception instanceof MissingRequiredPropertyException)
+                {
+                    throw $exception;
+                }
+
                 // do nothing
             }
         }

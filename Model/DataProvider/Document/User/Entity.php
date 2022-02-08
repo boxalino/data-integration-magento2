@@ -5,6 +5,7 @@ use Boxalino\DataIntegration\Api\DataProvider\DocUserLineInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\User\Entity as DataProviderResourceModel;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 
 /**
  * Class Entity
@@ -78,7 +79,19 @@ class Entity extends ModeIntegrator
      */
     public function getInternalId(array $item): ?string
     {
-        return (string)$item["entity_id"];
+        try{
+            $value = (string) $item["entity_id"];
+        } catch (\Throwable $exception)
+        {
+            $value = (string) $item[$this->getDiIdField()];
+        }
+
+        if(empty($value))
+        {
+            throw new MissingRequiredPropertyException("Missing internal_id on content: " . json_encode($item));
+        }
+
+        return $value;
     }
 
     /**

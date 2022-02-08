@@ -9,14 +9,12 @@ use Boxalino\DataIntegrationDoc\Doc\Order;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Generator\DocGeneratorInterface;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\FailSyncException;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrder;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\FullIntegrationInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -85,7 +83,12 @@ class DocHandler extends DocOrder implements
      */
     public function chunk() : bool
     {
-        return true;
+        if($this->getSystemConfiguration()->getMode() == FullIntegrationInterface::INTEGRATION_MODE)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**

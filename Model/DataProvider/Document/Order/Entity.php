@@ -4,6 +4,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\Order;
 use Boxalino\DataIntegration\Api\DataProvider\DocOrderLineInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Order\Entity as DataProviderResourceModel;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocOrderHandlerInterface;
 
 /**
@@ -96,7 +97,19 @@ class Entity extends ModeIntegrator
      */
     public function getInternalId(array $row) : string
     {
-        return (string) $row["entity_id"];
+        try{
+            $value = (string) $row["entity_id"];
+        } catch (\Throwable $exception)
+        {
+            $value = (string) $row[$this->getDiIdField()];
+        }
+
+        if(empty($value))
+        {
+            throw new MissingRequiredPropertyException("Missing internal_id on content: " . json_encode($row));
+        }
+
+        return $value;
     }
 
     /**
