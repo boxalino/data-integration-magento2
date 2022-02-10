@@ -54,6 +54,11 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
      */
     public function getAttributeCode() : string
     {
+        if($this->handlerHasProperty($this->getResolverType()))
+        {
+            return $this->properties[$this->getResolverType()];
+        }
+
         return $this->getResolverType();
     }
 

@@ -34,6 +34,11 @@ class Brand extends IntegrationPropertyHandlerAbstract
             }
         }
 
+        if($this->logErrors())
+        {
+            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
+        }
+
         return $content;
     }
 

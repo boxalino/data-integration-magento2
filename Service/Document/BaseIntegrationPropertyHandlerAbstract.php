@@ -36,6 +36,11 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
     protected $diSchemaDataProviderResolver;
 
     /**
+     * @var null | bool
+     */
+    protected $logErrorsFlag = null;
+
+    /**
      * @param LoggerInterface $logger
      * @param DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
      */
@@ -53,10 +58,6 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
         {
             $this->addPropertyNameDocAttributeMapping($key, $name);
         }
-
-        $this->addSchemaDefinition(DocSchemaInterface::FIELD_STRING, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringAttribute");
-        $this->addSchemaDefinition(DocSchemaInterface::FIELD_NUMERIC, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\NumericAttribute");
-        $this->addSchemaDefinition(DocSchemaInterface::FIELD_DATETIME, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\DatetimeAttribute");
     }
 
     /**
@@ -99,5 +100,18 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
         return "_" . $item;
     }
 
-    
+    /**
+     * @return bool
+     */
+    public function logErrors() : bool
+    {
+        if(is_null($this->logErrorsFlag))
+        {
+            $this->logErrorsFlag = $this->getSystemConfiguration()->isTest();
+        }
+
+        return $this->logErrorsFlag;
+    }
+
+
 }

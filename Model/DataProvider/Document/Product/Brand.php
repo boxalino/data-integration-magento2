@@ -30,11 +30,18 @@ class Brand extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->getResourceModel()->getFetchAllByWebsiteAttributeId(
-            $this->getFields(),
-            $this->getSystemConfiguration()->getWebsiteId(),
-            $this->getAttributeId()
-        );
+        try{
+            $data = $this->getResourceModel()->getFetchAllByWebsiteAttributeId(
+                $this->getFields(),
+                $this->getSystemConfiguration()->getWebsiteId(),
+                $this->getAttributeId()
+            );
+        } catch (\Throwable $exception)
+        {
+            $data = [];
+        }
+
+        return $data;
     }
 
     /**
@@ -74,11 +81,5 @@ class Brand extends ModeIntegrator
             $this->addValueToAttributeContent($data, $this->attributeNameValuesList, $languageCode);
         }
     }
-
-    public function getAttributeCode() : string
-    {
-        return "manufacturer";
-    }
-
 
 }

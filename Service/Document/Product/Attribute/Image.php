@@ -40,8 +40,7 @@ class Image extends IntegrationPropertyHandlerAbstract
                     $content[$id][$this->getResolverType()] = [];
                 }
 
-                $schema = $this->getImagesSchema($item, $languages, $attributeCode);
-                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $schema;
+                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $this->getImagesSchema($item, $languages, $attributeCode);
             }
         }
 

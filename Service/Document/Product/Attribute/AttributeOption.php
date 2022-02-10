@@ -50,10 +50,24 @@ class AttributeOption extends AttributeAbstract
                     $content[$id][$this->getDocSchemaPropertyNode()] = [];
                 }
 
-                $content[$id][$this->getDocSchemaPropertyNode()][] =
-                    $this->getSchema($item, $languages, $attributeName, $attributeCode);
-
+                try{
+                    $content[$id][$this->getDocSchemaPropertyNode()][] =
+                        $this->getSchema($item, $languages, $attributeName, $attributeCode);
+                } catch (\Throwable $exception)
+                {
+                    if($this->logErrors())
+                    {
+                        $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
+                            . $exception->getMessage() . " on " . json_encode($item)
+                        );
+                    }
+                }
             }
+        }
+
+        if($this->logErrors())
+        {
+            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
         }
 
         return $content;

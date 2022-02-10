@@ -43,7 +43,8 @@ class Translation extends IntegrationPropertyHandlerAbstract
             $this->getDataProvider()->setAttributeCode($attributeCode);
 
             /** @var array $item columns: di_id, <attributeCode>, lang1, lang2, lang3 .. */
-            foreach ($this->getDataProvider()->getData() as $item) {
+            foreach ($this->getDataProvider()->getData() as $item)
+            {
                 if ($item instanceof \ArrayIterator) {
                     $item = $item->getArrayCopy();
                 }

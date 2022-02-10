@@ -74,7 +74,6 @@ trait DiIntegrateTypedSchemaTrait
                 }
 
                 $content[$id][$this->getResolverType()][] = $schema;
-                unset($schema);
             } catch (\Throwable $exception)
             {
                 $this->logger->debug("Boxalino DI: Error on " . get_called_class() . " content export: " . $exception->getMessage());
@@ -108,6 +107,12 @@ trait DiIntegrateTypedSchemaTrait
                 }
             } catch (MissingRequiredPropertyException $exception)
             {
+                if($this->logErrors())
+                {
+                    $this->logger->warning("Missing required property : "
+                        . $exception->getMessage() . " on " . json_encode($item)
+                    );
+                }
                 unset($content[$id]);
                 continue;
             }

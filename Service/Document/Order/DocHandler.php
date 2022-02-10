@@ -65,7 +65,20 @@ class DocHandler extends DocOrder implements
                 $doc = $this->getDocSchemaGenerator($content);
                 $doc->setCreationTm(date("Y-m-d H:i:s"));
 
-                $this->addDocLine($doc);
+                try{
+                    if($doc->getInternalId())
+                    {
+                        $this->addDocLine($doc);
+                    }
+                } catch (\Throwable $exception)
+                {
+                    if($this->getSystemConfiguration()->isTest())
+                    {
+                        $this->logger->warning("Incomplete content for order: " . $doc->jsonSerialize());
+                    }
+
+                    continue;
+                }
             }
 
             $this->addSeekConditionToBatch();

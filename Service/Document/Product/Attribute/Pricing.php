@@ -34,12 +34,22 @@ class Pricing extends IntegrationPropertyHandlerAbstract
 
             $id = $this->_getDocKey($item);
 
-            /** @var PricingSchema $schema */
-            $schema = $this->getPricingSchema($languages, $currencyCodes, $currencyFactors,
-                $item[$this->getAttributeCode()],
-                $this->getDataProvider()->getLabelForPriceByRow($item));
+            try{
+                /** @var PricingSchema $schema */
+                $schema = $this->getPricingSchema($languages, $currencyCodes, $currencyFactors,
+                    $item[$this->getAttributeCode()],
+                    $this->getDataProvider()->getLabelForPriceByRow($item));
 
-            $content[$id][$this->getResolverType()] = $schema;
+                $content[$id][$this->getResolverType()] = $schema;
+            } catch (\Throwable $exception)
+            {
+                if($this->logErrors())
+                {
+                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
+                        . $exception->getMessage() . " on " . json_encode($item)
+                    );
+                }
+            }
         }
 
         return $content;

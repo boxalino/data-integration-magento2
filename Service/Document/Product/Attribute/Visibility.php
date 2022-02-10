@@ -23,11 +23,21 @@ class Visibility extends IntegrationPropertyHandlerAbstract
         $datProvider = $this->getDataProvider();
         foreach ($datProvider->getData() as $item)
         {
-            $content[$this->_getDocKey($item)][$this->getAttributeCode()] =
-                $this->getSchemaByItem($languages, $datProvider->getContextVisibility($item));
+            try{
+                $content[$this->_getDocKey($item)][$this->getAttributeCode()] =
+                    $this->getSchemaByItem($languages, $datProvider->getContextVisibility($item));
 
-            $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()] =
-                $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item));
+                $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()] =
+                    $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item));
+            } catch (\Throwable $exception)
+            {
+                if($this->logErrors())
+                {
+                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
+                        . $exception->getMessage() . " on " . json_encode($item)
+                    );
+                }
+            }
         }
 
         return $content;

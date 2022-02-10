@@ -24,8 +24,18 @@ class Stock extends IntegrationPropertyHandlerAbstract
                 continue;
             }
 
-            $content[$id][$this->getResolverType()][] = $this->getStockSchema($item[$this->getAttributeCode()], NULL, $item["stock_name"]);
-            $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema([$item["stock_status"]], "stock_status", null);
+            try{
+                $content[$id][$this->getResolverType()][] = $this->getStockSchema($item[$this->getAttributeCode()], NULL, $item["stock_name"]);
+                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema([$item["stock_status"]], "stock_status", null);
+            } catch (\Throwable $exception)
+            {
+                if($this->logErrors())
+                {
+                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
+                        . $exception->getMessage() . " on " . json_encode($item)
+                    );
+                }
+            }
         }
 
         return $content;

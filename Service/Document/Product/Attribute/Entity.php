@@ -28,6 +28,10 @@ class Entity extends IntegrationPropertyHandlerAbstract
         ]
     ){
         parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
+
+        $this->addSchemaDefinition(DocSchemaInterface::FIELD_STRING, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringAttribute");
+        $this->addSchemaDefinition(DocSchemaInterface::FIELD_NUMERIC, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\NumericAttribute");
+        $this->addSchemaDefinition(DocSchemaInterface::FIELD_DATETIME, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\DatetimeAttribute");
     }
 
     public function getValues(): array
@@ -83,6 +87,11 @@ class Entity extends IntegrationPropertyHandlerAbstract
         if(empty($content))
         {
             throw new NoRecordsFoundException("No records available. This is a logical exception in order to exit the handler loop.");
+        }
+
+        if($this->logErrors())
+        {
+            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
         }
 
         return $content;
