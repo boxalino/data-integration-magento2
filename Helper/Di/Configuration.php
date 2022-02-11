@@ -205,6 +205,7 @@ class Configuration implements DiConfigurationInterface
     protected function _getFullConfigurations(StoreConfigurationHandler $storeConfigurationHandler) : array
     {
         return [
+            GcpRequestInterface::DI_REQUEST_DISPATCH => $storeConfigurationHandler->getDispatch(),
             GcpRequestInterface::DI_REQUEST_MODE => GcpRequestInterface::GCP_MODE_FULL,
             DiConfigurationInterface::DI_CONFIG_ENDPOINT => $storeConfigurationHandler->getRestApiEndpointByMode(GcpRequestInterface::GCP_MODE_FULL),
             "allowProductSync" => $storeConfigurationHandler->getSyncStatusByModeType( GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_PRODUCT),

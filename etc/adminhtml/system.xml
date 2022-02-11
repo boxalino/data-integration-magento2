@@ -75,6 +75,12 @@
                     <validate>validate-select</validate>
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                 </field>
+                <field id="dispatch" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Dispatch Request Mode</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <comment>Only enabled if/when Boxalino has confirmed the computation of your FULL content in BQ is over 1h (exceptional case)</comment>
+                </field>
                 <field id="endpoint" translate="label comment" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Boxalino Endpoint</label>
                     <validate>validate-url</validate>

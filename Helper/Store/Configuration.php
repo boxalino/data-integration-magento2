@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Helper\Store;
 
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingConfigurationException;
+use Boxalino\DataIntegrationDoc\Service\GcpRequestInterface;
 use Magento\Store\Model\Store;
 
 /**
@@ -130,6 +131,21 @@ class Configuration
     public function getBatchSize() : int
     {
         $value = $this->getStore()->getConfig($this->getScopeConfigPath("batchSize"));
+        if(empty($value))
+        {
+            return 0;
+        }
+
+        return (int)$value;
+    }
+
+    /**
+     * @return int
+     * @throws \Exception
+     */
+    public function getDispatch() : int
+    {
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath(GcpRequestInterface::DI_REQUEST_DISPATCH, GcpRequestInterface::GCP_MODE_FULL));
         if(empty($value))
         {
             return 0;

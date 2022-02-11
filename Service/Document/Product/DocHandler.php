@@ -111,8 +111,9 @@ class DocHandler extends DocProduct implements
         $this->logTime("start" . __FUNCTION__);
         foreach($this->getDocData() as $id => $content)
         {
-            $id = (string)$content[DocSchemaInterface::FIELD_INTERNAL_ID];
             try{
+                $id = (string)$content[DocSchemaInterface::FIELD_INTERNAL_ID];
+
                 if(!isset($content[DocSchemaInterface::DI_DOC_TYPE_FIELD]))
                 {
                     if($this->getSystemConfiguration()->isTest())

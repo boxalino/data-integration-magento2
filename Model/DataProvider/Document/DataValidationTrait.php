@@ -18,7 +18,7 @@ trait DataValidationTrait
             list($month, $day, $year) = explode("-", (new \DateTime($date))->format('m-d-Y'));
             if(checkdate((int)$month, (int)$day, (int)$year))
             {
-                return (new \DateTime($date))->format("Y-m-d");
+                return (new \DateTime($date))->format("Y-m-d H:i:s");
             }
 
             return null;
