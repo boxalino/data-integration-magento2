@@ -49,7 +49,7 @@ trait EavAttributeResourceTrait
      * @return array
      */
     public function getAttributesByScopeBackendTypeFrontendInput(
-        array $scope,
+        array $scope = [],
         array $backendType = [],
         array $frontendInput = [],
         bool $orConditional = false,

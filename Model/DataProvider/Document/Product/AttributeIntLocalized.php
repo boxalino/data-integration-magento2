@@ -14,7 +14,7 @@ class AttributeIntLocalized extends AttributeLocalizedAbstract
 
     public function getFrontendInputList() : array
     {
-        return ["select", "boolean", "text", NULL];
+        return ["boolean", "text", NULL];
     }
 
     public function getEntityAttributeTableType() : string
