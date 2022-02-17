@@ -98,7 +98,11 @@ class EavAttribute implements
             )
             || ($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT] === "select"
                 && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::BACKEND_TYPE] === "int"
-                && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::SOURCE_MODEL] === "Magento\\Eav\\Model\\Entity\\Attribute\\Source\\Table"
+                && (in_array(
+                        $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::SOURCE_MODEL],
+                        ["Magento\Eav\Model\Entity\Attribute\Source\Table", "Magento\Catalog\Model\ResourceModel\Eav\Attribute"]
+                    ) || empty($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::SOURCE_MODEL])
+                )
             );
     }
 
@@ -111,8 +115,7 @@ class EavAttribute implements
         }
 
         if($backendType === "decimal" ||
-            ($backendType === "int" && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT]==="boolean") ||
-            ($backendType === "int" && empty($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::SOURCE_MODEL]))
+            ($backendType === "int" && $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT]==="boolean")
         ){
             return "numeric";
         }

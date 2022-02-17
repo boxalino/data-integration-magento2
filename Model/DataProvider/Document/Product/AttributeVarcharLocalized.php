@@ -9,7 +9,7 @@ class AttributeVarcharLocalized extends AttributeLocalizedAbstract
 
     public function getBackendTypeList() : array
     {
-        return ["varchar"];
+        return ["varchar", "string"];
     }
 
     public function getFrontendInputList() : array

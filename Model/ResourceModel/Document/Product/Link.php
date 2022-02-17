@@ -82,11 +82,6 @@ class Link extends ModeIntegrator
                 ['entity_visibility'=>'c_p_e_v.value']
             );
 
-//        if(!empty($this->exportIds) && $this->isDelta)
-//        {
-//            $select->where('c_p_e.entity_id IN(?)', $this->exportIds);
-//        }
-
         $finalSelect = $this->adapter->select()
             ->from(
                 ["entity_select" => new \Zend_Db_Expr("( ". $select->__toString() . " )")],
