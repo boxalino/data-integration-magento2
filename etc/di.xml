@@ -85,4 +85,43 @@
         </arguments>
     </type>
 
+    <!-- DELTA sync logs in boxalino-di.log file -->
+    <type name="Boxalino\DataIntegration\Model\Indexer\Delta">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <!-- CLI commands -->
+    <type name="Boxalino\DataIntegration\Framework\Console\Product\FullDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Order\FullDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\User\FullDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Product\DeltaDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Order\DeltaDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\User\DeltaDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+
 </config>

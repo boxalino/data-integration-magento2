@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document;
 
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\FailSyncException;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Psr\Log\LoggerInterface;
@@ -75,6 +74,10 @@ trait DiIntegrateTrait
      */
     public function integrateFull() : void
     {
+        if($this->getSystemConfiguration()->isTest())
+        {
+            $this->getLogger()->info("Boxalino DI: creating the document JSONL from structured DB load.");
+        }
         $document = $this->getDocContent();
         $this->loadByChunk($document);
         unset($document);
@@ -91,6 +94,10 @@ trait DiIntegrateTrait
      */
     public function integrateByChunk()
     {
+        if($this->getSystemConfiguration()->isTest())
+        {
+            $this->getLogger()->info("Boxalino DI: creating the document JSONL from structured DB load.");
+        }
         $document = $this->getDocContent();
         $this->loadByChunk($document);
         unset($document);

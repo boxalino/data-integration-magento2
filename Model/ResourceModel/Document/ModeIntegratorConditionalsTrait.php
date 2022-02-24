@@ -44,7 +44,7 @@ trait ModeIntegratorConditionalsTrait
         $orConditions = $this->_getDateConditional($conditionalFields, ">", "'$dateConditional'");
         if($addAndConditional)
         {
-            $andConditions = $this->_getDateConditional($conditionalFields, "<=", "STR_TO_DATE(DATE_SUB(NOW(), INTERVAL 5 MINUTE), '%Y-%m-%d %H:%i')");
+            $andConditions = $this->_getDateConditional($conditionalFields, "<=", "STR_TO_DATE(DATE_SUB(NOW(), INTERVAL 5 MINUTE), '%Y-%m-%d %H:%i:%s')");
             return implode(" AND ",["(" . $orConditions . ")",  "(" . $andConditions . ")"]);
         }
 
@@ -63,7 +63,7 @@ trait ModeIntegratorConditionalsTrait
         $conditions = [];
         foreach($conditionalFields as $field)
         {
-            $conditions[] = " STR_TO_DATE($field, '%Y-%m-%d %H:%i') $symbol $date ";
+            $conditions[] = " STR_TO_DATE($field, '%Y-%m-%d %H:%i:%s') $symbol $date ";
         }
 
         if($and)
