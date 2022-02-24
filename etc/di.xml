@@ -93,6 +93,7 @@
     </type>
 
     <!-- CLI commands -->
+    <preference for="Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface" type="Boxalino\DataIntegration\Model\Indexer\Mview\View"/>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\FullDataIntegration">
         <arguments>
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
@@ -108,6 +109,21 @@
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
         </arguments>
     </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Product\FullMviewDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Order\FullMviewDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\User\FullMviewDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\DeltaDataIntegration">
         <arguments>
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
@@ -119,6 +135,21 @@
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\User\DeltaDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Product\DeltaMviewDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Order\DeltaMviewDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\User\DeltaMviewDataIntegration">
         <arguments>
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
         </arguments>

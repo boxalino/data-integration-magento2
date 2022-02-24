@@ -6,6 +6,7 @@ use Boxalino\DataIntegrationDoc\Framework\Integrate\DiLoggerTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\IntegrationHandler;
+use Psr\Log\LoggerInterface;
 
 /**
  * @package Boxalino\DataIntegration\Service\Integration\Mode
@@ -23,6 +24,7 @@ abstract class AbstractIntegrationHandler extends IntegrationHandler
     ){
         parent::__construct();
         $this->logger = $logger;
+
         foreach($docHandlers as $doc => $resolver)
         {
             if($resolver instanceof DocHandlerInterface)

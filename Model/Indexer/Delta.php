@@ -1,13 +1,10 @@
 <?php
 namespace Boxalino\DataIntegration\Model\Indexer;
 
-use Boxalino\DataIntegration\Service\Document\IntegrationDocHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\DiIntegrateTrait;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\DiLoggerTrait;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\Mode\Configuration\DeltaTrait;
-use Boxalino\DataIntegrationDoc\Framework\Integrate\Mode\Configuration\InstantTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
-use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 use Psr\Log\LoggerInterface;
 
@@ -57,10 +54,12 @@ abstract class Delta implements \Magento\Framework\Indexer\ActionInterface,
      */
     public function execute($ids)
     {
-        try{
-            /** @var ConfigurationDataObject $configuration */
-            foreach($this->getConfigurations() as $configuration)
-            {
+        $exceptions = [];
+
+        /** @var ConfigurationDataObject $configuration */
+        foreach($this->getConfigurations() as $configuration)
+        {
+            try{
                 if($this->canRun($configuration))
                 {
                     try{
@@ -74,14 +73,23 @@ abstract class Delta implements \Magento\Framework\Indexer\ActionInterface,
                         $this->integrate($configuration);
                     } catch (\Throwable $exception)
                     {
+                        $exceptions[] = $exception->getMessage() . " for " . $this->getProcessName();
                         $this->logger->info($exception->getMessage());
                     }
                 }
+            } catch (\Exception $exception)
+            {
+                $exceptions[] = $exception->getMessage() . " for " . $this->getProcessName();
+                $this->logger->alert($exception->getMessage());
             }
-        } catch (\Exception $exception)
-        {
-            $this->logger->alert($exception->getMessage());
         }
+
+        if(empty($exceptions))
+        {
+            return;
+        }
+
+        throw new \Exception(json_encode($exceptions));
     }
 
     /**
@@ -91,6 +99,8 @@ abstract class Delta implements \Magento\Framework\Indexer\ActionInterface,
      */
     public function executeFull()
     {
+        $exceptions = [];
+
         try{
             /** @var ConfigurationDataObject $configuration */
             foreach($this->getConfigurations() as $configuration)
@@ -101,14 +111,23 @@ abstract class Delta implements \Magento\Framework\Indexer\ActionInterface,
                         $this->integrate($configuration);
                     } catch (\Throwable $exception)
                     {
+                        $exceptions[] = $exception->getMessage() . " for " . $this->getProcessName();
                         $this->logger->info($exception->getMessage());
                     }
                 }
             }
         } catch (\Exception $exception)
         {
+            $exceptions[] = $exception->getMessage() . " for " . $this->getProcessName();
             $this->logger->alert($exception->getMessage());
         }
+
+        if(empty($exceptions))
+        {
+            return;
+        }
+
+        throw new \Exception(json_encode($exceptions));
     }
 
 
