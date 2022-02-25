@@ -84,8 +84,8 @@ class View implements DiViewHandlerInterface
         {
             if($view->getId() === $viewId)
             {
-               $backlogSize = $view->getChangelog()->getList($fromVersion, $toVersion);
-               return count($backlogSize);
+                $backlogSize = $view->getChangelog()->getList($fromVersion, $toVersion);
+                return count($backlogSize);
             }
         }
 
@@ -121,7 +121,7 @@ class View implements DiViewHandlerInterface
      * @return int
      * @throws ChangelogTableNotExistsException | MviewViewIdNotFoundException
      */
-    public function getCurrentVersionIdByViewId(string $viewId, ?string $group = null) : int
+    public function getChangelogVersionIdByViewId(string $viewId, ?string $group = null) : int
     {
         $group = $group ?? $this->mviewGroupId;
         /** @var ViewInterface $view */
@@ -148,7 +148,7 @@ class View implements DiViewHandlerInterface
      * @return int
      * @throws MviewViewIdNotFoundException
      */
-    public function getLastVersionIdByViewId(string $viewId, ?string $group = null) : int
+    public function getMviewVersionIdByViewId(string $viewId, ?string $group = null) : int
     {
         $group = $group ?? $this->mviewGroupId;
         /** @var ViewInterface $view */

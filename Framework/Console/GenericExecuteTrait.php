@@ -10,10 +10,9 @@ trait GenericExecuteTrait
 {
 
     /**
-     * @param string|null $account
      * @return array
      */
-    protected function _execute(?string $account = null)  : array
+    protected function _execute()  : array
     {
         $exceptionMessages = [];
         /** @var ConfigurationDataObject $configuration */

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Framework\Console;
 
+
 use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
 use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 
@@ -11,11 +12,10 @@ trait MviewIdsExecuteTrait
 {
 
     /**
-     * @param string|null $account
      * @return array
      * @throws EmptyBacklogException
      */
-    protected function _execute(?string $account = null)  : array
+    protected function _execute()  : array
     {
         $ids = $this->getMviewIds();
         if(empty($ids))

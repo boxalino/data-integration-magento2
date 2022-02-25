@@ -3,15 +3,18 @@ namespace Boxalino\DataIntegration\Framework\Console;
 
 use Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface;
 use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
+use Boxalino\DataIntegration\Service\ErrorHandler\MviewViewIdNotFoundException;
 use Boxalino\DataIntegrationDoc\Framework\Console\DiGenericAbstractCommand;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
+use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class AbstractMviewDataIntegration
+ * Class AbstractFullMviewDataIntegration
  *
  * Used as a CLI command
  *
@@ -22,12 +25,12 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
 {
 
     /**
-     * @var string | null
+     * @var strin | null
      */
     protected $mviewViewId;
 
     /**
-     * @var string | null
+     * @var strin | null
      */
     protected $mviewGroupId;
 
@@ -39,12 +42,12 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     /**
      * @var int | null
      */
-    protected $lastVersionId = null;
+    protected $mviewVersionId = null;
 
     /**
      * @var int | null
      */
-    protected $currentVersionId = null;
+    protected $changelogVersionId = null;
 
     public function __construct(
         DiViewHandlerInterface $diViewHandler,
@@ -73,11 +76,11 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
         try{
             $this->_reviewMview();
 
-            $exceptionMessages = $this->_execute($account);
+            $exceptionMessages = $this->_execute();
 
             if(empty($exceptionMessages))
             {
-                if(!is_null($this->lastVersionId) && !is_null($this->currentVersionId))
+                if(!is_null($this->mviewVersionId) && !is_null($this->changelogVersionId))
                 {
                     $this->_updateMview();
                 }
@@ -100,11 +103,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
         }
     }
 
-    /**
-     * @param string|null $account
-     * @return array
-     */
-    abstract protected function _execute(?string $account = null) : array;
+    abstract protected function _execute() : array;
 
     /**
      * @return void
@@ -114,21 +113,21 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
         try{
             if($this->mviewViewId)
             {
-                $this->lastVersionId = $this->mviewViewHandler->getLastVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
-                $this->currentVersionId = $this->mviewViewHandler->getCurrentVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
+                $this->mviewVersionId = $this->mviewViewHandler->getMviewVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
+                $this->changelogVersionId = $this->mviewViewHandler->getChangelogVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
 
                 $this->getLogger()->info("Boxalino DI: Mview information: " .
                     json_encode([
                         "group" => $this->mviewGroupId,
                         "viewId" => $this->mviewViewId,
-                        "currentVersionId"=> $this->currentVersionId,
-                        "lastVersionId"=> $this->lastVersionId,
-                        "backlog" => $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->lastVersionId, $this->currentVersionId)
+                        "changelogVersionId"=>$this->changelogVersionId,
+                        "mviewVersionId"=>$this->mviewVersionId,
+                        "backlog" => $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId)
                     ]));
             }
         } catch (\Throwable $exception)
         {
-            $this->lastVersionId = null; $this->currentVersionId = null;
+            $this->mviewVersionId = null; $this->changelogVersionId = null;
             $this->getLogger()->warning($exception->getMessage());
         }
     }
@@ -140,10 +139,10 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     protected function _updateMview() : void
     {
         try{
-            $this->getLogger()->info("Boxalino DI: Updating the mview version for $this->mviewGroupId:$this->mviewViewId from $this->currentVersionId to $this->lastVersionId");
-            $this->mviewViewHandler->updateVersionIdByViewId($this->mviewViewId, $this->lastVersionId, $this->mviewGroupId);
+            $this->getLogger()->info("Boxalino DI: Updating the mview version for $this->mviewGroupId:$this->mviewViewId from $this->mviewVersionId to $this->changelogVersionId");
+            $this->mviewViewHandler->updateVersionIdByViewId($this->mviewViewId, $this->changelogVersionId, $this->mviewGroupId);
 
-            $this->getLogger()->info("Boxalino DI: Clearing the $this->mviewGroupId:$this->mviewViewId  changelog for version older than $this->lastVersionId");
+            $this->getLogger()->info("Boxalino DI: Clearing the $this->mviewGroupId:$this->mviewViewId  changelog for version older than $this->changelogVersionId");
             $this->mviewViewHandler->clearChangelogByViewId($this->mviewViewId, $this->mviewGroupId);
         } catch (\Throwable $exception)
         {
@@ -158,7 +157,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     public function getMviewIds() : array
     {
         return $this->getMviewViewHandler()->getBacklogByViewId(
-                $this->getMviewViewId(), $this->getLastVersionId(), $this->getCurrentVersionId(), $this->getMviewGroupId()
+                $this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId()
         );
     }
 
@@ -189,17 +188,17 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     /**
      * @return int|null
      */
-    public function getLastVersionId(): ?int
+    public function getMviewVersionId(): ?int
     {
-        return $this->lastVersionId;
+        return $this->mviewVersionId;
     }
 
     /**
      * @return int|null
      */
-    public function getCurrentVersionId(): ?int
+    public function getChangelogVersionId(): ?int
     {
-        return $this->currentVersionId;
+        return $this->changelogVersionId;
     }
 
 

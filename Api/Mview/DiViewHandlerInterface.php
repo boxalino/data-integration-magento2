@@ -1,13 +1,14 @@
 <?php
 namespace Boxalino\DataIntegration\Api\Mview;
 
+
 use Boxalino\DataIntegration\Service\ErrorHandler\MviewViewIdNotFoundException;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 
 /**
  * Interface DiViewHandlerInterface
  */
-interface DiViewHandlerInterface 
+interface DiViewHandlerInterface
 {
 
     /**
@@ -45,7 +46,7 @@ interface DiViewHandlerInterface
      * @return int
      * @throws ChangelogTableNotExistsException | MviewViewIdNotFoundException
      */
-    public function getCurrentVersionIdByViewId(string $viewId, ?string $group = null) : int;
+    public function getChangelogVersionIdByViewId(string $viewId, ?string $group = null) : int;
 
     /**
      * @param string $viewId
@@ -53,7 +54,7 @@ interface DiViewHandlerInterface
      * @return int
      * @throws MviewViewIdNotFoundException
      */
-    public function getLastVersionIdByViewId(string $viewId, ?string $group = null) : int;
+    public function getMviewVersionIdByViewId(string $viewId, ?string $group = null) : int;
 
     /**
      * @param string $viewId
@@ -63,5 +64,5 @@ interface DiViewHandlerInterface
      */
     public function clearChangelogByViewId(string $viewId, ?string $group = null) : void;
 
-    
+
 }

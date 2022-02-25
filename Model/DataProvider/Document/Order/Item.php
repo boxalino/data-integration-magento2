@@ -48,6 +48,7 @@ class Item extends ModeIntegrator
         $options["name"] = [$item["name"]];
         $options["description"] = [$item["description"]];
         $options["free_shipping"] = [$item["free_shipping"]];
+        $options["parent_item_id"] = [$item["parent_item_id"]];
 
         try{
             $itemOptions = json_decode($item["product_options"], true);
@@ -138,12 +139,12 @@ class Item extends ModeIntegrator
 
     public function getUnitListPrice(array $item): ?float
     {
-        return (float)round($item["price_incl_tax"], 2);
+        return (float)round($item["original_price"], 2);
     }
 
     public function getUnitSalesPrice(array $item): ?float
     {
-        return (float)round($item["original_price"], 2);
+        return (float)round($item["price_incl_tax"], 2);
     }
 
     public function getUnitGrossMargin(array $item): ?float
@@ -163,7 +164,7 @@ class Item extends ModeIntegrator
 
     public function getTotalListPrice(array $item): ?float
     {
-        return (float)round($item["row_total_incl_tax"], 2);
+        return (float)round($item["original_price"], 2) * (int)$item["qty_ordered"];
     }
 
     public function getTotalSalesPrice(array $item): ?float
@@ -209,6 +210,6 @@ class Item extends ModeIntegrator
 
         return "ordered";
     }
-    
+
 
 }
