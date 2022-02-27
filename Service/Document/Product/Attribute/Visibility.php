@@ -21,6 +21,7 @@ class Visibility extends IntegrationPropertyHandlerAbstract
         $languages = $this->getSystemConfiguration()->getLanguages();
         /** @var DocProductVisibilityPropertyInterface $datProvider */
         $datProvider = $this->getDataProvider();
+        
         foreach ($datProvider->getData() as $item)
         {
             try{

@@ -24,8 +24,9 @@ class AttributeOption extends AttributeAbstract
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
+        $dataProvider = $this->getDataProvider();
 
-        foreach($this->getDataProvider()->getAttributes() as $attribute)
+        foreach($dataProvider->getAttributes() as $attribute)
         {
             $this->setAttribute($attribute);
             $this->_addAttributeConfigOnDataProviderByAttribute();
@@ -37,7 +38,7 @@ class AttributeOption extends AttributeAbstract
             }
 
             /** @var array $item columns di_id, <attributeCode> with value */
-            foreach($this->getDataProvider()->getData() as $id => $item)
+            foreach($dataProvider->getData() as $id => $item)
             {
                 if($item instanceof \ArrayIterator)
                 {

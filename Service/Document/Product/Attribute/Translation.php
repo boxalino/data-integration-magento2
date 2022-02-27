@@ -37,13 +37,14 @@ class Translation extends IntegrationPropertyHandlerAbstract
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
-
-        foreach ($this->getDataProvider()->getAttributes() as $attributeCode => $type)
+        $dataProvider = $this->getDataProvider();
+        
+        foreach ($dataProvider->getAttributes() as $attributeCode => $type)
         {
-            $this->getDataProvider()->setAttributeCode($attributeCode);
+            $dataProvider->setAttributeCode($attributeCode);
 
             /** @var array $item columns: di_id, <attributeCode>, lang1, lang2, lang3 .. */
-            foreach ($this->getDataProvider()->getData() as $item)
+            foreach ($dataProvider->getData() as $item)
             {
                 if ($item instanceof \ArrayIterator) {
                     $item = $item->getArrayCopy();

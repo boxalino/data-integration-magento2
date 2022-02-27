@@ -10,6 +10,9 @@ trait GenericExecuteTrait
 {
 
     /**
+     * Removed the check for account input parameter
+     * The mview is saved globally and gets cleared at the end of the flow
+     *
      * @return array
      */
     protected function _execute()  : array
@@ -18,35 +21,20 @@ trait GenericExecuteTrait
         /** @var ConfigurationDataObject $configuration */
         foreach($this->getConfigurations() as $configuration)
         {
-            try{
-                if($this->canRun($configuration))
-                {
-                    try{
-                        if(empty($account))
-                        {
-                            $this->integrate($configuration);
-                            continue;
-                        }
-                    } catch (\Throwable $exception)
-                    {
-                        $exceptionMessages[] = $exception->getMessage() . " for " . $this->getProcessName();
-                        $this->logger->info($exception->getMessage());
-                    }
-                   
-                    if($configuration->getAccount() == $account)
-                    {
-                        $this->integrate($configuration);
-                        break;
-                    }
-                }
-            } catch (\Throwable $exception)
+            if($this->canRun($configuration))
             {
-                $exceptionMessages[] = $exception->getMessage();
+                try{
+                    $this->integrate($configuration);
+                } catch (\Throwable $exception)
+                {
+                    $exceptionMessages[] = $exception->getMessage() . " for " . $this->getProcessName();
+                    $this->logger->info($exception->getMessage());
+                }
             }
         }
-        
+
         return $exceptionMessages;
     }
 
-    
+
 }

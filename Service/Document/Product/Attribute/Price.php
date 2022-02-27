@@ -23,14 +23,14 @@ class Price extends IntegrationPropertyHandlerAbstract
         $currencyFactor = $this->getCurrencyFactorMap();
         $languages = $this->getSystemConfiguration()->getLanguages();
         $currencyCodes = array_unique($this->getSystemConfiguration()->getCurrencyCodes());
-
         $dataProvider = $this->getDataProvider();
+        
         if($dataProvider instanceof DocProductPricePropertyInterface)
         {
             foreach ($dataProvider->getData() as $item)
             {
-                $listPrice = $this->getDataProvider()->getListPrice($item);
-                $salesPrice = $this->getDataProvider()->getSalesPrice($item);
+                $listPrice = $dataProvider->getListPrice($item);
+                $salesPrice = $dataProvider->getSalesPrice($item);
                 if(empty($listPrice) && empty($salesPrice))
                 {
                     continue;

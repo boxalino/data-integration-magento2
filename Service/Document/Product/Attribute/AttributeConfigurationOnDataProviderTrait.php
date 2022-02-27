@@ -21,12 +21,12 @@ trait AttributeConfigurationOnDataProviderTrait
     {
         if(isset($this->attribute["attribute_code"]))
         {
-            $this->getDataProvider()->setAttributeCode($this->attribute['attribute_code']);
+            $this->dataProvider->setAttributeCode($this->attribute['attribute_code']);
         }
 
         if(isset($this->attribute["attribute_id"]))
         {
-            $this->getDataProvider()->setAttributeId((int)$this->attribute['attribute_id']);
+            $this->dataProvider->setAttributeId((int)$this->attribute['attribute_id']);
         }
     }
 

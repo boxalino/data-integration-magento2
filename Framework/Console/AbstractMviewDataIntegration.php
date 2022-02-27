@@ -70,9 +70,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $account = $input->getArgument("account");
-        $output->writeln('Start of Boxalino Data Integration (DI) ...');
-
+        $output->writeln("Start of Boxalino Data Integration (DI)...");
         try{
             $this->_reviewMview();
 

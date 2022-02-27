@@ -24,8 +24,9 @@ class Pricing extends IntegrationPropertyHandlerAbstract
         $currencyFactors = $this->getCurrencyFactorMap();
         $languages = $this->getSystemConfiguration()->getLanguages();
         $currencyCodes = array_unique($this->getSystemConfiguration()->getCurrencyCodes());
-
-        foreach ($this->getDataProvider()->getData() as $item)
+        $dataProvider = $this->getDataProvider();
+        
+        foreach ($dataProvider->getData() as $item)
         {
             if($item instanceof \ArrayIterator)
             {
@@ -38,7 +39,7 @@ class Pricing extends IntegrationPropertyHandlerAbstract
                 /** @var PricingSchema $schema */
                 $schema = $this->getPricingSchema($languages, $currencyCodes, $currencyFactors,
                     $item[$this->getAttributeCode()],
-                    $this->getDataProvider()->getLabelForPriceByRow($item));
+                    $dataProvider->getLabelForPriceByRow($item));
 
                 $content[$id][$this->getResolverType()] = $schema;
             } catch (\Throwable $exception)

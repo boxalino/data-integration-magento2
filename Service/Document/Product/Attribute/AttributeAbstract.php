@@ -23,7 +23,9 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
-        foreach($this->getDataProvider()->getAttributes() as $attribute)
+        $dataProvider = $this->getDataProvider();
+
+        foreach($dataProvider->getAttributes() as $attribute)
         {
             $this->setAttribute($attribute);
             $this->_addAttributeConfigOnDataProviderByAttribute();
@@ -35,7 +37,7 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
             }
 
             /** @var array $item columns di_id, <attributeCode> with value */
-            foreach($this->getDataProvider()->getData() as $id => $item)
+            foreach($dataProvider->getData() as $id => $item)
             {
                 $itemList = [$item];
                 if($item instanceof \ArrayIterator)
@@ -49,14 +51,14 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
                     $itemList = $item->getArrayCopy();
                 }
 
-                foreach($itemList as $item)
+                foreach($itemList as $row)
                 {
-                    if($item instanceof \ArrayIterator)
+                    if($row instanceof \ArrayIterator)
                     {
-                        $item = $item->getArrayCopy();
+                        $row = $row->getArrayCopy();
                     }
 
-                    $id = $this->_getDocKey($item);
+                    $id = $this->_getDocKey($row);
                     if(!isset($content[$id][$this->getDocSchemaPropertyNode()]))
                     {
                         $content[$id][$this->getDocSchemaPropertyNode()] = [];
@@ -64,13 +66,13 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
 
                     try{
                         $content[$id][$this->getDocSchemaPropertyNode()][] =
-                            $this->getSchema($item, $languages, $attributeName, $attributeCode);
+                            $this->getSchema($row, $languages, $attributeName, $attributeCode);
                     } catch (\Throwable $exception)
                     {
                         if($this->logErrors())
                         {
                             $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
-                                . $exception->getMessage() . " on " . json_encode($item)
+                                . $exception->getMessage() . " on " . json_encode($row)
                             );
                         }
                     }

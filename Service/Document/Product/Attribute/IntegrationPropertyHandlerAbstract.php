@@ -32,8 +32,7 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
         if(is_null($this->dataProvider))
         {
             $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
-            $this->dataProvider->setAttributeCode($this->getAttributeCode())
-                ->setSystemConfiguration($this->getSystemConfiguration());
+            $this->_defaultDataProvider();
             $this->dataProvider->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             $this->dataProvider->setSyncCheck($this->getSyncCheck());
             $this->dataProvider->setMviewIds($this->getIds());
@@ -41,7 +40,20 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
             $this->dataProvider->resolve();
         }
 
+        $this->_defaultDataProvider();
         return $this->dataProvider;
+    }
+
+    /**
+     * Declare the updated account configurations on the data provider
+     * (ex: for loop execution)
+     *
+     * @return void
+     */
+    protected function _defaultDataProvider() : void
+    {
+        $this->dataProvider->setAttributeCode($this->getAttributeCode())
+            ->setSystemConfiguration($this->getSystemConfiguration());
     }
 
     /**

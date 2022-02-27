@@ -19,15 +19,16 @@ class Image extends IntegrationPropertyHandlerAbstract
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
-
-        foreach($this->getDataProvider()->getAttributes() as $attribute)
+        $dataProvider = $this->getDataProvider();
+        
+        foreach($dataProvider->getAttributes() as $attribute)
         {
             $this->setAttribute($attribute);
             $this->_addAttributeConfigOnDataProviderByAttribute();
             list($attributeCode, $attributeName) = $this->_getPropertyNameAndAttributeCode();
 
             /** @var array $item columns: di_id, <attributeCode>, lang1, lang2, lang3 ..  */
-            foreach($this->getDataProvider()->getData() as $item)
+            foreach($dataProvider->getData() as $item)
             {
                 if($item instanceof \ArrayIterator)
                 {

@@ -40,7 +40,7 @@ class FullMviewDataIntegration extends AbstractMviewDataIntegration
 
     public function getDescription(): string
     {
-        return "Boxalino Full Mview User Data Integration. Accepts parameters [account]";
+        return "Boxalino Full Mview User Data Integration";
     }
 
     /**

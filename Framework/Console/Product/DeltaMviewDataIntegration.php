@@ -45,7 +45,7 @@ class DeltaMviewDataIntegration extends AbstractMviewDataIntegration
 
     public function getDescription(): string
     {
-        return "Boxalino Delta Mview Product Data Integration. Accepts parameters [account]";
+        return "Boxalino Delta Mview Product Data Integration.";
     }
 
     /**
