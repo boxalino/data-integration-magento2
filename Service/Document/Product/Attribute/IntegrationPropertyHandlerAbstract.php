@@ -32,12 +32,9 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
         if(is_null($this->dataProvider))
         {
             $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
-            $this->_defaultDataProvider();
             $this->dataProvider->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             $this->dataProvider->setSyncCheck($this->getSyncCheck());
             $this->dataProvider->setMviewIds($this->getIds());
-
-            $this->dataProvider->resolve();
         }
 
         $this->_defaultDataProvider();
@@ -54,6 +51,8 @@ abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropert
     {
         $this->dataProvider->setAttributeCode($this->getAttributeCode())
             ->setSystemConfiguration($this->getSystemConfiguration());
+
+        $this->dataProvider->resolve();
     }
 
     /**
