@@ -108,6 +108,11 @@ class DocHandler extends DocProduct implements
         $productGroups = [];
         $productSkus = [];
 
+        if($this->getSystemConfiguration()->isTest())
+        {
+            $this->getLogger()->info("Boxalino DI: Start to organize the DB load into product_groups & skus.");
+        }
+
         $this->logTime("start" . __FUNCTION__);
         foreach($this->getDocData() as $id => $content)
         {
@@ -119,7 +124,7 @@ class DocHandler extends DocProduct implements
                     if($this->getSystemConfiguration()->isTest())
                     {
                         $this->getLogger()->warning("Boxalino DI: incomplete content for $id: "
-                            . json_encode($content) . ". This error usually means the property handlers are misconfigured."
+                            . json_encode($content) . ". This error usually means the property handlers are missconfigured."
                         );
                     }
 

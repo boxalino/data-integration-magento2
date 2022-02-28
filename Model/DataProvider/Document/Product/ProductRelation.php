@@ -28,7 +28,6 @@ class ProductRelation extends ModeIntegrator
         DataProviderResourceModel $resource
     ) {
         $this->resourceModel = $resource;
-        $this->entityIdRelationsList = new \ArrayObject();
     }
 
     /**
@@ -42,7 +41,8 @@ class ProductRelation extends ModeIntegrator
     public function resolve(): void
     {
         $this->_resolveDataDelta();
-        
+
+        $this->entityIdRelationsList = new \ArrayObject();
         $this->loadSuperInformation();
         $this->loadLinkInformation();
     }
