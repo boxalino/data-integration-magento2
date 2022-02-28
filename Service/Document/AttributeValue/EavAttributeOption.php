@@ -27,10 +27,11 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
     public function getValues() : array
     {
         $content = [];
+        $dataProvider = $this->getDataProvider();
         try {
-            foreach($this->getDataProvider()->getData() as $id => $attributeCode)
+            foreach($dataProvider->getData() as $id => $attributeCode)
             {
-                $this->getDataProvider()->setAttributeCode($attributeCode);
+                $dataProvider->setAttributeCode($attributeCode);
                 $attributeName = $this->sanitizePropertyName($attributeCode);
                 if(!isset($content[$attributeName]))
                 {
@@ -39,10 +40,10 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
 
                 $schema = [];
                 $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $attributeName;
-                $schema[DocSchemaInterface::FIELD_NUMERICAL] = $this->getDataProvider()->isNumerical((string)$id);
+                $schema[DocSchemaInterface::FIELD_NUMERICAL] = $dataProvider->isNumerical((string)$id);
                 $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
 
-                $name = $this->getDataProvider()->getValueLabel((string)$id);
+                $name = $dataProvider->getValueLabel((string)$id);
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_VALUE_LABEL,
                     $schema,

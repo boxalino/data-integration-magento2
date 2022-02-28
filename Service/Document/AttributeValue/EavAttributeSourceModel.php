@@ -30,24 +30,25 @@ class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
     public function getValues() : array
     {
         $content = [];
+        $dataProvider = $this->getDataProvider();
         try {
-            foreach($this->getDataProvider()->getAttributes() as $attributeCode)
+            foreach($dataProvider->getAttributes() as $attributeCode)
             {
-                $this->getDataProvider()->setAttributeCode($attributeCode);
+                $dataProvider->setAttributeCode($attributeCode);
                 $attributeName = $this->sanitizePropertyName($attributeCode);
 
                 $content[$attributeName] = [];
-                foreach($this->getDataProvider()->getData() as $id => $label)
+                foreach($dataProvider->getData() as $id => $label)
                 {
                     $schema = [];
                     $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $attributeName;
-                    $schema[DocSchemaInterface::FIELD_NUMERICAL] = $this->getDataProvider()->isNumerical((string)$id);
+                    $schema[DocSchemaInterface::FIELD_NUMERICAL] = $dataProvider->isNumerical((string)$id);
                     $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
                     $this->addingLocalizedPropertyToSchema(
                         DocSchemaInterface::FIELD_VALUE_LABEL,
                         $schema,
                         $this->getSystemConfiguration()->getLanguages(),
-                        $this->getDataProvider()->getValueLabel((string)$id)
+                        $dataProvider->getValueLabel((string)$id)
                     );
 
                     $content[$attributeName][] = $schema;

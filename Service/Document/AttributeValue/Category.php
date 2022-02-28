@@ -24,16 +24,17 @@ class Category extends IntegrationPropertyHandlerAbstract
     public function getValues() : array
     {
         $content = [];
+        $dataProvider = $this->getDataProvider();
         try {
-            foreach($this->getDataProvider()->getData() as $id)
+            foreach($dataProvider->getData() as $id)
             {
                 $schema = [];
-                $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $this->getDataProvider()->getAttributeName((string)$id);
-                $schema[DocSchemaInterface::FIELD_NUMERICAL] = $this->getDataProvider()->isNumerical((string)$id);
+                $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $dataProvider->getAttributeName((string)$id);
+                $schema[DocSchemaInterface::FIELD_NUMERICAL] = $dataProvider->isNumerical((string)$id);
                 $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
-                $schema[DocSchemaInterface::FIELD_PARENT_VALUE_IDS] = $this->getDataProvider()->getParentValueIds((string)$id);
+                $schema[DocSchemaInterface::FIELD_PARENT_VALUE_IDS] = $dataProvider->getParentValueIds((string)$id);
 
-                $status = $this->getDataProvider()->getStatus((string)$id);
+                $status = $dataProvider->getStatus((string)$id);
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_STATUS,
                     $schema,
@@ -41,7 +42,7 @@ class Category extends IntegrationPropertyHandlerAbstract
                     $status
                 );
 
-                $name = $this->getDataProvider()->getValueLabel((string)$id);
+                $name = $dataProvider->getValueLabel((string)$id);
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_VALUE_LABEL,
                     $schema,
@@ -49,14 +50,14 @@ class Category extends IntegrationPropertyHandlerAbstract
                     $name
                 );
 
-                $description = $this->getDataProvider()->getDescription((string)$id);
+                $description = $dataProvider->getDescription((string)$id);
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_DESCRIPTION,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
                     $description);
 
-                $link = $this->getDataProvider()->getLink((string)$id);
+                $link = $dataProvider->getLink((string)$id);
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LINK,
                     $schema,
@@ -64,7 +65,7 @@ class Category extends IntegrationPropertyHandlerAbstract
                     $link
                 );
 
-                $content[$this->getDataProvider()->getAttributeName((string)$id)][] = $schema;
+                $content[$dataProvider->getAttributeName((string)$id)][] = $schema;
             }
         } catch(MissingSchemaDataProviderDefinitionException $exception)
         {

@@ -27,33 +27,34 @@ class EavAttribute extends IntegrationPropertyHandlerAbstract
     public function getValues() : array
     {
         $content = [];
+        $dataProvider = $this->getDataProvider();
         try {
-            foreach($this->getDataProvider()->getData() as $row)
+            foreach($dataProvider->getData() as $row)
             {
                 $schema = [];
-                $attributeCode = $this->getDataProvider()->getCode($row);
+                $attributeCode = $dataProvider->getCode($row);
 
                 $schema[DocSchemaInterface::FIELD_NAME] = $this->sanitizePropertyName($attributeCode);
-                $schema[DocSchemaInterface::FIELD_INTERNAL_ID] = $this->getDataProvider()->getInternalId($row);
-                $schema[DocSchemaInterface::FIELD_LOCALIZED] =  $this->getDataProvider()->isLocalized($row);
-                $schema[DocSchemaInterface::FIELD_MULTI_VALUE] =  $this->getDataProvider()->isMultivalue($row);
-                $schema[DocSchemaInterface::FIELD_FILTER_BY] =  $this->getDataProvider()->isFilterBy($row);
-                $schema[DocSchemaInterface::FIELD_FORMAT] =  $this->getDataProvider()->getFormat($row);
-                $schema[DocSchemaInterface::FIELD_SEARCH_BY] = $this->getDataProvider()->getSearchBy($row);
-                $schema[DocSchemaInterface::FIELD_SEARCH_SUGGESTION] = $this->getDataProvider()->isSearchSuggestion($row);
-                $schema[DocSchemaInterface::FIELD_FILTER_BY] = $this->getDataProvider()->isFilterBy($row);
-                $schema[DocSchemaInterface::FIELD_ORDER_BY] = $this->getDataProvider()->isOrderBy($row);
+                $schema[DocSchemaInterface::FIELD_INTERNAL_ID] = $dataProvider->getInternalId($row);
+                $schema[DocSchemaInterface::FIELD_LOCALIZED] =  $dataProvider->isLocalized($row);
+                $schema[DocSchemaInterface::FIELD_MULTI_VALUE] =  $dataProvider->isMultivalue($row);
+                $schema[DocSchemaInterface::FIELD_FILTER_BY] =  $dataProvider->isFilterBy($row);
+                $schema[DocSchemaInterface::FIELD_FORMAT] =  $dataProvider->getFormat($row);
+                $schema[DocSchemaInterface::FIELD_SEARCH_BY] = $dataProvider->getSearchBy($row);
+                $schema[DocSchemaInterface::FIELD_SEARCH_SUGGESTION] = $dataProvider->isSearchSuggestion($row);
+                $schema[DocSchemaInterface::FIELD_FILTER_BY] = $dataProvider->isFilterBy($row);
+                $schema[DocSchemaInterface::FIELD_ORDER_BY] = $dataProvider->isOrderBy($row);
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
-                    $this->getDataProvider()->getLabel($row)
+                    $dataProvider->getLabel($row)
                 );
                 $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_ATTRIBUTE_GROUP,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
-                    $this->getDataProvider()->getAttributeGroup($row)
+                    $dataProvider->getAttributeGroup($row)
                 );
 
                 $content[$attributeCode] = $schema;

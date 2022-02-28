@@ -53,13 +53,12 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
      */
     public function getDataProvider() : DocAttributeValueLineInterface
     {
-        if(is_null($this->dataProvider))
-        {
+        if(is_null($this->dataProvider)) {
             $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
-            $this->dataProvider->setSystemConfiguration($this->getSystemConfiguration());
-
-            $this->dataProvider->resolve();
         }
+        
+        $this->dataProvider->setSystemConfiguration($this->getSystemConfiguration());
+        $this->dataProvider->resolve();
 
         return $this->dataProvider;
     }
