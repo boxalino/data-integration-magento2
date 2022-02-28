@@ -101,6 +101,31 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getInputList(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getUsages() : array
+    {
+        return [
+            "Data sync to Boxalino GCP for Magento2 integrations using the MVIEW indexer mode.",
+            "After the content is successfully exported for all configured accounts - the MVIEW state id is updated and the MVIEW backlog is cleared."
+        ];
+    }
+
+    /**
+     * The execute strategy is different for Delta / Full / Instant modes
+     * Review the available traits for further description
+     *
+     * @return array
+     */
     abstract protected function _execute() : array;
 
     /**
