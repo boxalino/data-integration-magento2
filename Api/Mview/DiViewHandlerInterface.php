@@ -1,12 +1,12 @@
 <?php
 namespace Boxalino\DataIntegration\Api\Mview;
 
-
 use Boxalino\DataIntegration\Service\ErrorHandler\MviewViewIdNotFoundException;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 
 /**
  * Interface DiViewHandlerInterface
+ * Generic helping functions to assist in managing Magento2 MVIEW Processor / View / Changelog
  */
 interface DiViewHandlerInterface
 {

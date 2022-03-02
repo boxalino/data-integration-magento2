@@ -21,6 +21,14 @@ abstract class Delta extends AbstractIntegrationHandler
     }
 
     /**
+     * @return string|null
+     */
+    public function getSyncCheck() : ?string
+    {
+        return $this->syncCheck();
+    }
+
+    /**
      * @param array $ids
      */
     public function setMviewIds(array $ids) : void

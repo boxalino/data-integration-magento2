@@ -47,25 +47,5 @@ class Entity extends ModeIntegrator
         return $this->adapter->fetchAll($select);
     }
 
-    /**
-     * Filter out parent_ids which no longer exist in the DB
-     *
-     * @return Select
-     */
-    protected function getRelationEntityTypeSelect() : Select
-    {
-        return $this->adapter->select()
-            ->from(
-                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
-                ["parent_id", "child_id"]
-            )
-            ->joinLeft(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
-                "c_p_r.parent_id = c_p_e.entity_id",
-                ["parent_type_id"=>"type_id"]
-            )
-            ->where("c_p_e.entity_id IS NOT NULL");
-    }
-
 
 }

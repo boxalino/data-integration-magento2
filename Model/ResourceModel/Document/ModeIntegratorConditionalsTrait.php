@@ -25,7 +25,7 @@ trait ModeIntegratorConditionalsTrait
             return $query;
         }
 
-        $query->andWhere("$field IN (?)", $ids);
+        $query->where("$field IN (?)", $ids);
         return $query;
     }
 
