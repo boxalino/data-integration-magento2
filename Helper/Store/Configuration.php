@@ -155,6 +155,21 @@ class Configuration
     }
 
     /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function getOutsource(string $mode) : bool
+    {
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath(GcpRequestInterface::DI_REQUEST_OUTSOURCE, $mode));
+        if(empty($value))
+        {
+            return false;
+        }
+
+        return (bool)$value;
+    }
+
+    /**
      * The API endpoint depends on the data sync mode (delta, full, instant)
      *
      * @return string

@@ -7,6 +7,7 @@ use Boxalino\DataIntegrationDoc\Generator\DocGeneratorInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttribute;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttributeHandlerInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
 use Psr\Log\LoggerInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 
@@ -42,6 +43,19 @@ class DocHandler extends DocAttribute
 
     public function integrate(): void
     {
+        if($this->getSystemConfiguration()->getMode()=== DeltaIntegrationInterface::INTEGRATION_MODE)
+        {
+            if($this->getSystemConfiguration()->getOutsource())
+            {
+                if($this->getSystemConfiguration()->isTest())
+                {
+                    $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()} is outsourced.");
+                }
+
+                return;
+            }
+        }
+
         if($this->getSystemConfiguration()->isTest())
         {
             $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");

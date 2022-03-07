@@ -21,6 +21,7 @@
                 <product>0</product>
                 <user>0</user>
                 <order>0</order>
+                <outsource>1</outsource>
             </di_config>
         </boxalino_di_D>
         <boxalino_di_I>

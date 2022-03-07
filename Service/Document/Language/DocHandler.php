@@ -9,6 +9,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocLanguagesHandlerInter
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocLanguages;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
 
 /**
  * Class DocHandler
@@ -29,6 +30,19 @@ class DocHandler extends DocLanguages implements
 
     public function integrate(): void
     {
+        if($this->getSystemConfiguration()->getMode()=== DeltaIntegrationInterface::INTEGRATION_MODE)
+        {
+            if($this->getSystemConfiguration()->getOutsource())
+            {
+                if($this->getSystemConfiguration()->isTest())
+                {
+                    $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()} is outsourced.");
+                }
+
+                return;
+            }
+        }
+
         if($this->getSystemConfiguration()->isTest())
         {
             $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");
