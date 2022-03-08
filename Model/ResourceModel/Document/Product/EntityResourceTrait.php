@@ -79,10 +79,11 @@ trait EntityResourceTrait
     {
         $mainEntitySelect = $this->_getEntityByWebsiteIdSelect($websiteId);
         $relationParentTypeSelect = $this->getRelationEntityTypeSelect();
+        $affectedGroupSelect = $this->getAffectedParentGroupSelect();
         return $this->adapter->select()
             ->from(
                 ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
-                ['c_p_e.entity_id', 'as_parent'=>'c_p_r.parent_id', 'as_child'=>'c_p_r_p.child_id']
+                ['c_p_e.entity_id', 'as_parent'=>'c_p_r.parent_id', 'as_child'=>'c_p_r_p.child_id', 'c_p_r_r.child_id', 'c_p_r_r.parent_id']
             )
             ->joinLeft(
                 ['c_p_r' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
@@ -92,6 +93,11 @@ trait EntityResourceTrait
             ->joinLeft(
                 ['c_p_r_p' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
                 "c_p_r_p.parent_id = c_p_e.entity_id",
+                []
+            )
+            ->joinLeft(
+                ['c_p_r_r' => new \Zend_Db_Expr("( ". $affectedGroupSelect->__toString() . ' )')],
+                "c_p_r_r.affected = c_p_e.entity_id",
                 []
             )
             ->where("c_p_e.entity_id IS NOT NULL");
@@ -115,6 +121,25 @@ trait EntityResourceTrait
                 ["parent_type_id"=>"type_id"]
             )
             ->where("c_p_e.entity_id IS NOT NULL");
+    }
+
+    /**
+     * Inner join to get a list of any possible affected items when a detached id is updated
+     *
+     * @return Select
+     */
+    protected function getAffectedParentGroupSelect() : Select
+    {
+        return $this->adapter->select()
+            ->from(
+                ['c_p_r_affected' => $this->adapter->getTableName('catalog_product_relation')],
+                ["c_p_r_affected.parent_id", "affected"=>'c_p_r_r_affected.child_id', 'c_p_r_affected.child_id']
+            )
+            ->joinInner(
+                ['c_p_r_r_affected' => $this->adapter->getTableName('catalog_product_relation')],
+                "c_p_r_affected.parent_id = c_p_r_r_affected.parent_id",
+                []
+            );
     }
 
 

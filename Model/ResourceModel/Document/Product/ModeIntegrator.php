@@ -49,11 +49,23 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
                 "e_c.entity_id = c_e.as_child",
                 []
             )
+            ->joinLeft(
+                ['e_a_c' => $this->adapter->getTableName('catalog_product_entity')],
+                "e_a_c.entity_id = c_e.child_id",
+                []
+            )
+            ->joinLeft(
+                ['e_a_p' => $this->adapter->getTableName('catalog_product_entity')],
+                "e_a_p.entity_id = c_e.parent_id",
+                []
+            )
             ->where(
                 implode(" OR ", [
                         $this->getDeltaDateConditional(["e_e.updated_at", "e_e.created_at"]),
                         $this->getDeltaDateConditional(["e_p.updated_at", "e_p.created_at"]),
-                        $this->getDeltaDateConditional(["e_c.updated_at", "e_c.created_at"])
+                        $this->getDeltaDateConditional(["e_c.updated_at", "e_c.created_at"]),
+                        $this->getDeltaDateConditional(["e_a_c.updated_at", "e_a_c.created_at"]),
+                        $this->getDeltaDateConditional(["e_a_p.updated_at", "e_a_p.created_at"])
                     ]
                 )
             );
@@ -108,7 +120,7 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
                 "e.entity_id = c_e.entity_id",
                 []
             )
-            ->where("c_e.entity_id IN (?) OR c_e.as_parent IN (?) OR c_e.as_child IN (?)", $this->idsConditional);
+            ->where("c_e.entity_id IN (?) OR c_e.as_parent IN (?) OR c_e.as_child IN (?) OR c_e.parent_id IN (?) OR c_e.child_id IN (?)", $this->idsConditional);
 
         return $select;
     }

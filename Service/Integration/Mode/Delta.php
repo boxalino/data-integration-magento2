@@ -14,7 +14,6 @@ abstract class Delta extends AbstractIntegrationHandler
 
     public function integrate(): void
     {
-        $this->syncCheck = $this->syncCheck();
         $this->setHandlerIntegrateTime((new \DateTime())->format("Y-m-d H:i:s"));
         $this->addSystemConfigurationOnHandlers();
         $this->integrateDelta();
