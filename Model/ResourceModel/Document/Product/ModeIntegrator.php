@@ -109,20 +109,7 @@ abstract class ModeIntegrator extends DiSchemaDataProviderResource
             return $query;
         }
 
-        $select = $this->adapter->select()
-            ->distinct(true)
-            ->from(
-                ['e' => $this->adapter->getTableName('catalog_product_entity')],
-                ["*"]
-            )
-            ->joinLeft(
-                ['c_e' => new \Zend_Db_Expr("( ". $query->__toString() . ' )')],
-                "e.entity_id = c_e.entity_id",
-                []
-            )
-            ->where("c_e.entity_id IN (?) OR c_e.as_parent IN (?) OR c_e.as_child IN (?) OR c_e.parent_id IN (?) OR c_e.child_id IN (?)", $this->idsConditional);
-
-        return $select;
+        return $this->addResourceIdsConditional($query, "e.entity_id", $this->idsConditional);
     }
 
 

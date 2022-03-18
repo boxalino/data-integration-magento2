@@ -29,15 +29,10 @@ trait EntityResourceTrait
      */
     public function getEntityByWebsiteIdSelect(string $websiteId): Select
     {
-        $select = $this->_getEntityIdsWithRelationsByWebsiteIdSelect($websiteId);
+        $select = $this->_getEntityByWebsiteIdSelect($websiteId);
         if($this->useDeltaIdsConditionals)
         {
             return $this->addDeltaIdsConditional($select);
-        }
-
-        if($this->delta)
-        {
-            return $this->addDeltaDateConditional($select);
         }
 
         if($this->instant)
@@ -45,7 +40,13 @@ trait EntityResourceTrait
             return $this->addInstantConditional($select);
         }
 
-        return $this->_getEntityByWebsiteIdSelect($websiteId);
+        if($this->delta)
+        {
+            $select = $this->_getEntityIdsWithRelationsBySelect($select);
+            return $this->addDeltaDateConditional($select);
+        }
+
+        return $select;
     }
 
     /**
@@ -70,14 +71,12 @@ trait EntityResourceTrait
     }
 
     /**
-     * USED FOR MVIEW / DELTA DRIVEN EXPORTS
+     * MVIEW / DELTA DRIVEN EXPORTS
      *
-     * @param string $websiteId
      * @return Select
      */
-    protected function _getEntityIdsWithRelationsByWebsiteIdSelect(string $websiteId) : Select
+    protected function _getEntityIdsWithRelationsBySelect(Select $mainEntitySelect) : Select
     {
-        $mainEntitySelect = $this->_getEntityByWebsiteIdSelect($websiteId);
         $relationParentTypeSelect = $this->getRelationEntityTypeSelect();
         $affectedGroupSelect = $this->getAffectedParentGroupSelect();
         return $this->adapter->select()

@@ -3,11 +3,8 @@ namespace Boxalino\DataIntegration\Framework\Console;
 
 use Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface;
 use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
-use Boxalino\DataIntegration\Service\ErrorHandler\MviewViewIdNotFoundException;
 use Boxalino\DataIntegrationDoc\Framework\Console\DiGenericAbstractCommand;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
-use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -143,9 +140,10 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
                     json_encode([
                         "group" => $this->mviewGroupId,
                         "viewId" => $this->mviewViewId,
-                        "changelogVersionId"=>$this->changelogVersionId,
-                        "mviewVersionId"=>$this->mviewVersionId,
-                        "backlog" => $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId)
+                        "changelogVersionId"=> $this->changelogVersionId,
+                        "mviewVersionId"=> $this->mviewVersionId,
+                        "backlog" => $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId),
+                        "affected" => count($this->mviewViewHandler->getBacklogByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId))
                     ]));
             }
         } catch (\Throwable $exception)
@@ -180,7 +178,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     public function getMviewIds() : array
     {
         return $this->getMviewViewHandler()->getBacklogByViewId(
-                $this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId()
+            $this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId()
         );
     }
 

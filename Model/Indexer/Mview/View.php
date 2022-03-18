@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\Indexer\Mview;
 
 use Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface;
+use Boxalino\DataIntegration\Api\Mview\DiViewIdResourceInterface;
 use Boxalino\DataIntegration\Service\ErrorHandler\MviewViewIdNotFoundException;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 use Magento\Framework\Mview\View\CollectionFactory;
@@ -34,15 +35,26 @@ class View implements DiViewHandlerInterface
     protected $mviewGroupCollections;
 
     /**
+     * @var \ArrayObject
+     */
+    protected $mviewViewIdsResourceCollection;
+
+    /**
      * View constructor.
      */
     public function __construct(
         CollectionFactory $viewsFactory,
+        array $mviewViewIdsResourceCollection = [],
         ?string $mviewGroupId = "boxalino_di"
     ){
         $this->viewsFactory = $viewsFactory;
         $this->mviewGroupId = $mviewGroupId;
         $this->mviewGroupCollections = new \ArrayObject();
+        $this->mviewViewIdsResourceCollection = new \ArrayObject();
+        foreach($mviewViewIdsResourceCollection as $viewId => $resourceObject)
+        {
+            $this->mviewViewIdsResourceCollection->offsetSet($viewId, $resourceObject);
+        }
     }
 
     /**
@@ -61,7 +73,14 @@ class View implements DiViewHandlerInterface
         {
             if($view->getId() === $viewId)
             {
-                return $view->getChangelog()->getList($fromVersion, $toVersion);
+                $ids = $view->getChangelog()->getList($fromVersion, $toVersion);
+                if($this->mviewViewIdsResourceCollection->offsetExists($viewId))
+                {
+                    /** @var DiViewIdResourceInterface $mviewViewIdsResource */
+                    $mviewViewIdsResource = $this->mviewViewIdsResourceCollection->offsetGet($viewId);
+                    $ids = $mviewViewIdsResource->getAffectedIdsByMviewIds($ids);
+                }
+                return $ids;
             }
         }
 
