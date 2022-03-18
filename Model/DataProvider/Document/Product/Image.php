@@ -37,6 +37,16 @@ class Image extends ModeIntegrator
     protected $directory;
 
     /**
+     * @var bool
+     */
+    protected $addPlaceholder;
+
+    /**
+     * @var bool
+     */
+    protected $addMediaPath;
+
+    /**
      * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      * @param ScopeConfigInterface $scopeConfig
      * @param DirectoryList $directoryList
@@ -44,11 +54,15 @@ class Image extends ModeIntegrator
     public function __construct(
         DataProviderResourceModel $resource,
         ScopeConfigInterface $scopeConfig,
-        DirectoryList $directoryList
+        DirectoryList $directoryList,
+        bool $addPlaceholder = true,
+        bool $addMediaPath = true
     ) {
         $this->resourceModel = $resource;
         $this->scopeConfig = $scopeConfig;
         $this->directory = $directoryList;
+        $this->addPlaceholder = $addPlaceholder;
+        $this->addMediaPath = $addMediaPath;
     }
 
     /**
@@ -92,17 +106,18 @@ class Image extends ModeIntegrator
      */
     protected function getFields() : array
     {
-        $mediaPath = $this->getMediaAbsoluteUrl();
         return [
             $this->getDiIdField() => "c_p_e_s.entity_id",
-            $this->getAttributeCode() =>
-                new \Zend_Db_Expr("CONCAT('$mediaPath', IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', '$this->placeholder', c_p_e_a_s.value))")
+            $this->getAttributeCode() => new \Zend_Db_Expr($this->_getValueField())
         ];
     }
 
     public function resolve(): void
     {
-        $this->loadImagePlaceholders();
+        if($this->addPlaceholder)
+        {
+            $this->loadImagePlaceholders();
+        }
     }
 
     /**
@@ -116,10 +131,18 @@ class Image extends ModeIntegrator
             foreach($this->getAttributes() as $attribute)
             {
                 $attributeCode = $attribute["attribute_code"];
-                $this->imagePlaceholdersList[$attributeCode][$storeId] = $this->scopeConfig->getValue(
-                        "catalog/placeholder/{$attributeCode}_placeholder",
-                        ScopeInterface::SCOPE_STORE,
-                        $storeId) ?? "{$attributeCode}_placeholder";
+                $config = $this->scopeConfig->getValue(
+                    "catalog/placeholder/{$attributeCode}_placeholder",
+                    ScopeInterface::SCOPE_STORE,
+                    $storeId);
+
+                if(empty($config))
+                {
+                    $this->imagePlaceholdersList[$attributeCode][$storeId] = null;
+                    continue;
+                }
+
+                $this->imagePlaceholdersList[$attributeCode][$storeId] = $this->getMediaAbsoluteUrl() . "/placeholder/" . $config;
             }
         }
     }
@@ -131,6 +154,30 @@ class Image extends ModeIntegrator
     public function getMediaAbsoluteUrl() : string
     {
         return $this->directory->getUrlPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA) . "/catalog/product";
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getValueField() : string
+    {
+        if($this->addMediaPath)
+        {
+            $mediaPath = $this->getMediaAbsoluteUrl();
+            if($this->addPlaceholder)
+            {
+                return "CONCAT('$mediaPath', IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', '$this->placeholder', c_p_e_a_s.value))";
+            }
+
+            return "CONCAT('$mediaPath', IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', NULL, c_p_e_a_s.value))";
+        }
+
+        if($this->addPlaceholder)
+        {
+            return "IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', '$this->placeholder', c_p_e_a_s.value)";
+        }
+
+        return "IF(c_p_e_a_s.value IS NULL OR c_p_e_a_s.value = '', NULL, c_p_e_a_s.value)";
     }
 
 
