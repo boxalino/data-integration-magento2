@@ -156,7 +156,10 @@ class DocHandler extends DocProduct implements
                 $this->_treatSkusWithParentIds($id, $schema, $content, $productGroups, $productSkus);
             } catch (\Throwable $exception)
             {
-                $this->logger->info($exception->getMessage());
+                if($this->getSystemConfiguration()->isTest())
+                {
+                    $this->logger->info($exception->getMessage() . json_encode($content));
+                }
             }
         }
 
