@@ -183,6 +183,16 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     }
 
     /**
+     * @param array $mviewIds
+     * @param string $websiteId
+     * @return array
+     */
+    public function getAffectedIdsByWebsite(array $mviewIds, string $websiteId) : array
+    {
+        return $this->getMviewViewHandler()->getBacklogForWebsiteId($mviewIds, $websiteId, $this->getMviewViewId(), $this->getMviewGroupId());
+    }
+
+    /**
      * @return DiViewHandlerInterface
      */
     public function getMviewViewHandler() : DiViewHandlerInterface

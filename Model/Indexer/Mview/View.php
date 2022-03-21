@@ -58,6 +58,36 @@ class View implements DiViewHandlerInterface
     }
 
     /**
+     * @param array $mviewIds
+     * @param string $websiteId
+     * @param string $viewId
+     * @param string|null $group
+     * @return array
+     */
+    public function getBacklogForWebsiteId(array $mviewIds, string $websiteId, string $viewId, ?string $group = null) : array
+    {
+        $group = $group ?? $this->mviewGroupId;
+        /** @var ViewInterface $view */
+        foreach($this->getViewsByGroup($group) as $view)
+        {
+            if($view->getId() === $viewId)
+            {
+                $ids = $mviewIds;
+                if($this->mviewViewIdsResourceCollection->offsetExists($viewId))
+                {
+                    /** @var DiViewIdResourceInterface $mviewViewIdsResource */
+                    $mviewViewIdsResource = $this->mviewViewIdsResourceCollection->offsetGet($viewId);
+                    $ids = $mviewViewIdsResource->getAffectedIdsByMviewIdsWebsiteId($ids, $websiteId);
+                }
+
+                return $ids;
+            }
+        }
+
+        throw new MviewViewIdNotFoundException("The desired $viewId does not exist in mview group $group");
+    }
+
+    /**
      * @param string $viewId
      * @param int $fromVersion
      * @param int $toVersion

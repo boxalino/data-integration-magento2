@@ -19,6 +19,7 @@ class Gallery extends ModeIntegrator
     /**
      * @param array $fields
      * @param string $websiteId
+     * @param int $storeId
      * @param int $attributeId
      * @return array
      */
@@ -28,14 +29,16 @@ class Gallery extends ModeIntegrator
         $mediaGalleryImageJoin = $this->getMediaGalleryEntitySelect($attributeId);
         $select = $this->adapter->select()
             ->from(
-                ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $mediaGalleryImageJoin->__toString() . ' )')],
+                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+
                 $fields
             )
             ->joinLeft(
-                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+                ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $mediaGalleryImageJoin->__toString() . ' )')],
                 "c_p_e_s.entity_id = c_p_e_a_s.entity_id",
                 []
             )
+            ->where('c_p_e_a_s.entity_id IS NOT NULL')
             ->group("c_p_e_s.entity_id");
 
         return $this->adapter->fetchAll($select);

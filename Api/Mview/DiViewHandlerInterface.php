@@ -12,6 +12,15 @@ interface DiViewHandlerInterface
 {
 
     /**
+     * @param array $mviewIds
+     * @param string $websiteId
+     * @param string $viewId
+     * @param string|null $group
+     * @return array
+     */
+    public function getBacklogForWebsiteId(array $mviewIds, string $websiteId, string $viewId, ?string $group = null) : array;
+
+    /**
      * @param string $viewId
      * @param int $fromVersion
      * @param int $toVersion

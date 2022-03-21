@@ -28,6 +28,25 @@ class ProductMviewIds implements DiViewIdResourceInterface
     }
 
     /**
+     * @param $ids
+     * @param $websiteId
+     * @return array
+     */
+    public function getAffectedIdsByMviewIdsWebsiteId($ids, $websiteId) : array
+    {
+        $mainSelect = $this->_getEntityByWebsiteIdSelect($websiteId);
+        $select = $this->adapter->select()
+            ->distinct(true)
+            ->from(
+                ['e' => new \Zend_Db_Expr("( " . $mainSelect->__toString() . " )")],
+                ["e.entity_id"]
+            )
+            ->where("e.entity_id IN (?)", $ids);
+
+        return $this->adapter->fetchCol($select);
+    }
+
+    /**
      * @param array $ids
      * @return array
      */

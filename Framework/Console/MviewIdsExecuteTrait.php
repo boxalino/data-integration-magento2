@@ -32,7 +32,7 @@ trait MviewIdsExecuteTrait
             if($this->canRun($configuration))
             {
                 try{
-                    $this->getIntegrationHandler()->setMviewIds($ids);
+                    $this->getIntegrationHandler()->setMviewIds($this->getAffectedIdsByWebsite($ids, $configuration->getWebsiteId()));
                 } catch (\Throwable $exception)
                 {
                     $this->logger->info("Declared handler can not be used with the mview integration: " . $exception->getMessage());
