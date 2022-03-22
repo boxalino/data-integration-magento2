@@ -27,7 +27,7 @@ class Pricing extends ModeIntegrator
                 ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 $fields
             )
-            ->joinLeft(
+            ->join(
                 ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $indexedPriceSelect->__toString() . ' )')],
                 "c_p_e_s.entity_id = c_p_e_a_s.entity_id",
                 []

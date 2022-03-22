@@ -19,15 +19,14 @@ class Category extends ModeIntegrator
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $select = $this->adapter->select()
             ->from(
-                ['c_c_p' => $this->adapter->getTableName('catalog_category_product')],
+                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 $fields
             )
-            ->joinLeft(
-                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+            ->join(
+                ['c_c_p' => $this->adapter->getTableName('catalog_category_product')],
                 "c_p_e_s.entity_id=c_c_p.product_id",
                 []
             )
-            ->where("c_p_e_s.entity_id IS NOT NULL")
             ->group("c_c_p.product_id");
 
         return $this->adapter->fetchAll($select);

@@ -30,10 +30,9 @@ class Gallery extends ModeIntegrator
         $select = $this->adapter->select()
             ->from(
                 ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
-
                 $fields
             )
-            ->joinLeft(
+            ->join(
                 ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $mediaGalleryImageJoin->__toString() . ' )')],
                 "c_p_e_s.entity_id = c_p_e_a_s.entity_id",
                 []
@@ -48,7 +47,7 @@ class Gallery extends ModeIntegrator
      * @param int $attributeId
      * @return \Magento\Framework\DB\Select
      */
-    protected function getMediaGalleryEntitySelect(int $attributeId) : Select
+    protected function getMediaGalleryEntitySelect(int $attributeId)
     {
         return $this->adapter->select()
             ->from(

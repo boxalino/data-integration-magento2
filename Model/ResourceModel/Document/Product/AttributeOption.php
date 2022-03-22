@@ -39,7 +39,7 @@ class AttributeOption extends ModeIntegrator
                 "c_p_e_s.entity_id = c_p_e_i.entity_id AND c_p_e_i.attribute_id= $attributeId",
                 []
             )
-            ->joinLeft(
+            ->join(
                 ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $attributeOptionAdminValueSelect->__toString() . ' )')],
                 "c_p_e_a_s.option_id = c_p_e_i.value",
                 []
@@ -50,7 +50,7 @@ class AttributeOption extends ModeIntegrator
 
     /**
      * For every fetched property - adds translation and connection to product
-     * 
+     *
      * @param array $fields
      * @param string $websiteId
      * @param int $storeId
@@ -64,15 +64,14 @@ class AttributeOption extends ModeIntegrator
         $eavPropertySelect = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_$type");
         $select = $this->adapter->select()
             ->from(
-                ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $eavPropertySelect->__toString() . ' )')],
+                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 $fields
             )
-            ->joinLeft(
-                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
+            ->join(
+                ['c_p_e_a_s' => new \Zend_Db_Expr("( ". $eavPropertySelect->__toString() . ' )')],
                 "c_p_e_s.entity_id = c_p_e_a_s.entity_id",
                 []
             )
-            ->where('c_p_e_s.entity_id IS NOT NULL')
             ->where('c_p_e_a_s.value IS NOT NULL');
 
         return $this->adapter->fetchAll($select);
