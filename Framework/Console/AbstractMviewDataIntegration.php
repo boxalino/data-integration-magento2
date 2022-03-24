@@ -5,6 +5,7 @@ use Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface;
 use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
 use Boxalino\DataIntegrationDoc\Framework\Console\DiGenericAbstractCommand;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
+use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,15 +69,13 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("Start of Boxalino Data Integration (DI)...");
-        try{
+        try {
             $this->_reviewMview();
 
             $exceptionMessages = $this->_execute();
 
-            if(empty($exceptionMessages))
-            {
-                if(!is_null($this->mviewVersionId) && !is_null($this->changelogVersionId))
-                {
+            if (empty($exceptionMessages)) {
+                if (!is_null($this->mviewVersionId) && !is_null($this->changelogVersionId)) {
                     $this->_updateMview();
                 }
 
@@ -85,6 +84,11 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
             }
 
             $output->writeln(json_encode($exceptionMessages));
+        } catch (ModeDisabledException $exception)
+        {
+            $this->getLogger()->info($exception->getMessage());
+            $output->writeln($exception->getMessage());
+            return 0;
         } catch (EmptyBacklogException $exception)
         {
             $this->getLogger()->info($exception->getMessage());
@@ -134,6 +138,12 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
             if($this->mviewViewId)
             {
                 $this->mviewVersionId = $this->mviewViewHandler->getMviewVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
+                if(is_null($this->mviewVersionId))
+                {
+                    throw new ModeDisabledException(
+                        "MVIEW mode is not enabled on your project. In order to pursue, make sure your delta indexers are in `Update by Schedule` mode."
+                    );
+                }
                 $this->changelogVersionId = $this->mviewViewHandler->getChangelogVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
 
                 $this->getLogger()->info("Boxalino DI: Mview information: " .
@@ -148,7 +158,12 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
             }
         } catch (\Throwable $exception)
         {
-            $this->mviewVersionId = null; $this->changelogVersionId = null;
+            if($exception instanceof ModeDisabledException)
+            {
+                throw $exception;
+            }
+
+            $this->mviewVersionId = 0; $this->changelogVersionId = 0;
             $this->getLogger()->warning($exception->getMessage());
         }
     }
