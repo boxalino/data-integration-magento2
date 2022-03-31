@@ -51,6 +51,13 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                     $name
                 );
 
+                /** adding the admin storeview value as string property key */
+                $key = $dataProvider->getAdmin((string)$id);
+                if(!is_null($key))
+                {
+                    $schema[DocSchemaInterface::FIELD_STRING][] = $this->getStringAttributeSchema([$key], "key");
+                }
+
                 $content[$attributeName][] = $schema;
             }
         } catch(MissingSchemaDataProviderDefinitionException $exception)

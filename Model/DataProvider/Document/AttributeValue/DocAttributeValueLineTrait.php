@@ -97,5 +97,25 @@ trait DocAttributeValueLineTrait
         return [];
     }
 
+    /**
+     * @param string $id
+     * @return string | null
+     */
+    public function getAdmin(string $id) : ?string
+    {
+        try{
+            $content = $this->getDataByCode($this->attributeCode, $id);
+            if(isset($content["admin"]))
+            {
+                return $content["admin"];
+            }
+
+            return null;
+        } catch (\Throwable $exception)
+        {
+            return null;
+        }
+    }
+
 
 }

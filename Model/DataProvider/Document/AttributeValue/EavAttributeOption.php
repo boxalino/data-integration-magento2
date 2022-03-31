@@ -60,18 +60,43 @@ class EavAttributeOption implements
      */
     protected function loadOptionIdTranslation() : void
     {
-        foreach($this->resourceModel->getFetchPairsAttributeByFieldsFrontendInputTypes(
-            ['attribute_id', 'attribute_code'], $this->getFrontendInputTypes()) as $attributeId => $attributeCode)
+        foreach($this->getAttributes() as $attributeId => $attributeCode)
         {
             $attributeContent = new \ArrayObject();
             foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
             {
-                $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($attributeId, $storeId);
-                $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+                $this->_loadOptionIdTranslation($attributeId, $storeId, $languageCode, $attributeContent);
             }
+
+            /** adding the admin value */
+            $this->_loadOptionIdTranslation($attributeId, 0, "admin", $attributeContent);
 
             $this->attributeNameValuesList->offsetSet($attributeCode, $attributeContent);
         }
+    }
+
+    /**
+     * @param int $attributeId
+     * @param int $storeId
+     * @param string $languageCode
+     * @param \ArrayObject $attributeContent
+     * @return void
+     */
+    protected function _loadOptionIdTranslation(int $attributeId, int $storeId, string $languageCode, \ArrayObject $attributeContent) : void
+    {
+        $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($attributeId, $storeId);
+        $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAttributes() : array
+    {
+        return $this->resourceModel->getFetchPairsAttributeByFieldsFrontendInputTypes(
+            ['attribute_id', 'attribute_code'],
+            $this->getFrontendInputTypes()
+        );
     }
 
     /**

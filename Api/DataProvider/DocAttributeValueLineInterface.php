@@ -64,5 +64,11 @@ interface DocAttributeValueLineInterface extends DiSchemaDataProviderInterface
      */
     public function getStatus(string $id) : array;
 
+    /**
+     * @param string $id
+     * @return string | null
+     */
+    public function getAdmin(string $id) : ?string;
+
 
 }
