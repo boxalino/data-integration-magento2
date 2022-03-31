@@ -81,7 +81,7 @@ class EavAttribute implements
 
     public function isMultivalue(array $row): bool
     {
-        return $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT] === "multiselect";
+        return in_array($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT], ["multiselect", "gallery"]);
     }
 
     public function isIndexed(array $row): bool
