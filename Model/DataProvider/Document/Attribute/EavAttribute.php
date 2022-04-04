@@ -91,7 +91,7 @@ class EavAttribute implements
 
     public function isLocalized(array $row): bool
     {
-        return $this->isMultivalue($row)
+        return in_array($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_INPUT], ["multiselect"])
             || in_array(
                 $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::KEY_IS_GLOBAL],
                 [ScopedAttributeInterface::SCOPE_STORE]
