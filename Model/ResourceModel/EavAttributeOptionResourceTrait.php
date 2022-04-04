@@ -71,7 +71,7 @@ trait EavAttributeOptionResourceTrait
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
                     'option_id',
-                    new \Zend_Db_Expr("CASE WHEN c_o.value IS NULL THEN b_o.value ELSE c_o.value END as value")
+                    'c_o.value'
                 ]
             )->joinLeft(
                 ['s_o' => $this->adapter->getTableName('eav_attribute_option_swatch')],
