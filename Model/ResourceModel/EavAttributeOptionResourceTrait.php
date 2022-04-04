@@ -71,9 +71,9 @@ trait EavAttributeOptionResourceTrait
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
                     'option_id',
-                    'c_o.value'
+                    's_o.value'
                 ]
-            )->joinLeft(
+            )->joinRight(
                 ['s_o' => $this->adapter->getTableName('eav_attribute_option_swatch')],
                 's_o.option_id = a_o.option_id AND s_o.store_id = 0',
                 []

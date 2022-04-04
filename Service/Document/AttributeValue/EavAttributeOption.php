@@ -62,7 +62,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
 
                 /** adding the swatch value as string property swatch */
                 $swatch = $dataProvider->getSwatch((string)$id);
-                if(!is_null($key))
+                if(!is_null($swatch))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
                         $this->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH);
