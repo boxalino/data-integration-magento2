@@ -69,10 +69,28 @@ class EavAttributeOption implements
             }
 
             /** adding the admin value */
-            $this->_loadOptionIdTranslation($attributeId, 0, "admin", $attributeContent);
+            $this->_loadOptionIdTranslation($attributeId, 0,
+                DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY, $attributeContent
+            );
 
+            /** adding the swatch value */
+            $this->_loadOptionIdSwatch($attributeId,
+                DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH, $attributeContent
+            );
             $this->attributeNameValuesList->offsetSet($attributeCode, $attributeContent);
         }
+    }
+
+    /**
+     * @param int $attributeId
+     * @param string $languageCode
+     * @param \ArrayObject $attributeContent
+     * @return void
+     */
+    protected function _loadOptionIdSwatch(int $attributeId, string $languageCode, \ArrayObject $attributeContent) : void
+    {
+        $data = $this->resourceModel->getFetchPairsAttributeOptionSwatchByAttributeId($attributeId);
+        $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
     }
 
     /**

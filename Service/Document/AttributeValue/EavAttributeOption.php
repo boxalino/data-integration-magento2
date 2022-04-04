@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocAttributeValueLineInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
@@ -52,10 +53,19 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 );
 
                 /** adding the admin storeview value as string property key */
-                $key = $dataProvider->getAdmin((string)$id);
+                $key = $dataProvider->getKey((string)$id);
                 if(!is_null($key))
                 {
-                    $schema[DocSchemaInterface::FIELD_STRING][] = $this->getStringAttributeSchema([$key], "key");
+                    $schema[DocSchemaInterface::FIELD_STRING][] =
+                        $this->getStringAttributeSchema([$key], DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY);
+                }
+
+                /** adding the swatch value as string property swatch */
+                $swatch = $dataProvider->getSwatch((string)$id);
+                if(!is_null($key))
+                {
+                    $schema[DocSchemaInterface::FIELD_STRING][] =
+                        $this->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH);
                 }
 
                 $content[$attributeName][] = $schema;

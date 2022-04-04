@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValue;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocAttributeValueLineInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValueListHelperTrait;
 
 /**
@@ -101,13 +102,33 @@ trait DocAttributeValueLineTrait
      * @param string $id
      * @return string | null
      */
-    public function getAdmin(string $id) : ?string
+    public function getKey(string $id) : ?string
     {
         try{
             $content = $this->getDataByCode($this->attributeCode, $id);
-            if(isset($content["admin"]))
+            if(isset($content[DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY]))
             {
-                return $content["admin"];
+                return $content[DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY];
+            }
+
+            return null;
+        } catch (\Throwable $exception)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * @param string $id
+     * @return string | null
+     */
+    public function getSwatch(string $id) : ?string
+    {
+        try{
+            $content = $this->getDataByCode($this->attributeCode, $id);
+            if(isset($content[DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH]))
+            {
+                return $content[DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH];
             }
 
             return null;
