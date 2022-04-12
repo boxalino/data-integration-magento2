@@ -14,10 +14,12 @@ use Boxalino\DataIntegrationDoc\Generator\Product\Line;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Generator\Product\Sku;
+use Boxalino\DataIntegrationDoc\Doc\Schema\Status;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Magento\Framework\DataObject;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -90,6 +92,7 @@ class DocHandler extends DocProduct implements
 
             $document->setProductLine($productLine)->setCreationTm(date("Y-m-d H:i:s"));
             $this->addDocLine($document);
+
         }
 
         $this->logTime("end" . __FUNCTION__);
@@ -209,6 +212,11 @@ class DocHandler extends DocProduct implements
             {
                 /** @var Group $parent */
                 $schema->setVisibility($productGroups[$parentId]->getVisibility());
+                $status = $this->getChildStatusByParent($productGroups[$parentId]->getStatus(), $schema->getStatus());
+                if(!is_null($status))
+                {
+                    $schema->setStatus($status);
+                }
                 $productGroups[$parentId]->addSkus([$schema]);
 
                 continue;
@@ -241,6 +249,13 @@ class DocHandler extends DocProduct implements
                 try{
                     /** @var Sku $sku */
                     $sku->setVisibility($schema->getVisibility());
+                    $status = $this->getChildStatusByParent($schema->getStatus(), $sku->getStatus());
+                    if(is_null($status))
+                    {
+                        continue;
+                    }
+
+                    $sku->setStatus($status);
                 } catch (\Throwable $exception)
                 {
                 }
@@ -303,6 +318,51 @@ class DocHandler extends DocProduct implements
         }
 
         return $content;
+    }
+
+    /**
+     * If the parent has status: disabled - children statuses must be updated to parent status
+     *
+     * @param array $parentStatus
+     * @param array $childStatus
+     * @return array | null
+     */
+    protected function getChildStatusByParent(array $parentStatus, array $childStatus) : ?array
+    {
+        $updated = false;
+        /** @var Status (as array) $parent */
+        foreach($parentStatus as $parent)
+        {
+            if(is_array($parent))
+            {
+                $parent = new DataObject($parent);
+            }
+
+            if($parent->getValue() == \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED)
+            {
+                $updated = true;
+
+                /** @var Status (as array) $child */
+                foreach($childStatus as &$child)
+                {
+                    if(is_array($child))
+                    {
+                        $child = new DataObject($child);
+                    }
+                    if($child->getLanguage() === $parent->getLanguage())
+                    {
+                        $child->setValue($parent->getValue());
+                    }
+                }
+            }
+        }
+
+        if($updated)
+        {
+            return $childStatus;
+        }
+
+        return null;
     }
 
     /**
