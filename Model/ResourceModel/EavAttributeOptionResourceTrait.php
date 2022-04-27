@@ -37,6 +37,16 @@ trait EavAttributeOptionResourceTrait
 
     /**
      * @param int $attributeId
+     * @return array
+     */
+    public function getFetchPairsAttributeOptionSortOrderByAttributeId(int $attributeId) : array
+    {
+        $select = $this->getAttributeOptionSortOrderByStoreAndAttributeIdSelect($attributeId);
+        return $this->adapter->fetchPairs($select);
+    }
+
+    /**
+     * @param int $attributeId
      * @param int $storeId
      * @return Select
      */
@@ -77,6 +87,22 @@ trait EavAttributeOptionResourceTrait
                 ['s_o' => $this->adapter->getTableName('eav_attribute_option_swatch')],
                 's_o.option_id = a_o.option_id AND s_o.store_id = 0',
                 []
+            )->where('a_o.attribute_id = ?', $attributeId);
+    }
+
+    /**
+     * @param int $attributeId
+     * @return Select
+     */
+    public function getAttributeOptionSortOrderByStoreAndAttributeIdSelect(int $attributeId) : Select
+    {
+        return $this->adapter->select()
+            ->from(
+                ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
+                [
+                    'option_id',
+                    'sort_order'
+                ]
             )->where('a_o.attribute_id = ?', $attributeId);
     }
 

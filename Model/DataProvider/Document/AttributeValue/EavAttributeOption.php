@@ -77,6 +77,12 @@ class EavAttributeOption implements
             $this->_loadOptionIdSwatch($attributeId,
                 DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH, $attributeContent
             );
+
+            /** adding the sort_order value */
+            $this->_loadOptionIdSortOrder($attributeId,
+                DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER, $attributeContent
+            );
+
             $this->attributeNameValuesList->offsetSet($attributeCode, $attributeContent);
         }
     }
@@ -103,6 +109,18 @@ class EavAttributeOption implements
     protected function _loadOptionIdTranslation(int $attributeId, int $storeId, string $languageCode, \ArrayObject $attributeContent) : void
     {
         $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($attributeId, $storeId);
+        $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+    }
+
+    /**
+     * @param int $attributeId
+     * @param string $languageCode
+     * @param \ArrayObject $attributeContent
+     * @return void
+     */
+    protected function _loadOptionIdSortOrder(int $attributeId, string $languageCode, \ArrayObject $attributeContent) : void
+    {
+        $data = $this->resourceModel->getFetchPairsAttributeOptionSortOrderByAttributeId($attributeId);
         $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
     }
 

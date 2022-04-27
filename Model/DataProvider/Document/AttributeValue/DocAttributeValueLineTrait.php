@@ -138,5 +138,25 @@ trait DocAttributeValueLineTrait
         }
     }
 
+    /**
+     * @param string $id
+     * @return string | null
+     */
+    public function getSortOrder(string $id) : ?string
+    {
+        try{
+            $content = $this->getDataByCode($this->attributeCode, $id);
+            if(isset($content[DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER]))
+            {
+                return (string)$content[DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER];
+            }
+
+            return null;
+        } catch (\Throwable $exception)
+        {
+            return null;
+        }
+    }
+
 
 }

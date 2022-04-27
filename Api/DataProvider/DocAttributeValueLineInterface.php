@@ -11,6 +11,7 @@ interface DocAttributeValueLineInterface extends DiSchemaDataProviderInterface
 {
     public const STRING_ATTRIBUTES_KEY = "key";
     public const STRING_ATTRIBUTES_SWATCH = "swatch";
+    public const STRING_ATTRIBUTES_SORT_ORDER = "sort_order";
 
     /**
      * @param string $id
@@ -77,6 +78,12 @@ interface DocAttributeValueLineInterface extends DiSchemaDataProviderInterface
      * @return string | null
      */
     public function getSwatch(string $id) : ?string;
+
+    /**
+     * @param string $id
+     * @return string | null
+     */
+    public function getSortOrder(string $id) : ?string;
 
 
 }

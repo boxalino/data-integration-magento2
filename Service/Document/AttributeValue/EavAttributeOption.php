@@ -68,6 +68,14 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                         $this->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH);
                 }
 
+                /** adding the sort_order value as string property sort_order */
+                $sortOrder = $dataProvider->getSortOrder((string)$id);
+                if(!is_null($sortOrder))
+                {
+                    $schema[DocSchemaInterface::FIELD_STRING][] =
+                        $this->getStringAttributeSchema([$sortOrder], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER);
+                }
+
                 $content[$attributeName][] = $schema;
             }
         } catch(MissingSchemaDataProviderDefinitionException $exception)
