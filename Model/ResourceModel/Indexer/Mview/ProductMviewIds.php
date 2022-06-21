@@ -52,23 +52,6 @@ class ProductMviewIds implements DiViewIdResourceInterface
      */
     public function getAffectedIdsByMviewIds(array $ids) : array
     {
-        $defaultIds = $this->_getAffectedIdsByRelationConnection($ids);
-        $superLinkIds = [];
-
-        if(count($defaultIds))
-        {
-            $superLinkIds = $this->_getAffectedIdsBySuperLinkConnection($defaultIds);
-        }
-
-        return array_merge($defaultIds, $superLinkIds);
-    }
-
-    /**
-     * @param array $ids
-     * @return array
-     */
-    protected function _getAffectedIdsByRelationConnection(array $ids) : array
-    {
         $select = $this->adapter->select()
             ->distinct(true)
             ->from(
@@ -81,23 +64,6 @@ class ProductMviewIds implements DiViewIdResourceInterface
                 []
             )
             ->where("c_e.entity_id IN (?) OR c_e.as_parent IN (?) OR c_e.as_child IN (?) OR c_e.parent_id IN (?) OR c_e.child_id IN (?)", $ids);
-
-        return $this->adapter->fetchCol($select);
-    }
-
-    /**
-     * @param array $ids
-     * @return array
-     */
-    protected function _getAffectedIdsBySuperLinkConnection(array $ids) : array
-    {
-        $select = $this->adapter->select()
-            ->distinct(true)
-            ->from(
-                ['c_p_s_l' => $this->adapter->getTableName('catalog_product_super_link')],
-                ["c_p_s_l.product_id"]
-            )
-            ->where("c_p_s_l.parent_id IN (?)", $ids);
 
         return $this->adapter->fetchCol($select);
     }
