@@ -19,6 +19,8 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\FullIntegrationInterface;
 use Magento\Framework\DataObject;
 use Psr\Log\LoggerInterface;
 
@@ -218,6 +220,16 @@ class DocHandler extends DocProduct implements
                     $schema->setStatus($status);
                 }
                 $productGroups[$parentId]->addSkus([$schema]);
+
+                continue;
+            }
+
+            if($this->getDiConfiguration()->getMode() === DeltaIntegrationInterface::INTEGRATION_MODE)
+            {
+                if(in_array($parentId, $this->getIds()))
+                {
+                    $productSkus[$parentId][] = $schema;
+                }
 
                 continue;
             }
