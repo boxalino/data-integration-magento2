@@ -21,7 +21,7 @@ class Visibility extends IntegrationPropertyHandlerAbstract
         $languages = $this->getSystemConfiguration()->getLanguages();
         /** @var DocProductVisibilityPropertyInterface $datProvider */
         $datProvider = $this->getDataProvider();
-        
+
         foreach ($datProvider->getData() as $item)
         {
             try{
@@ -30,6 +30,12 @@ class Visibility extends IntegrationPropertyHandlerAbstract
 
                 $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()] =
                     $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item));
+
+                $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING][] =
+                    $this->getStringAttributeSchema(
+                        $datProvider->getIndividualVisibility($item),
+                        DocSchemaInterface::FIELD_STRING_INDIVIDUAL_VISIBILITY
+                    );
             } catch (\Throwable $exception)
             {
                 if($this->logErrors())

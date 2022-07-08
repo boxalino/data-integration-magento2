@@ -25,6 +25,15 @@ interface DocProductVisibilityPropertyInterface extends DocProductPropertyInterf
      */
     public function getSelfVisibility(array $item) : array;
 
+    /**
+     * Access the visibility of the item itself
+     * (array of unique values, for any store)
+     *
+     * @param array $item
+     * @return array
+     */
+    public function getIndividualVisibility(array $item) : array;
+
 
     
 }

@@ -61,12 +61,24 @@ class Visibility extends ModeIntegrator
     }
 
     /**
+     * @param array $item
+     * @return array
+     */
+    public function getIndividualVisibility(array $item) : array
+    {
+        return array_unique(array_values(array_intersect_key(
+                    $this->getSelfVisibility($item), array_flip($this->getSystemConfiguration()->getLanguages()))
+            )
+        );
+    }
+
+    /**
      * Pre-loading visibility data for each contexts (self and context)
      */
     public function resolve(): void
     {
         $this->_resolveDataDelta();
-        
+
         $this->_loadVisibilityData($this->getDocPropertyNameByContext(), $this->getContextVisibilityFields());
         $this->_loadVisibilityData($this->getDocPropertyNameByContext(false), $this->getSelfVisibilityFields());
     }
