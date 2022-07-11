@@ -14,6 +14,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocUser;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocUserHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\FullIntegrationInterface;
 use Psr\Log\LoggerInterface;
 
@@ -32,6 +33,7 @@ class DocHandler extends DocUser implements
     DocMviewDeltaIntegrationInterface
 {
 
+    use DocInstantIntegrationTrait;
     use DocDeltaIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use DiIntegrateTrait;
