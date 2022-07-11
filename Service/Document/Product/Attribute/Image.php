@@ -15,7 +15,7 @@ class Image extends IntegrationPropertyHandlerAbstract
 
     use AttributeConfigurationOnDataProviderTrait;
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

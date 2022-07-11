@@ -13,13 +13,13 @@ use Boxalino\DataIntegrationDoc\Doc\User;
  */
 class Entity extends IntegrationPropertyHandlerAbstract
 {
-    
+
     use DiIntegrateTypedSchemaTrait;
 
     /**
      * @return array
      */
-    public function getValues(): array
+    public function _getValues(): array
     {
         return $this->getValuesForEntityTypedSchema();
     }

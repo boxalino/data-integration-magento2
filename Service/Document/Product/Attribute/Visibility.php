@@ -15,7 +15,7 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\Visibility as VisibilitySchema;
 class Visibility extends IntegrationPropertyHandlerAbstract
 {
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

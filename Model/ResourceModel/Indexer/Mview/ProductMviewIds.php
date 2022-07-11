@@ -8,6 +8,7 @@ use Magento\Framework\DB\Select;
 
 /**
  * Declared as a dependency in the integration layer in case the mview is enabled
+ * Can be used for delta & instant updates as resource for which IDs to be updated
  */
 class ProductMviewIds implements DiViewIdResourceInterface
 {
@@ -32,7 +33,7 @@ class ProductMviewIds implements DiViewIdResourceInterface
      * @param $websiteId
      * @return array
      */
-    public function getAffectedIdsByMviewIdsWebsiteId($ids, $websiteId) : array
+    public function getIdsByMviewIdsWebsiteId($ids, $websiteId) : array
     {
         $mainSelect = $this->_getEntityByWebsiteIdSelect($websiteId);
         $select = $this->adapter->select()

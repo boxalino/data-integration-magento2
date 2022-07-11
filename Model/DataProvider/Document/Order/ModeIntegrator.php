@@ -7,8 +7,8 @@ use Boxalino\DataIntegration\Model\DataProvider\Document\DocPropertyAccessorTrai
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 
 /**
  * Abstract class ModeIntegrator
@@ -20,6 +20,7 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
 {
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
+    use DocInstantIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use DataValidationTrait;
     use DocPropertyAccessorTrait;
@@ -54,6 +55,12 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
             return $this->getDataDelta();
         }
 
+        /** for instant requests */
+        if($this->filterByIds())
+        {
+            return $this->getDataInstant();
+        }
+
         return $this->_getData();
     }
 
@@ -70,6 +77,21 @@ abstract class ModeIntegrator implements DocOrderPropertyInterface
             $this->getResourceModel()->addIdsConditional($this->getIds());
         }
         $this->getResourceModel()->addDateConditional($this->_getDeltaSyncCheckDate());
+
+        return $this->_getData();
+    }
+
+    /**
+     * To be extended with the istant filter logic
+     * @return array
+     */
+    public function getDataInstant() : array
+    {
+        $this->getResourceModel()->useInstant(true);
+        if(count($this->getIds()) > 0)
+        {
+            $this->getResourceModel()->addIdsConditional($this->getIds());
+        }
 
         return $this->_getData();
     }

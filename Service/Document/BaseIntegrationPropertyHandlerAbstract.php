@@ -11,6 +11,8 @@ use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterfa
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,11 +24,13 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
     DocSchemaPropertyHandlerInterface,
     DiIntegrationConfigurationInterface,
     DocDeltaIntegrationInterface,
+    DocInstantIntegrationInterface,
     DocMviewDeltaIntegrationInterface
 {
 
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
+    use DocInstantIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use DiPropertyTrait;
 
@@ -47,18 +51,44 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
     public function __construct(
         LoggerInterface $logger,
         DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
-        array $docAttributePropertiesMapping = []
+        array $docAttributePropertiesMapping = [],
+        bool $instantMode = false
     ){
         parent::__construct();
 
         $this->logger = $logger;
         $this->diSchemaDataProviderResolver = $diSchemaDataProviderResolver;
+        $this->instantMode = $instantMode;
 
         foreach($docAttributePropertiesMapping as $key=>$name)
         {
             $this->addPropertyNameDocAttributeMapping($key, $name);
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getValues(): array
+    {
+        if($this->filterByIds())
+        {
+            if($this->hasModeEnabled())
+            {
+                return $this->_getValues();
+            }
+
+            return [];
+        }
+
+        return $this->_getValues();
+    }
+
+    /**
+     * Added an abstract in order to adjust the
+     * @return array
+     */
+    abstract public function _getValues() : array;
 
     /**
      * Connection between the property handler and the data provider

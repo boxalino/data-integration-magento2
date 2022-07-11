@@ -6,6 +6,7 @@ use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
 use Boxalino\DataIntegrationDoc\Framework\Console\DiGenericAbstractCommand;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,7 +69,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("Start of Boxalino Data Integration (DI)...");
+        $output->writeln("Start of MVIEW Boxalino Data Integration (DI)...");
         try {
             $this->_reviewMview();
 
@@ -79,7 +80,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
                     $this->_updateMview();
                 }
 
-                $output->writeln("End of Boxalino Data Integration Process.");
+                $output->writeln("End of MVIEW Boxalino Data Integration Process.");
                 return 0;
             }
 
@@ -146,14 +147,21 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
                 }
                 $this->changelogVersionId = $this->mviewViewHandler->getChangelogVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
 
+                $backlog = $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId);
+                $affected = $backlog;
+                if($this->getIntegrationHandler()->getIntegrationMode() === DeltaIntegrationInterface::INTEGRATION_MODE)
+                {
+                    $affected = count($this->mviewViewHandler->getAffectedBacklogByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId));
+                }
+
                 $this->getLogger()->info("Boxalino DI: Mview information: " .
                     json_encode([
                         "group" => $this->mviewGroupId,
                         "viewId" => $this->mviewViewId,
                         "changelogVersionId"=> $this->changelogVersionId,
                         "mviewVersionId"=> $this->mviewVersionId,
-                        "backlog" => $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId),
-                        "affected" => count($this->mviewViewHandler->getBacklogByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId))
+                        "backlog" => $backlog,
+                        "affected" => $affected
                     ]));
             }
         } catch (\Throwable $exception)
@@ -188,6 +196,18 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     }
 
     /**
+     * Get MVIEW ids and other affected ids (based on product relations, etc)
+     * @return array
+     */
+    public function getAffectedIds() : array
+    {
+        return $this->getMviewViewHandler()->getAffectedBacklogByViewId(
+            $this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId()
+        );
+    }
+
+    /**
+     * Get MVIEW Ids as saved in mview table
      * @return array
      */
     public function getMviewIds() : array
@@ -198,11 +218,12 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     }
 
     /**
+     * Set the ID per website/account
      * @param array $mviewIds
      * @param string $websiteId
      * @return array
      */
-    public function getAffectedIdsByWebsite(array $mviewIds, string $websiteId) : array
+    public function getIdsByWebsite(array $mviewIds, string $websiteId) : array
     {
         return $this->getMviewViewHandler()->getBacklogForWebsiteId($mviewIds, $websiteId, $this->getMviewViewId(), $this->getMviewGroupId());
     }

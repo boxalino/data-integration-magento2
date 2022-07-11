@@ -14,7 +14,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class ProductRelation extends IntegrationPropertyHandlerAbstract
 {
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         foreach($this->getDataProvider()->getData() as $id => $relations)

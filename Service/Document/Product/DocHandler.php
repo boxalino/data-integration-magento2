@@ -4,8 +4,11 @@ namespace Boxalino\DataIntegration\Service\Document\Product;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrateTrait;
+use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
+use Boxalino\DataIntegrationDoc\Doc\Schema\Status;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Generator\DocGeneratorInterface;
@@ -19,6 +22,8 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProduct;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocProductHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\FullIntegrationInterface;
 use Magento\Framework\DataObject;
@@ -43,6 +48,7 @@ use Psr\Log\LoggerInterface;
 class DocHandler extends DocProduct implements
     DocProductHandlerInterface,
     DocDeltaIntegrationInterface,
+    DocInstantIntegrationInterface,
     DiIntegrationConfigurationInterface,
     DiHandlerIntegrationConfigurationInterface,
     DocMviewDeltaIntegrationInterface
@@ -50,14 +56,18 @@ class DocHandler extends DocProduct implements
 
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
+    use DocInstantIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use DiIntegrateTrait;
 
     public function __construct(
         LoggerInterface $logger,
-        array $propertyHandlers = []
+        array $propertyHandlers = [],
+        bool $instantMode = true
     ){
         parent::__construct($logger);
+        $this->instantMode = $instantMode;
+
         foreach($propertyHandlers as $key => $propertyHandler)
         {
             if($propertyHandler instanceof DocSchemaPropertyHandlerInterface)

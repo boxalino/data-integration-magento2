@@ -20,7 +20,7 @@ class AttributeOption extends AttributeAbstract
      *
      * @return array
      */
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

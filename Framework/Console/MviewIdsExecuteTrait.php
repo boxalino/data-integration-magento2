@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Framework\Console;
 
 use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 
 /**
@@ -32,7 +33,12 @@ trait MviewIdsExecuteTrait
             if($this->canRun($configuration))
             {
                 try{
-                    $this->getIntegrationHandler()->setMviewIds($this->getAffectedIdsByWebsite($ids, $configuration->getWebsiteId()));
+                    if($this->getIntegrationHandler()->getIntegrationMode() === DeltaIntegrationInterface::INTEGRATION_MODE)
+                    {
+                        $ids = $this->getAffectedIds();
+                    }
+
+                    $this->getIntegrationHandler()->setMviewIds($this->getIdsByWebsite($ids, $configuration->getWebsiteId()));
                 } catch (\Throwable $exception)
                 {
                     $this->logger->info("Declared handler can not be used with the mview integration: " . $exception->getMessage());

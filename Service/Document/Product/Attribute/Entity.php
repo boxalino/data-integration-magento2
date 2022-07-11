@@ -25,16 +25,17 @@ class Entity extends IntegrationPropertyHandlerAbstract
             "updated_at"=> DocSchemaInterface::FIELD_UPDATE,
             "type_id" => DocSchemaInterface::FIELD_STRING,
             "has_options" => DocSchemaInterface::FIELD_NUMERIC
-        ]
+        ],
+        bool $instantMode = true
     ){
-        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
+        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping, $instantMode);
 
         $this->addSchemaDefinition(DocSchemaInterface::FIELD_STRING, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringAttribute");
         $this->addSchemaDefinition(DocSchemaInterface::FIELD_NUMERIC, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\NumericAttribute");
         $this->addSchemaDefinition(DocSchemaInterface::FIELD_DATETIME, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\DatetimeAttribute");
     }
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         foreach($this->getDataProvider()->getData() as $item)

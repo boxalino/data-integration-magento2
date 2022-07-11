@@ -35,6 +35,16 @@ interface DiViewHandlerInterface
      * @param int $fromVersion
      * @param int $toVersion
      * @param string|null $group
+     * @return int[]
+     * @throws MviewViewIdNotFoundException
+     */
+    public function getAffectedBacklogByViewId(string $viewId, int $fromVersion, int $toVersion, ?string $group = null) : array;
+
+    /**
+     * @param string $viewId
+     * @param int $fromVersion
+     * @param int $toVersion
+     * @param string|null $group
      * @return int
      * @throws MviewViewIdNotFoundException
      */

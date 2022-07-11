@@ -144,6 +144,11 @@
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
         </arguments>
     </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\Product\InstantMviewDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+        </arguments>
+    </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Order\DeltaMviewDataIntegration">
         <arguments>
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>

@@ -5,6 +5,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
 
 /**
  * Interface used to declare the behavior for certain integration modes
@@ -14,6 +15,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegration
  */
 interface ModeIntegratorInterface extends
     DocDeltaIntegrationInterface,
+    DocInstantIntegrationInterface,
     DocSchemaPropertyHandlerInterface,
     DiIntegrationConfigurationInterface,
     DiHandlerIntegrationConfigurationInterface

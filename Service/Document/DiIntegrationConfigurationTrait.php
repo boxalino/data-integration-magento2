@@ -78,17 +78,18 @@ trait DiIntegrationConfigurationTrait
                 $handler->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             }
 
-            try{                
+            try{
                 if($handler instanceof DocDeltaIntegrationInterface)
                 {
                     if($handler->filterByCriteria())
                     {
                         $handler->setSyncCheck($this->getSyncCheck());
+
+                        if($handler instanceof DocMviewDeltaIntegrationInterface)
+                        {
+                            $handler->setMviewIds($this->getIds());
+                        }
                     }
-                }
-                if($handler instanceof DocMviewDeltaIntegrationInterface)
-                {
-                    $handler->setMviewIds($this->getIds());
                 }
             } catch (\Throwable $exception)
             {

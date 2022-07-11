@@ -18,7 +18,7 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\Pricing as PricingSchema;
 class Pricing extends IntegrationPropertyHandlerAbstract
 {
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $currencyFactors = $this->getCurrencyFactorMap();

@@ -10,6 +10,7 @@ use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 
 /**
  * @package Boxalino\DataIntegration\Model\Document\Product
@@ -18,6 +19,7 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
 {
     use DiIntegrationConfigurationTrait;
     use DocDeltaIntegrationTrait;
+    use DocInstantIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
     use AttributeValueListHelperTrait;
     use AttributeHelperTrait;
@@ -46,6 +48,16 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
     }
 
     /**
+     * To be extended with the istant filter logic
+     * @return array
+     */
+    public function getDataInstant() : array
+    {
+        $this->_resolveDataInstant();
+        return $this->_getData();
+    }
+
+    /**
      * In case processing is required at the level of resolve
      * @return void
      */
@@ -64,6 +76,22 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
     }
 
     /**
+     * In case processing is required at the level of resolve
+     * @return void
+     */
+    protected function _resolveDataInstant() : void
+    {
+        if($this->filterByIds())
+        {
+            $this->getResourceModel()->useInstant(true);
+            if(count($this->getIds()) > 0)
+            {
+                $this->getResourceModel()->addIdsConditional($this->getIds());
+            }
+        }
+    }
+
+    /**
      * @return DiSchemaDataProviderResourceInterface
      */
     public function getResourceModel() : DiSchemaDataProviderResourceInterface
@@ -77,6 +105,12 @@ abstract class ModeIntegrator implements DocProductPropertyInterface
         if($this->filterByCriteria())
         {
             return $this->getDataDelta();
+        }
+
+        /** for instant requests */
+        if($this->filterByIds())
+        {
+            return $this->getDataInstant();
         }
 
         return $this->_getData();

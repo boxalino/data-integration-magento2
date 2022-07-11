@@ -28,17 +28,18 @@ class Translation extends IntegrationPropertyHandlerAbstract
             "name" => DocSchemaInterface::FIELD_TITLE,
             DocSchemaInterface::FIELD_DESCRIPTION => DocSchemaInterface::FIELD_DESCRIPTION,
             DocSchemaInterface::FIELD_SHORT_DESCRIPTION => DocSchemaInterface::FIELD_SHORT_DESCRIPTION
-        ]
+        ],
+        bool $instantMode = false
     ){
-        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping);
+        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping, $instantMode);
     }
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
         $dataProvider = $this->getDataProvider();
-        
+
         foreach ($dataProvider->getAttributes() as $attributeCode => $type)
         {
             $dataProvider->setAttributeCode($attributeCode);

@@ -13,7 +13,7 @@ interface DiViewIdResourceInterface
      * @param $websiteId
      * @return array
      */
-    public function getAffectedIdsByMviewIdsWebsiteId($ids, $websiteId) : array;
+    public function getIdsByMviewIdsWebsiteId($ids, $websiteId) : array;
 
     /**
      * @param array $ids

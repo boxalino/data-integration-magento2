@@ -15,10 +15,10 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\Order\Product as OrderProductSchema;
  */
 class Item extends IntegrationPropertyHandlerAbstract
 {
-    
+
     use DiIntegrateTypedSchemaTrait;
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         return $this->getValuesForTypedSchema();
     }

@@ -13,7 +13,7 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\Repeated;
 class Brand extends IntegrationPropertyHandlerAbstract
 {
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();

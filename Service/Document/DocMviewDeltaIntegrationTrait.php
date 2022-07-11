@@ -17,19 +17,6 @@ trait DocMviewDeltaIntegrationTrait
     protected $ids = [];
 
     /**
-     * @var bool 
-     */
-    protected $filterByIds = false;
-
-    /**
-     * @return array
-     */
-    public function getIds(): array
-    {
-        return $this->ids;
-    }
-
-    /**
      * @param array $ids
      * @return DocDeltaIntegrationInterface
      */

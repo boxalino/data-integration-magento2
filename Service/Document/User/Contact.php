@@ -18,7 +18,7 @@ class Contact extends IntegrationPropertyHandlerAbstract
 
     use DiIntegrateTypedSchemaTrait;
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         return $this->getValuesForTypedSchema();
     }

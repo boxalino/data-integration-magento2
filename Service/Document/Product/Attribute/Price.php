@@ -17,7 +17,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 class Price extends IntegrationPropertyHandlerAbstract
 {
 
-    public function getValues(): array
+    public function _getValues(): array
     {
         $content = [];
         $currencyFactor = $this->getCurrencyFactorMap();
