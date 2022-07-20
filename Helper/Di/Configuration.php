@@ -227,6 +227,7 @@ class Configuration implements DiConfigurationInterface
             GcpRequestInterface::DI_REQUEST_MODE => GcpRequestInterface::GCP_MODE_INSTANT_UPDATE,
             DiConfigurationInterface::DI_CONFIG_ENDPOINT => $storeConfigurationHandler->getRestApiEndpointByMode(GcpRequestInterface::GCP_MODE_INSTANT_UPDATE),
             GcpRequestInterface::DI_REQUEST_OUTSOURCE => $storeConfigurationHandler->getOutsource(GcpRequestInterface::GCP_MODE_INSTANT_UPDATE),
+            GcpRequestInterface::DI_REQUEST_FIELDS => $storeConfigurationHandler->getFields(GcpRequestInterface::GCP_MODE_INSTANT_UPDATE),
             "allowProductSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_INSTANT_UPDATE, GcpRequestInterface::GCP_TYPE_PRODUCT),
             "allowUserSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_INSTANT_UPDATE, GcpRequestInterface::GCP_TYPE_USER),
             "allowOrderSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_INSTANT_UPDATE, GcpRequestInterface::GCP_TYPE_ORDER),

@@ -170,6 +170,21 @@ class Configuration
     }
 
     /**
+     * @return string | null
+     * @throws \Exception
+     */
+    public function getFields(string $mode) : bool
+    {
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath(GcpRequestInterface::DI_REQUEST_FIELDS, $mode));
+        if(empty($value))
+        {
+            return false;
+        }
+
+        return (bool)$value;
+    }
+
+    /**
      * The API endpoint depends on the data sync mode (delta, full, instant)
      *
      * @return string

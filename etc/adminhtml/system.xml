@@ -155,6 +155,10 @@
                     <validate>validate-url</validate>
                     <comment><![CDATA[Use the endpoint <a href="https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/394559761/Sync+Request#Request-Definition" target="_blank">for the INSTANT data sync</a>.]]></comment>
                 </field>
+                <field id="fields" translate="label comment" sortOrder="50" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Instant Fields</label>
+                    <comment>Declare which fields must be updated as part of your instant sync</comment>
+                </field>
             </group>
         </section>
 
