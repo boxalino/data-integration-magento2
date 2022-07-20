@@ -170,18 +170,18 @@ class Configuration
     }
 
     /**
+     * @param string $mode
      * @return string | null
-     * @throws \Exception
      */
-    public function getFields(string $mode) : bool
+    public function getFields(string $mode) : ?string
     {
         $value = $this->getStore()->getConfig($this->getScopeConfigPath(GcpRequestInterface::DI_REQUEST_FIELDS, $mode));
         if(empty($value))
         {
-            return false;
+            return null;
         }
 
-        return (bool)$value;
+        return $value;
     }
 
     /**
