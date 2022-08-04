@@ -20,19 +20,22 @@ trait AttributeLocalizedTrait
      * A row must be returned for each product id
      * di_id, langValue1, langValue2, langValue3
      *
+     * @param array|null $fields
+     * @param int|null $attributeId
+     * @param string|null $entityTypeTable
      * @return array
      */
-    public function getLocalizedDataForAttribute() : array
+    public function getLocalizedDataForAttribute(?array $fields = null, ?int $attributeId = null, ?string $entityTypeTable = null) : array
     {
         $attributeContent = new \ArrayObject();
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
             $data = $this->localizedResourceModel->getFetchPairsForLocalizedAttributeByStoreId(
-                $this->getFields(),
+                $fields ?? $this->getFields(),
                 $this->getSystemConfiguration()->getWebsiteId(),
                 $storeId,
-                $this->getAttributeId(),
-                $this->getEntityAttributeTableType()
+                $attributeId ?? $this->getAttributeId(),
+                $entityTypeTable ?? $this->getEntityAttributeTableType()
             );
 
             $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);

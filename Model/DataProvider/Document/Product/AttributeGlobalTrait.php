@@ -18,18 +18,21 @@ trait AttributeGlobalTrait
     /**
      * Used to create attribute data response structure (localized) when attribute is global
      *
+     * @param array|null $fields
+     * @param int|null $attributeId
+     * @param string|null $entityTypeTable
      * @return array
      */
-    public function getGlobalDataForAttributeAsLocalized() : array
+    public function getGlobalDataForAttributeAsLocalized(?array $fields = null, ?int $attributeId = null, ?string $entityTypeTable = null) : array
     {
         $attributeContent = new \ArrayObject();
 
         $data = $this->globalResourceModel->getFetchPairsForGlobalAttribute(
-            $this->getFields(),
+            $fields ?? $this->getFields(),
             $this->getSystemConfiguration()->getWebsiteId(),
             $this->getSystemConfiguration()->getStoreIds(),
-            $this->getAttributeId(),
-            $this->getEntityAttributeTableType()
+            $attributeId ?? $this->getAttributeId(),
+            $entityTypeTable ?? $this->getEntityAttributeTableType()
         );
 
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)

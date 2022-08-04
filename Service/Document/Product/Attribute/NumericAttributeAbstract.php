@@ -28,7 +28,17 @@ abstract class NumericAttributeAbstract extends IntegrationPropertyHandlerAbstra
                 $content[$id][$this->getDocSchemaPropertyNode()] = [];
             }
 
-            $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item);
+            try{
+                $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item);
+            } catch (\Throwable $exception)
+            {
+                if($this->logErrors())
+                {
+                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
+                        . $exception->getMessage() . " on " . json_encode($item)
+                    );
+                }
+            }
         }
 
         return $content;

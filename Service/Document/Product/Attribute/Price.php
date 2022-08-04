@@ -24,7 +24,7 @@ class Price extends IntegrationPropertyHandlerAbstract
         $languages = $this->getSystemConfiguration()->getLanguages();
         $currencyCodes = array_unique($this->getSystemConfiguration()->getCurrencyCodes());
         $dataProvider = $this->getDataProvider();
-        
+
         if($dataProvider instanceof DocProductPricePropertyInterface)
         {
             foreach ($dataProvider->getData() as $item)
@@ -37,8 +37,12 @@ class Price extends IntegrationPropertyHandlerAbstract
                 }
 
                 $id = $this->_getDocKey($item);
+                $schema = $this->getLocalizedPriceSchema($languages, $currencyCodes, $currencyFactor,
+                    $salesPrice, $listPrice,
+                    $dataProvider->getGrossMarginPrices($item),
+                    $dataProvider->getOtherPrices($item)
+                );
 
-                $schema = $this->getLocalizedPriceSchema($languages, $currencyCodes, $currencyFactor, $salesPrice, $listPrice);
                 $content[$id][$this->getResolverType()] = $schema;
             }
         }

@@ -6,6 +6,7 @@ use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyListInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as GlobalDataProviderResourceModel;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as LocalizedDataProviderResourceModel;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\TierPrice;
 
 /**
  * Class Price
@@ -13,6 +14,8 @@ use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocal
 class Price extends AttributeStrategyAbstract
     implements DocProductPropertyListInterface, DocProductPricePropertyInterface
 {
+    use SpecialPriceDateTrait;
+    use TierPriceTrait;
 
     /**
      * @var array
@@ -25,10 +28,12 @@ class Price extends AttributeStrategyAbstract
      */
     public function __construct(
         GlobalDataProviderResourceModel $globalResource,
-        LocalizedDataProviderResourceModel $localizedResource
+        LocalizedDataProviderResourceModel $localizedResource,
+        TierPrice $tierPriceResource
     ){
         parent::__construct($globalResource, $localizedResource);
 
+        $this->tierPriceResource = $tierPriceResource;
         $this->attributeNameValuesList = new \ArrayObject();
     }
 
@@ -49,6 +54,10 @@ class Price extends AttributeStrategyAbstract
 
     /**
      * Preloading relevant content for price modeling
+     *
+     * - all price attributes (price, special_price, msrp)
+     * - special_price_from / special_price_to
+     * - tier_price values for all groups (min value)
      */
     public function resolve(): void
     {
@@ -72,6 +81,9 @@ class Price extends AttributeStrategyAbstract
                 new \ArrayObject($this->getGlobalDataForAttributeAsLocalized())
             );
         }
+
+        $this->loadSpecialPriceDateAttributes();
+        $this->loadTierPriceAllGroups();
     }
 
     /**
@@ -110,33 +122,55 @@ class Price extends AttributeStrategyAbstract
 
     /**
      * The origin for the sales_price is the "special_price" attribute
+     *
      * @param array $item
      * @return array
      */
     public function getSalesPrice(array $item): array
     {
-        return $this->getDataByCode("special_price", $item[$this->getDiIdField()]);
+        $specialFromDate = $this->getDataByCode("special_from_date", $item[$this->getDiIdField()]);
+        $specialToDate = $this->getDataByCode("special_to_date", $item[$this->getDiIdField()]);
+        $specialPrice = $this->getDataByCode("special_price", $item[$this->getDiIdField()]);
+
+        return $this->_getSpecialPrice($specialFromDate, $specialToDate, $specialPrice);
     }
 
     /**
-     * The origin for the product cost
+     * The origin for the product cost (msrp)
+     *
      * @param array $item
      * @return array
      */
     public function getGrossMarginPrices(array $item): array
     {
-        return [];
+        return $this->getDataByCode("msrp", $item[$this->getDiIdField()]);
     }
 
     /**
-     * Export msrp as other_prices
+     * Tier price for customer_group_id = 0 and min quantity
      *
      * @param array $item
      * @return array
      */
     public function getOtherPrices(array $item): array
     {
-        return $this->getDataByCode("msrp", $item[$this->getDiIdField()]);
+        $tierPrices = $this->getDataByCode("tier_price_all_groups", $item[$this->getDiIdField()]);
+        if(empty($tierPrices))
+        {
+            return [];
+        }
+
+        $price = $this->getDataByCode("price", $item[$this->getDiIdField()]);
+        return $this->_getTierPrice($tierPrices, $price);
+    }
+
+    /**
+     * @return void
+     */
+    protected function loadTierPriceAllGroups(): void
+    {
+        $this->_resolveDataDeltaTierPrice();
+        $this->_loadTierPriceAllGroups();
     }
 
 

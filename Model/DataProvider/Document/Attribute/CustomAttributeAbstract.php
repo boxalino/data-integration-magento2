@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\Attribute;
+use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 
 /**
  * Class CustomAttributeAbstract
@@ -14,8 +15,26 @@ use Boxalino\DataIntegrationDoc\Doc\Attribute;
 abstract class CustomAttributeAbstract extends Attribute
 {
 
+    use DiPropertyTrait;
+
     /** property code (same as getName) */
     abstract function getCode(): string;
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->sanitizePropertyName($this->getCode());
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getInternalId(): ?string
+    {
+        return $this->getCode();
+    }
 
 
 }

@@ -172,6 +172,7 @@ class Configuration
     /**
      * @param string $mode
      * @return string | null
+     * @throws \Exception
      */
     public function getFields(string $mode) : ?string
     {

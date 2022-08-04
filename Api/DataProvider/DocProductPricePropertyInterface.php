@@ -31,4 +31,5 @@ interface DocProductPricePropertyInterface extends DocProductPropertyInterface
      */
     public function getOtherPrices(array $item) : array;
 
+
 }

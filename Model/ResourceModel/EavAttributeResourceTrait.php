@@ -45,6 +45,8 @@ trait EavAttributeResourceTrait
      * @param array $backendType list of available backend_type options (varchar, static, int, decimal, datetime, text)
      * @param array $frontendInput list of available frontend_input options (multiselect, select, text, price, date, textarea, boolean, gallery, media_image, etc)
      * @param bool $orConditional
+     * @param array $excludeConditions
+     * @param array $attributeCodesOnly list of attributes code enquired about
      * @param int $entityTypeId
      * @return array
      */
@@ -54,6 +56,7 @@ trait EavAttributeResourceTrait
         array $frontendInput = [],
         bool $orConditional = false,
         array $excludeConditions = [],
+        array $attributeCodesOnly = [],
         int $entityTypeId = \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID): array
     {
         $conditions = [];
@@ -100,6 +103,11 @@ trait EavAttributeResourceTrait
         foreach($excludeConditions as $condition)
         {
             $select->where($condition);
+        }
+
+        if($attributeCodesOnly)
+        {
+            $select->where("e_a.attribute_code IN (?)", $attributeCodesOnly);
         }
 
         return $this->adapter->fetchAll($select);

@@ -10,7 +10,7 @@
     "license": ["MIT"],
     "require": {
         "php": ">=7.2",
-        "boxalino/data-integration-doc-php":"~3.1.15"
+        "boxalino/data-integration-doc-php":"~3.1.18"
     },
     "autoload": {
         "files": ["registration.php"],
