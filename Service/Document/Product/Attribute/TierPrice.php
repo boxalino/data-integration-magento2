@@ -17,7 +17,7 @@ class TierPrice extends StringAttributeAbstract
      */
     public function getResolverType(): string
     {
-        return "tier_price";
+        return "tier_price_json";
     }
 
 
