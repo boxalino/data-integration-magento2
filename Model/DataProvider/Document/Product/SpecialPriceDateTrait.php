@@ -54,39 +54,68 @@ trait SpecialPriceDateTrait
      * @param array $specialPrice
      * @return array
      */
-    protected function _getSpecialPrice(array $specialFromDate, array $specialToDate, array $specialPrice) : array
+    protected function _getSpecialPrice(array $specialFromDate, array $specialToDate, array $specialPrice, array $price) : array
     {
-        if(empty($specialFromDate) && empty($specialToDate))
+        if($this->_comparePriceWith($price, $specialPrice))
         {
-            return $specialPrice;
-        }
-
-        if($specialToDate && empty($specialFromDate))
-        {
-            if($this->_compareDateWith($specialToDate, true))
+            if(empty($specialFromDate) && empty($specialToDate))
             {
                 return $specialPrice;
             }
 
-            return [];
-        }
+            if($specialToDate && empty($specialFromDate))
+            {
+                if($this->_compareDateWith($specialToDate, true))
+                {
+                    return $specialPrice;
+                }
 
-        if($specialFromDate && empty($specialToDate))
-        {
-            if($this->_compareDateWith($specialFromDate, false))
+                return [];
+            }
+
+            if($specialFromDate && empty($specialToDate))
+            {
+                if($this->_compareDateWith($specialFromDate, false))
+                {
+                    return $specialPrice;
+                }
+
+                return [];
+            }
+
+            if($this->_compareDateWith($specialFromDate, false) && $this->_compareDateWith($specialToDate, true))
             {
                 return $specialPrice;
             }
-
-            return [];
-        }
-
-        if($this->_compareDateWith($specialFromDate, false) && $this->_compareDateWith($specialToDate, true))
-        {
-            return $specialPrice;
         }
 
         return [];
+    }
+
+    /**
+     * @param array $prices
+     * @param array $salesPrices
+     * @return bool
+     */
+    protected function _comparePriceWith(array $prices, array $salesPrices) : bool
+    {
+        $languages = $this->getSystemConfiguration()->getLanguages();
+        $price = array_unique(array_filter(array_values(array_intersect_key($prices, array_flip($languages)))));
+        $salesPrice = array_unique(array_filter(array_values(array_intersect_key($salesPrices, array_flip($languages)))));
+        if(empty($salesPrice))
+        {
+            return false;
+        }
+
+        if(count($price) == count($salesPrice))
+        {
+            $price = $price[0];
+            $salesPrice = $salesPrice[0];
+
+            return $price > $salesPrice;
+        }
+
+        return false;
     }
 
     /**

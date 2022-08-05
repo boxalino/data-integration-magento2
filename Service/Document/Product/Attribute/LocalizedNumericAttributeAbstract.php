@@ -47,7 +47,6 @@ abstract class LocalizedNumericAttributeAbstract extends IntegrationPropertyHand
         }
 
         return $content;
-
     }
 
     /**

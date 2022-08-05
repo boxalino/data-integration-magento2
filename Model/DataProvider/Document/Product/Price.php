@@ -131,8 +131,9 @@ class Price extends AttributeStrategyAbstract
         $specialFromDate = $this->getDataByCode("special_from_date", $item[$this->getDiIdField()]);
         $specialToDate = $this->getDataByCode("special_to_date", $item[$this->getDiIdField()]);
         $specialPrice = $this->getDataByCode("special_price", $item[$this->getDiIdField()]);
+        $price = $this->getDataByCode('price', $item[$this->getDiIdField()]);
 
-        return $this->_getSpecialPrice($specialFromDate, $specialToDate, $specialPrice);
+        return $this->_getSpecialPrice($specialFromDate, $specialToDate, $specialPrice, $price);
     }
 
     /**
