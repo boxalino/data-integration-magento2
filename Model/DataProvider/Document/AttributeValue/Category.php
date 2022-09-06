@@ -86,7 +86,7 @@ class Category implements
      */
     public function getParentValueIds(string $id): array
     {
-        return $this->getDataByCode("path", $id);
+        return $this->getDataByCode("parent_ids", $id);
     }
 
     /**
@@ -162,7 +162,7 @@ class Category implements
             $attributeContent->offsetSet($id, $content);
         }
 
-        $this->attributeNameValuesList->offsetSet("path", $attributeContent);
+        $this->attributeNameValuesList->offsetSet("parent_ids", $attributeContent);
     }
 
     /**

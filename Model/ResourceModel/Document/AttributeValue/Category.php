@@ -23,12 +23,12 @@ class Category extends DiSchemaDataProviderResource
         $select = $this->adapter->select()
             ->from(
                 $this->adapter->getTableName('catalog_category_entity'),
-                ["entity_id"]
+                ["*"]
             )
             ->where('path LIKE "'. $rootCategoryIdPath.'/%"')
             ->orWhere('entity_id IN (?)', explode("/", $rootCategoryIdPath));
 
-        return $this->adapter->fetchCol($select);
+        return $this->adapter->fetchAll($select);
     }
 
     /**
