@@ -15,7 +15,7 @@ class ProductParentMviewIdsWithSuperLink extends ProductMviewIdsWithSuperLink
      */
     public function getAffectedIdsByMviewIds(array $ids) : array
     {
-        $defaultIds = parent::getAffectedIdsByMviewIds($ids);
+        $defaultIds = parent::getAffectedIdsByMviewIds(parent::getAffectedIdsByMviewIds($ids));
         $superLinkIds = [];
 
         if(count($defaultIds))
