@@ -49,10 +49,10 @@ trait TierPriceTrait
 
                 if(strpos($tierPrice, "%") === FALSE)
                 {
-                    return round($tierPrice, 2);
+                    return round((float)$tierPrice, 2);
                 }
 
-                $tierPrice = (string) round($price[$language] * (100 - (int)rtrim($tierPrice, "%")) / 100, 2);
+                $tierPrice = (string) round((float)$price[$language] * (100 - (int)rtrim($tierPrice, "%")) / 100, 2);
             }
         );
 
