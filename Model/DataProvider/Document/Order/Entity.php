@@ -203,7 +203,7 @@ class Entity extends ModeIntegrator
      */
     public function getTotalCrncyAmt(array $row): float
     {
-        return (float) round($row["grand_total"], 2);
+        return round((float)$row["grand_total"], 2);
     }
 
     /**
@@ -214,7 +214,7 @@ class Entity extends ModeIntegrator
      */
     public function getTotalCrncyAmtNet(array $row): ?float
     {
-        return (float) round($row["subtotal"], 2);
+        return round((float)$row["subtotal"], 2);
     }
 
     /**
@@ -245,7 +245,7 @@ class Entity extends ModeIntegrator
      */
     public function getShippingCostsNet(array $row): ?float
     {
-        return (float) round($row["shipping_amount"], 2);
+        return round((float)$row["shipping_amount"], 2);
     }
 
     /**
@@ -254,7 +254,7 @@ class Entity extends ModeIntegrator
      */
     public function getCurrencyFactor(array $row): ?float
     {
-        return (float) round($row["base_to_order_rate"], 2);
+        return round((float)$row["base_to_order_rate"], 2);
     }
 
     /**
@@ -274,7 +274,7 @@ class Entity extends ModeIntegrator
     {
         if(isset($row["s_o_t_percent"]))
         {
-            return (float) round($row["s_o_t_percent"], 2);
+            return round((float)$row["s_o_t_percent"], 2);
         }
 
         return null;
@@ -286,7 +286,7 @@ class Entity extends ModeIntegrator
      */
     public function getTaxAmnt(array $row): ?float
     {
-        return (float) round($row["tax_amount"], 2);
+        return round((float)$row["tax_amount"], 2);
     }
 
     /**
@@ -295,7 +295,7 @@ class Entity extends ModeIntegrator
      */
     public function getPaymentMethod(array $row): ?string
     {
-        return (string) $row["s_o_p_method"] ?? null;
+        return (string)$row["s_o_p_method"] ?? null;
     }
 
     /**
