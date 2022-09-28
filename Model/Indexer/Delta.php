@@ -77,7 +77,7 @@ abstract class Delta implements \Magento\Framework\Indexer\ActionInterface,
                         $this->logger->info($exception->getMessage());
                     }
                 }
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
                 $exceptions[] = $exception->getMessage() . " for " . $this->getProcessName();
                 $this->logger->alert($exception->getMessage());

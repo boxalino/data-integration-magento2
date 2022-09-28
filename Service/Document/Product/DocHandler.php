@@ -82,7 +82,7 @@ class DocHandler extends DocProduct implements
      * For instant update use - the schema will be reduced to the properties that require
      * to be updated instantly
      */
-    protected function createDocLines() : self
+    protected function createDocLines() : void
     {
         $this->addSystemConfigurationOnHandlers();
         $this->generateDocData();
@@ -107,8 +107,6 @@ class DocHandler extends DocProduct implements
         $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
 
         $this->resetDocData();
-
-        return $this;
     }
 
     /**

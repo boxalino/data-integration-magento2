@@ -53,9 +53,9 @@ class DocHandler extends DocOrder implements
     }
 
     /**
-     * @return $this
+     * @return void
      */
-    protected function createDocLines() : self
+    protected function createDocLines() : void
     {
         try {
             $this->addSystemConfigurationOnHandlers();
@@ -89,8 +89,6 @@ class DocHandler extends DocOrder implements
         {
             $this->logger->info($exception->getMessage());
         }
-
-        return $this;
     }
 
     /**

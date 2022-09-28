@@ -53,9 +53,9 @@ class DocHandler extends DocLanguages implements
     }
 
     /**
-     * @return $this
+     * @return void
      */
-    protected function createDocLines() : self
+    protected function createDocLines() : void
     {
         foreach($this->getSystemConfiguration()->getLanguagesCountryCodeMap() as $language => $countryCode)
         {
@@ -67,8 +67,6 @@ class DocHandler extends DocLanguages implements
 
             $this->addDocLine($doc);
         }
-
-        return $this;
     }
 
 

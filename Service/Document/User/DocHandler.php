@@ -53,9 +53,9 @@ class DocHandler extends DocUser implements
     }
 
     /**
-     * @return \Boxalino\DataIntegration\Service\Document\User\DocHandler
+     * @return void
      */
-    protected function createDocLines() : self
+    protected function createDocLines() : void
     {
         try {
             $this->addSystemConfigurationOnHandlers();
@@ -89,8 +89,6 @@ class DocHandler extends DocUser implements
         {
             $this->logger->info($exception->getMessage());
         }
-
-        return $this;
     }
 
     /**

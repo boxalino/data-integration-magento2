@@ -38,7 +38,7 @@ class DocHandler extends DocAttribute
                 $this->addPropertyHandler($propertyHandler);
             }
         }
-        
+
     }
 
     public function integrate(): void
@@ -66,9 +66,9 @@ class DocHandler extends DocAttribute
     }
 
     /**
-     * @return $this
+     * @return void
      */
-    protected function createDocLines() : self
+    protected function createDocLines() : void
     {
         $this->addSystemConfigurationOnHandlers();
         try {
@@ -84,13 +84,11 @@ class DocHandler extends DocAttribute
              * other properties outside of product table & properties
              */
             $this->addConfiguredProperties();
-            
+
         } catch (\Throwable $exception)
         {
             $this->getLogger()->info($exception->getMessage());
         }
-
-        return $this;
     }
 
     /**

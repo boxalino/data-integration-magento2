@@ -72,9 +72,9 @@ class DocHandler extends DocAttributeValues implements
     }
 
     /**
-     * @return $this
+     * @return void
      */
-    protected function createDocLines() : self
+    protected function createDocLines() : void
     {
         $this->addSystemConfigurationOnHandlers();
         try {
@@ -89,8 +89,6 @@ class DocHandler extends DocAttributeValues implements
         {
             $this->logger->info($exception->getMessage());
         }
-
-        return $this;
     }
 
     /**
