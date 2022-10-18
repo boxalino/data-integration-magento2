@@ -42,6 +42,11 @@ class Category extends IntegrationPropertyHandlerAbstract
             $content[$id][$this->getDocSchemaPropertyNode()][] = $schema;
         }
 
+        if($this->logErrors())
+        {
+            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
+        }
+
         return $content;
     }
 

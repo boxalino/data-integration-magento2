@@ -27,6 +27,12 @@ class ProductRelation extends IntegrationPropertyHandlerAbstract
                 $content[$id][$this->getResolverType()][] = $this->getProductRelationSchema($relation);
             }
         }
+
+        if($this->logErrors())
+        {
+            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
+        }
+
         return $content;
     }
 
