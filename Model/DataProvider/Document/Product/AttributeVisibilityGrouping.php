@@ -19,11 +19,14 @@ class AttributeVisibilityGrouping extends ModeIntegrator
 
     /**
      * @param DataProviderResourceModel $attributeGlobal
+     * @param string $eavAttributeType
      */
     public function __construct(
-        DataProviderResourceModel $attributeGlobal
+        DataProviderResourceModel $attributeGlobal,
+        string $eavAttributeType = "varchar"
     ) {
         $this->resourceModel = $attributeGlobal;
+        $this->eavAttributeType = $eavAttributeType;
     }
 
     /**
