@@ -3,7 +3,8 @@
     "description": "Boxalino Data Integration Layer for Magento2",
     "type": "magento2-module",
     "homepage": "http://www.boxalino.com",
-    "keywords": ["boxalino", "exporter","magento"],
+    "keywords": ["boxalino", "data integration", "magento"],
+    "version": "1.5.0",
     "support": {
         "email": "support@boxalino.com"
     },

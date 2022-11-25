@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Integration\Mode;
 
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
+use Boxalino\DataIntegration\Service\Integration\DiIntegrationThresholdTrait;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\DiLoggerTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocHandlerInterface;
@@ -15,12 +16,14 @@ abstract class AbstractIntegrationHandler extends IntegrationHandler
     implements DiIntegrationConfigurationInterface
 {
     use DiIntegrationConfigurationTrait;
+    use DiIntegrationThresholdTrait;
     use DiLoggerTrait;
 
     public function __construct(
         LoggerInterface $logger,
         array $docHandlers = [],
-        int $timeout = 0
+        int $timeout = 0,
+        string $fullConversionThreshold = "0"
     ){
         parent::__construct();
         $this->logger = $logger;
@@ -33,6 +36,7 @@ abstract class AbstractIntegrationHandler extends IntegrationHandler
             }
         }
         $this->setTimeout($timeout);
+        $this->setFullConversionThreshold((float)$fullConversionThreshold);
     }
 
     /**
