@@ -32,19 +32,22 @@ trait DiIntegrationThresholdTrait
         if($this->getFullConversionThreshold() > 0)
         {
             $this->getThreshold();
-            if($size > $this->threshold*$this->getFullConversionThreshold())
+            if($this->threshold > 0)
             {
-                try {
-                    $this->getLogger()->info(
-                        "Boxalino DI: upgrading sync mode to F: " . $size . " is bigger than allowed "
-                        . $this->getFullConversionThreshold() . " threshold from " . $this->threshold
-                    );
-                } catch (\Throwable $exception) {}
+                if($size > $this->threshold*$this->getFullConversionThreshold())
+                {
+                    try {
+                        $this->getLogger()->info(
+                            "Boxalino DI: upgrading sync mode to F: " . $size . " is bigger than allowed "
+                            . $this->getFullConversionThreshold() . " threshold from " . $this->threshold
+                        );
+                    } catch (\Throwable $exception) {}
 
-                try{
-                    $this->getSystemConfiguration()->setMode(FullIntegrationInterface::INTEGRATION_MODE);
-                    $this->setMviewIds([]);
-                } catch (\Throwable $exception) {}
+                    try{
+                        $this->getSystemConfiguration()->setMode(FullIntegrationInterface::INTEGRATION_MODE);
+                        $this->setMviewIds([]);
+                    } catch (\Throwable $exception) {}
+                }
             }
         }
     }
