@@ -54,14 +54,11 @@ trait DiIntegrationThresholdTrait
      */
     protected function getThreshold() : ?int
     {
-        if(is_null($this->threshold))
+        try{
+            $this->threshold = $this->thresholdCheck();
+        } catch (\Throwable $exception)
         {
-            try{
-                $this->threshold = $this->thresholdCheck();
-            } catch (\Throwable $exception)
-            {
-                $this->threshold = 0;
-            }
+            $this->threshold = 0;
         }
 
         return $this->threshold;
