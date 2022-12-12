@@ -53,19 +53,12 @@ class DocHandler extends DocAttributeValues implements
         {
             if($this->getSystemConfiguration()->getOutsource())
             {
-                if($this->getSystemConfiguration()->isTest())
-                {
-                    $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()} is outsourced.");
-                }
-
+                $this->logInfo("load for {$this->getDocType()} is outsourced.");
                 return;
             }
         }
 
-        if($this->getSystemConfiguration()->isTest())
-        {
-            $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");
-        }
+        $this->logInfo("load for {$this->getDocType()}");
 
         $this->createDocLines();
         parent::integrate();

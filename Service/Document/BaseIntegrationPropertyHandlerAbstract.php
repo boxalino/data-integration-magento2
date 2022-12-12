@@ -9,6 +9,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandler;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
+use Boxalino\DataIntegrationDoc\Service\Flow\DiLogTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
@@ -28,7 +29,10 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
     DocMviewDeltaIntegrationInterface
 {
 
-    use DiIntegrationConfigurationTrait;
+    use DiIntegrationConfigurationTrait, DiLogTrait
+    {
+        DiIntegrationConfigurationTrait::getDiConfiguration insteadof DiLogTrait;
+    }
     use DocDeltaIntegrationTrait;
     use DocInstantIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
@@ -38,11 +42,6 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
      * @var DiSchemaDataProviderResolverInterface
      */
     protected $diSchemaDataProviderResolver;
-
-    /**
-     * @var null | bool
-     */
-    protected $logErrorsFlag = null;
 
     /**
      * @param LoggerInterface $logger
@@ -128,19 +127,6 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
         }
 
         return "_" . $item;
-    }
-
-    /**
-     * @return bool
-     */
-    public function logErrors() : bool
-    {
-        if(is_null($this->logErrorsFlag))
-        {
-            $this->logErrorsFlag = $this->getSystemConfiguration()->isTest();
-        }
-
-        return $this->logErrorsFlag;
     }
 
 

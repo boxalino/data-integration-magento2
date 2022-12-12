@@ -83,17 +83,19 @@ trait DiIntegrationConfigurationTrait
                 {
                     if($handler->filterByCriteria())
                     {
-                        $handler->setSyncCheck($this->getSyncCheck());
-
-                        if($handler instanceof DocMviewDeltaIntegrationInterface)
+                        if(count($this->getIds()))
                         {
-                            $handler->setMviewIds($this->getIds());
+                            if($handler instanceof DocMviewDeltaIntegrationInterface)
+                            {
+                                $handler->setMviewIds($this->getIds());
+                                continue;
+                            }
                         }
+
+                        $handler->setSyncCheck($this->getSyncCheck());
                     }
                 }
-            } catch (\Throwable $exception)
-            {
-            }
+            } catch (\Throwable $exception) {}
 
             try{
                 if($handler instanceof DocInstantIntegrationInterface)
@@ -103,9 +105,7 @@ trait DiIntegrationConfigurationTrait
                         $handler->setIds($this->getIds());
                     }
                 }
-            } catch (\Throwable $exception)
-            {
-            }
+            } catch (\Throwable $exception) {}
         }
 
         return $this;

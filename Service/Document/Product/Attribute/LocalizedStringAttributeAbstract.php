@@ -37,12 +37,9 @@ abstract class LocalizedStringAttributeAbstract extends IntegrationPropertyHandl
                 $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item, $languages, $this->getAttributeCode());
             } catch (\Throwable $exception)
             {
-                if($this->logErrors())
-                {
-                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
-                        . $exception->getMessage() . " on " . json_encode($item)
-                    );
-                }
+                $this->logWarning("Error on ". $this->getResolverType() . " with exception: "
+                    . $exception->getMessage() . " on " . json_encode($item)
+                );
             }
         }
 

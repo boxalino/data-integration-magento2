@@ -34,20 +34,16 @@ class AttributeVisibilityGrouping extends IntegrationPropertyHandlerAbstract
                 $content[$id][$this->getResolverType()] = $this->getSchema($item);
             } catch (\Throwable $exception)
             {
-                if($this->logErrors())
-                {
-                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
-                        . $exception->getMessage() . " on " . json_encode($item)
-                    );
-                }
+                $this->logWarning("Error on ". $this->getResolverType() . "with exception: "
+                    . $exception->getMessage() . " on " . json_encode($item)
+                );
             }
         }
 
-        if($this->logErrors())
-        {
-            $this->logger->info(count($content) . " items have content for " . $this->getResolverType()
-                . ". Configured attribute " . $this->getAttributeCode());
-        }
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType()
+            . ". Configured attribute " . $this->getAttributeCode()
+        );
+
 
         return $content;
     }

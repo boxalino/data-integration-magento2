@@ -74,11 +74,7 @@ class DocHandler extends DocUser implements
                     }
                 } catch (\Throwable $exception)
                 {
-                    if($this->getSystemConfiguration()->isTest())
-                    {
-                        $this->logger->warning("Incomplete content for user: " . $doc->jsonSerialize());
-                    }
-
+                    $this->logWarning("Incomplete content for user: " . $doc->jsonSerialize());
                     continue;
                 }
             }

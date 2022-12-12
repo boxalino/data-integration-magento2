@@ -38,10 +38,14 @@ trait MviewIdsExecuteTrait
                         $ids = $this->getAffectedIds();
                     }
 
-                    $this->getIntegrationHandler()->setMviewIds($this->getIdsByWebsite($ids, $configuration->getWebsiteId()));
+                    $websiteIds = $this->getIdsByWebsite($ids, $configuration->getWebsiteId());
+                    $this->getIntegrationHandler()->setMviewIds($websiteIds);
+                    $this->logger->info("Boxalino DI MVIEW: " . count($websiteIds) . " items identified for "
+                        . $configuration->getAccount()
+                    );
                 } catch (\Throwable $exception)
                 {
-                    $this->logger->info("Declared handler can not be used with the mview integration: " . $exception->getMessage());
+                    $this->logger->info("Boxalino DI MVIEW: Declared handler can not be used with the mview integration: " . $exception->getMessage());
                 }
 
                 try{

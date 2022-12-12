@@ -1,9 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document;
 
-
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
-use Laminas\Di\Exception\MissingPropertyException;
 
 /**
  * Helper trait in accessing document properties

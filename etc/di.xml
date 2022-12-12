@@ -27,6 +27,54 @@
         </arguments>
     </virtualType>
 
+    <!-- FULL LOGGER -->
+    <virtualType name="Boxalino\DataIntegration\Logger\Full\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileName" xsi:type="string">/var/log/boxalino-di-full.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Boxalino\DataIntegration\Logger\Full\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">Boxalino DI Full Logger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- DELTA LOGGER -->
+    <virtualType name="Boxalino\DataIntegration\Logger\Delta\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileName" xsi:type="string">/var/log/boxalino-di-delta.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Boxalino\DataIntegration\Logger\Delta\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">Boxalino DI Delta Logger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- INSTANT LOGGER -->
+    <virtualType name="Boxalino\DataIntegration\Logger\Instant\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileName" xsi:type="string">/var/log/boxalino-di-instant.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Boxalino\DataIntegration\Logger\Instant\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">Boxalino DI Instant Logger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Instant\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <!-- GENERAL CONFIGURATIONS -->
     <preference for="Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface" type="Boxalino\DataIntegration\Helper\Di\Configuration"/>
     <preference for="Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface" type="Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolver"/>
@@ -85,10 +133,10 @@
         </arguments>
     </type>
 
-    <!-- DELTA sync logs in boxalino-di.log file -->
+    <!-- DELTA sync logs in boxalino-di-delta.log file -->
     <type name="Boxalino\DataIntegration\Model\Indexer\Delta">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
 
@@ -96,67 +144,67 @@
     <preference for="Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface" type="Boxalino\DataIntegration\Model\Indexer\Mview\View"/>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\FullDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Order\FullDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\User\FullDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\FullMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Order\FullMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\User\FullMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\DeltaDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Order\DeltaDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\User\DeltaDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\DeltaMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\InstantMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Instant\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Order\DeltaMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\User\DeltaMviewDataIntegration">
         <arguments>
-            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Logger</argument>
         </arguments>
     </type>
 

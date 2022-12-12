@@ -29,14 +29,17 @@ class AttributeOption extends AttributeAbstract
         foreach($dataProvider->getAttributes() as $attribute)
         {
             $this->setAttribute($attribute);
+
             $this->_addAttributeConfigOnDataProviderByAttribute();
             list($attributeCode, $attributeName) = $this->_getPropertyNameAndAttributeCode();
+            $this->logDebug("$attributeCode reviewed for export.");
 
             if($this->breakLoop())
             {
                 continue;
             }
 
+            $productsWithAttributeValues = 0;
             /** @var array $item columns di_id, <attributeCode> with value */
             foreach($dataProvider->getData() as $id => $item)
             {
@@ -56,20 +59,17 @@ class AttributeOption extends AttributeAbstract
                         $this->getSchema($item, $languages, $attributeName, $attributeCode);
                 } catch (\Throwable $exception)
                 {
-                    if($this->logErrors())
-                    {
-                        $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
-                            . $exception->getMessage() . " on " . json_encode($item)
-                        );
-                    }
+                    $this->logWarning("Error on ". $this->getResolverType() . " for $attributeCode with exception: "
+                        . $exception->getMessage() . " on " . json_encode($item)
+                    );
                 }
+                $productsWithAttributeValues++;
             }
+
+            $this->logDebug("$attributeCode is used by $productsWithAttributeValues products");
         }
 
-        if($this->logErrors())
-        {
-            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
-        }
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
 
         return $content;
     }

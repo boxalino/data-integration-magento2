@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document;
 
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
+use Boxalino\DataIntegrationDoc\Service\Flow\DiLogTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Psr\Log\LoggerInterface;
 
@@ -13,7 +14,10 @@ use Psr\Log\LoggerInterface;
 trait DiIntegrateTrait
 {
 
-    use DiIntegrationConfigurationTrait;
+    use DiIntegrationConfigurationTrait, DiLogTrait
+    {
+        DiIntegrationConfigurationTrait::getDiConfiguration insteadof DiLogTrait;
+    }
 
     /**
      * The major items content is integrated in batches
@@ -37,10 +41,8 @@ trait DiIntegrateTrait
         if($this->getSystemConfiguration()->getMode() == InstantIntegrationInterface::INTEGRATION_MODE)
         {
             parent::integrate();
-            if($this->getSystemConfiguration()->isTest())
-            {
-                $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");
-            }
+            $this->logInfo("load for {$this->getDocType()}");
+
             return;
         }
 
@@ -59,14 +61,12 @@ trait DiIntegrateTrait
         if($this->getSystemConfiguration()->getChunk())
         {
             $this->loadBq();
-            if($this->getSystemConfiguration()->isTest())
-            {
-                $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");
-            }
+            $this->logInfo("load for {$this->getDocType()}");
+
             return;
         }
 
-        throw new NoRecordsFoundException("No {$this->getDocType()} content viable for sync since " . $this->getSyncCheck());
+        throw new NoRecordsFoundException("{$this->getLogProcessName()}: No {$this->getDocType()} content viable for sync since " . $this->getSyncCheck());
     }
 
     /**
@@ -74,19 +74,13 @@ trait DiIntegrateTrait
      */
     public function integrateFull() : void
     {
-        if($this->getSystemConfiguration()->isTest())
-        {
-            $this->getLogger()->info("Boxalino DI: creating the document JSONL from structured DB load.");
-        }
+        $this->logInfo("Creating the document JSONL from structured DB load.");
         $document = $this->getDocContent();
         $this->loadByChunk($document);
         unset($document);
 
         $this->loadBq();
-        if($this->getSystemConfiguration()->isTest())
-        {
-            $this->getLogger()->info("Boxalino DI: load for {$this->getDocType()}");
-        }
+        $this->logInfo("load for {$this->getDocType()}");
     }
 
     /**
@@ -94,10 +88,8 @@ trait DiIntegrateTrait
      */
     public function integrateByChunk()
     {
-        if($this->getSystemConfiguration()->isTest())
-        {
-            $this->getLogger()->info("Boxalino DI: creating the document JSONL from structured DB load.");
-        }
+        $this->logInfo("Creating the document JSONL from structured DB load.");
+
         $document = $this->getDocContent();
         $this->loadByChunk($document);
         unset($document);

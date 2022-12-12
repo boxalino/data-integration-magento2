@@ -76,7 +76,7 @@ trait DiIntegrateTypedSchemaTrait
                 $content[$id][$this->getResolverType()][] = $schema;
             } catch (\Throwable $exception)
             {
-                $this->logger->debug("Boxalino DI: Error on " . get_called_class() . " content export: " . $exception->getMessage());
+                $this->logDebug("Error on " . get_called_class() . " content export: " . $exception->getMessage());
             }
         }
 
@@ -107,12 +107,8 @@ trait DiIntegrateTypedSchemaTrait
                 }
             } catch (MissingRequiredPropertyException $exception)
             {
-                if($this->logErrors())
-                {
-                    $this->logger->warning("Missing required property : "
-                        . $exception->getMessage() . " on " . json_encode($item)
-                    );
-                }
+                $this->logWarning("Missing required property : " . $exception->getMessage() . " on " . json_encode($item));
+
                 unset($content[$id]);
                 continue;
             }
@@ -135,7 +131,7 @@ trait DiIntegrateTypedSchemaTrait
 
         if(empty($content))
         {
-            throw new NoRecordsFoundException("No records available. This is a logical exception in order to exit the handler loop.");
+            throw new NoRecordsFoundException("{$this->getLogProcessName()} : No records available. This is a logical exception in order to exit the handler loop.");
         }
 
         return $content;
@@ -154,6 +150,6 @@ trait DiIntegrateTypedSchemaTrait
      * @return DocPropertiesInterface
      */
     abstract public function getPropertyHandlerSchema() : DocPropertiesInterface;
-    
+
 
 }

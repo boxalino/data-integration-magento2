@@ -87,14 +87,10 @@ class Entity extends IntegrationPropertyHandlerAbstract
 
         if(empty($content))
         {
-            throw new NoRecordsFoundException("No records available. This is a logical exception in order to exit the handler loop.");
+            throw new NoRecordsFoundException("{$this->getLogProcessName()}: No records available. This is a logical exception in order to exit the handler loop.");
         }
 
-        if($this->logErrors())
-        {
-            $this->logger->info(count($content) . " items have content for " . $this->getResolverType());
-        }
-
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
         return $content;
     }
 

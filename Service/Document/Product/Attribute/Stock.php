@@ -29,12 +29,9 @@ class Stock extends IntegrationPropertyHandlerAbstract
                 $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema([$item["stock_status"]], "stock_status", null);
             } catch (\Throwable $exception)
             {
-                if($this->logErrors())
-                {
-                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
-                        . $exception->getMessage() . " on " . json_encode($item)
-                    );
-                }
+                $this->logWarning("Error on ". $this->getResolverType() . "with exception: "
+                    . $exception->getMessage() . " on " . json_encode($item)
+                );
             }
         }
 

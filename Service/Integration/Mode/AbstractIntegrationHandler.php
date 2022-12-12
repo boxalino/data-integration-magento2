@@ -5,6 +5,7 @@ use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Integration\DiIntegrationThresholdTrait;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\DiLoggerTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
+use Boxalino\DataIntegrationDoc\Service\Flow\DiLogTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\IntegrationHandler;
 use Psr\Log\LoggerInterface;
@@ -15,15 +16,18 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractIntegrationHandler extends IntegrationHandler
     implements DiIntegrationConfigurationInterface
 {
-    use DiIntegrationConfigurationTrait;
+    use DiIntegrationConfigurationTrait, DiLogTrait, DiLoggerTrait
+    {
+        DiIntegrationConfigurationTrait::getDiConfiguration insteadof DiLogTrait;
+        DiLoggerTrait::getLogger insteadof DiLogTrait;
+    }
     use DiIntegrationThresholdTrait;
-    use DiLoggerTrait;
 
     public function __construct(
         LoggerInterface $logger,
         array $docHandlers = [],
         int $timeout = 0,
-        string $fullConversionThreshold = "0"
+        int $fullConversionThreshold = 0
     ){
         parent::__construct();
         $this->logger = $logger;
@@ -36,7 +40,7 @@ abstract class AbstractIntegrationHandler extends IntegrationHandler
             }
         }
         $this->setTimeout($timeout);
-        $this->setFullConversionThreshold((float)$fullConversionThreshold);
+        $this->setFullConversionThreshold($fullConversionThreshold);
     }
 
     /**

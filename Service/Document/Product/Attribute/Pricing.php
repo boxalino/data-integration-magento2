@@ -44,12 +44,9 @@ class Pricing extends IntegrationPropertyHandlerAbstract
                 $content[$id][$this->getResolverType()] = $schema;
             } catch (\Throwable $exception)
             {
-                if($this->logErrors())
-                {
-                    $this->logger->warning("Error on ". $this->getResolverType() . "with exception: "
-                        . $exception->getMessage() . " on " . json_encode($item)
-                    );
-                }
+                $this->logWarning("Error on ". $this->getResolverType() . " with exception: "
+                    . $exception->getMessage() . " on " . json_encode($item)
+                );
             }
         }
 

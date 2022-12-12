@@ -74,11 +74,7 @@ class DocHandler extends DocOrder implements
                     }
                 } catch (\Throwable $exception)
                 {
-                    if($this->getSystemConfiguration()->isTest())
-                    {
-                        $this->logger->warning("Incomplete content for order: " . $doc->jsonSerialize());
-                    }
-
+                    $this->logWarning("Incomplete content for order: " . $doc->jsonSerialize());
                     continue;
                 }
             }
