@@ -4,7 +4,6 @@ namespace Boxalino\DataIntegration\Service\Document\Product;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrateTrait;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;

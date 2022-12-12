@@ -1,15 +1,11 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document;
 
-use Boxalino\DataIntegration\Api\DataProvider\DocOrderItemPropertyInterface;
-use Boxalino\DataIntegration\Api\DataProvider\DocOrderLineInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocSchemaTypedInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Doc\Schema\Order\Product as OrderProductSchema;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
-use Laminas\Di\Exception\MissingPropertyException;
 
 /**
  * Trait DiIntegrateTypedSchemaTrait

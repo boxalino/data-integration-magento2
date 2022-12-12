@@ -21,7 +21,7 @@ trait MviewIdsExecuteTrait
         if(empty($ids))
         {
             throw new EmptyBacklogException(
-                "Boxalino DI: no mview ids in backlog for {$this->getIntegrationHandler()->getIntegrationType()} run at {$this->getIntegrationHandler()->getTm()}."
+                "Boxalino DI MVIEW: no mview ids in backlog for {$this->getIntegrationHandler()->getIntegrationType()} run at {$this->getIntegrationHandler()->getTm()}."
             );
         }
 

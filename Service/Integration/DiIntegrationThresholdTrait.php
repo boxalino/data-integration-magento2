@@ -24,14 +24,18 @@ trait DiIntegrationThresholdTrait
      */
     public function reviewModeBasedOnSyncSize(int $size) : void
     {
+        $this->getLogger()->info(
+            "Boxalino DI: {$size} items found for {$this->getLogProcessName()}"
+        );
+
         if($this->getFullConversionThreshold() > 0)
         {
             if($size > $this->getFullConversionThreshold())
             {
                 try {
                     $this->getLogger()->info(
-                        "Boxalino DI: upgrading sync mode to F: " . $size . " is bigger than allowed "
-                        . $this->getFullConversionThreshold()
+                        "Boxalino DI: upgrading {$this->getLogProcessName()} sync mode to F: " . $size
+                        . " products is bigger than allowed margin of " . $this->getFullConversionThreshold()
                     );
                 } catch (\Throwable $exception) {}
 
