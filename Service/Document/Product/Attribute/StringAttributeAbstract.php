@@ -32,7 +32,7 @@ abstract class StringAttributeAbstract extends IntegrationPropertyHandlerAbstrac
             }
 
             try{
-                $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item);
+                $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item)->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logWarning("Error on ". $this->getResolverType() . "with exception: "

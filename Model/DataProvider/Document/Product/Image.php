@@ -85,7 +85,7 @@ class Image extends ModeIntegrator
                 "varchar"
             );
 
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
         }
 
         return $attributeContent->getArrayCopy();

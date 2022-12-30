@@ -43,7 +43,7 @@ class Price extends IntegrationPropertyHandlerAbstract
                     $dataProvider->getOtherPrices($item)
                 );
 
-                $content[$id][$this->getResolverType()] = $schema;
+                $content[$id][$this->getResolverType()][] = $schema->toArray();
             }
         }
 

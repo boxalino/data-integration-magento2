@@ -18,7 +18,7 @@ class Brand extends IntegrationPropertyHandlerAbstract
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
         $dataProvider = $this->getDataProvider();
-        
+
         /** @var array $item columns: di_id, brands, lang1, lang2, lang3 ..  */
         foreach($dataProvider->getData() as $item)
         {
@@ -31,7 +31,8 @@ class Brand extends IntegrationPropertyHandlerAbstract
 
                 /** @var Repeated $schema value_id is the default store code set for the brand */
                 $schema = $this->getRepeatedLocalizedSchema($item, $languages, null, $this->getAttributeCode());
-                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $schema;
+                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $schema->toArray();
+                unset($schema);
             }
         }
 

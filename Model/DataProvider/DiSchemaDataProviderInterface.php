@@ -22,5 +22,5 @@ interface DiSchemaDataProviderInterface
      */
     public function resolve(): void;
 
-    
+
 }

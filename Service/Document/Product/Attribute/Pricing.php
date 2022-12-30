@@ -25,7 +25,7 @@ class Pricing extends IntegrationPropertyHandlerAbstract
         $languages = $this->getSystemConfiguration()->getLanguages();
         $currencyCodes = array_unique($this->getSystemConfiguration()->getCurrencyCodes());
         $dataProvider = $this->getDataProvider();
-        
+
         foreach ($dataProvider->getData() as $item)
         {
             if($item instanceof \ArrayIterator)
@@ -41,7 +41,7 @@ class Pricing extends IntegrationPropertyHandlerAbstract
                     $item[$this->getAttributeCode()],
                     $dataProvider->getLabelForPriceByRow($item));
 
-                $content[$id][$this->getResolverType()] = $schema;
+                $content[$id][$this->getResolverType()][] = $schema->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logWarning("Error on ". $this->getResolverType() . " with exception: "

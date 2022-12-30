@@ -4,6 +4,7 @@ namespace Boxalino\DataIntegration\Service\Document\User;
 use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrateTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Doc\User;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
@@ -63,18 +64,17 @@ class DocHandler extends DocUser implements
 
             foreach($this->getDocData() as $id=>$content)
             {
-                /** @var User | DocHandlerInterface $doc */
-                $doc = $this->getDocSchemaGenerator($content);
-                $doc->setCreationTm(date("Y-m-d H:i:s"));
-
                 try{
-                    if($doc->getInternalId())
+                    if(isset($content[DocSchemaInterface::FIELD_INTERNAL_ID]))
                     {
-                        $this->addDocLine($doc);
+                        /** @var User | DocHandlerInterface $doc */
+                        $this->addDocLine(
+                            $this->getDocSchemaGenerator($content)->setCreationTm(date("Y-m-d H:i:s"))
+                        );
                     }
                 } catch (\Throwable $exception)
                 {
-                    $this->logWarning("Incomplete content for user: " . $doc->jsonSerialize());
+                    $this->logWarning("Incomplete content for user: " . json_encode($content));
                     continue;
                 }
             }

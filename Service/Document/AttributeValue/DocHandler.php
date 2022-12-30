@@ -1,10 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
-use Boxalino\DataIntegrationDoc\Doc\AttributeValue;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
-use Boxalino\DataIntegrationDoc\Generator\DocGeneratorInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttributeValuesHandlerInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttributeValues;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
@@ -69,19 +67,30 @@ class DocHandler extends DocAttributeValues implements
      */
     protected function createDocLines() : void
     {
+        $this->logTime("start" . __FUNCTION__);
         $this->addSystemConfigurationOnHandlers();
         try {
             foreach($this->getHandlers() as $handler)
             {
+                $this->logMemory(get_class($handler));
+                $this->logTime("startTimeHandler");
+
                 if($handler instanceof DocSchemaPropertyHandlerInterface)
                 {
                     $this->_createDocLinesByHandler($handler);
                 }
+
+                $this->logTime("endTimeHandler");
+                $this->logMemory(get_class($handler), false);
+                $this->logMessage(get_class($handler), "endTimeHandler", "startTimeHandler");
             }
         } catch (\Throwable $exception)
         {
             $this->logger->info($exception->getMessage());
         }
+
+        $this->logTime("end" . __FUNCTION__);
+        $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
     }
 
     /**
@@ -91,17 +100,17 @@ class DocHandler extends DocAttributeValues implements
     protected function _createDocLinesByHandler(DocSchemaPropertyHandlerInterface $handler) : void
     {
         /** @var array: [property-name => [$schema, $schema], property-name => [], [..]] $data */
-        $data = $handler->getValues();
-        foreach($data as $propertyName => $content)
+        foreach($handler->getValues() as $propertyName => $content)
         {
             foreach($content as $schema)
             {
-                /** @var AttributeValue | DocGeneratorInterface $doc */
-                $doc = $this->getDocSchemaGenerator($schema);
-                $doc->setCreationTm(date("Y-m-d H:i:s"));
-
-                $this->addDocLine($doc);
+                $this->addDocLine(
+                    $this->getDocSchemaGenerator($schema)
+                        ->setCreationTm(date("Y-m-d H:i:s"))
+                );
             }
+
+            unset($content);
         }
     }
 

@@ -107,8 +107,6 @@ trait DiIntegrationConfigurationTrait
                 }
             } catch (\Throwable $exception) {}
         }
-
-        return $this;
     }
 
     /**

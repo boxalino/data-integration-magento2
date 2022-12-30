@@ -35,7 +35,7 @@ class Category extends IntegrationPropertyHandlerAbstract
                 $schema[DocSchemaInterface::FIELD_PARENT_VALUE_IDS] = $dataProvider->getParentValueIds((string)$row["entity_id"]);
 
                 $status = $dataProvider->getStatus((string)$row["entity_id"]);
-                $this->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_STATUS,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
@@ -43,7 +43,7 @@ class Category extends IntegrationPropertyHandlerAbstract
                 );
 
                 $name = $dataProvider->getValueLabel((string)$row["entity_id"]);
-                $this->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_VALUE_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
@@ -51,14 +51,14 @@ class Category extends IntegrationPropertyHandlerAbstract
                 );
 
                 $description = $dataProvider->getDescription((string)$row["entity_id"]);
-                $this->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_DESCRIPTION,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
                     $description);
 
                 $link = $dataProvider->getLink((string)$row["entity_id"]);
-                $this->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LINK,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
@@ -66,24 +66,27 @@ class Category extends IntegrationPropertyHandlerAbstract
                 );
 
                 $schema[DocSchemaInterface::FIELD_STRING][] =
-                    $this->getStringAttributeSchema([$row["path"]], "path");
+                    $this->getStringAttributeSchema([$row["path"]], "path")->toArray();
 
                 $schema[DocSchemaInterface::FIELD_NUMERIC][] =
-                    $this->getNumericAttributeSchema([$row["position"]], "position");
+                    $this->getNumericAttributeSchema([$row["position"]], "position")->toArray();
 
                 $schema[DocSchemaInterface::FIELD_NUMERIC][] =
-                    $this->getNumericAttributeSchema([$row["level"]], "level");
+                    $this->getNumericAttributeSchema([$row["level"]], "level")->toArray();
 
                 $schema[DocSchemaInterface::FIELD_NUMERIC][] =
-                    $this->getNumericAttributeSchema([$row["parent_id"]], "parent_id");
+                    $this->getNumericAttributeSchema([$row["parent_id"]], "parent_id")->toArray();
 
                 $content[$dataProvider->getAttributeName((string)$row["entity_id"])][] = $schema;
+                unset($schema);
             }
         } catch(MissingSchemaDataProviderDefinitionException $exception)
         {
             $this->logger->alert($exception->getMessage());
+        } catch (\Throwable $exception)
+        {
+            $this->logger->alert($exception->getMessage());
         }
-
 
         return $content;
     }

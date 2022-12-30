@@ -41,7 +41,7 @@ class Status extends ModeIntegrator
                 $storeId
             );
 
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
         }
 
         return $attributeContent->getArrayCopy();

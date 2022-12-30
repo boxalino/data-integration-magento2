@@ -38,7 +38,6 @@ class DocHandler extends DocAttribute
                 $this->addPropertyHandler($propertyHandler);
             }
         }
-
     }
 
     public function integrate(): void
@@ -90,19 +89,17 @@ class DocHandler extends DocAttribute
     protected function _createDocLinesByHandler(DocSchemaPropertyHandlerInterface $handler) : void
     {
         /** @var array: [property-name => [$schema, $schema], property-name => [], [..]] $data */
-        $data = $handler->getValues();
-        foreach($data as $propertyName => $content)
+        foreach($handler->getValues() as $propertyName => $content)
         {
             if(in_array($propertyName, $this->getExcludedProperties()))
             {
                 continue;
             }
 
-            /** @var Attribute | DocGeneratorInterface $doc */
-            $doc = $this->getDocSchemaGenerator($content);
-            $doc->setCreationTm(date("Y-m-d H:i:s"));
-
-            $this->addDocLine($doc);
+            /** @var Attribute | DocGeneratorInterface $doc  */
+            $this->addDocLine(
+                $this->getDocSchemaGenerator($content)->setCreationTm(date("Y-m-d H:i:s"))
+            );
         }
     }
 

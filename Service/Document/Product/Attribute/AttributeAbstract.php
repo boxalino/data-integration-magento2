@@ -69,7 +69,7 @@ abstract class AttributeAbstract extends IntegrationPropertyHandlerAbstract
 
                     try{
                         $content[$id][$this->getDocSchemaPropertyNode()][] =
-                            $this->getSchema($row, $languages, $attributeName, $attributeCode);
+                            $this->getSchema($row, $languages, $attributeName, $attributeCode)->toArray();
                     } catch (\Throwable $exception)
                     {
                         $this->logWarning("Error on ". $this->getResolverType() . " for $attributeCode with exception: "

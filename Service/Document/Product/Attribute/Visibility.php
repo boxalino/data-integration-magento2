@@ -10,6 +10,9 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\Visibility as VisibilitySchema;
  * Class Visibility
  * https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/254050518/Referenced+Schema+Types#VISIBILITY
  *
+ * The visibility is further manipulated at the level of the DocHandler.
+ * The children visibility is updated based on the parent it belongs to
+ *
  * @package Boxalino\DataIntegration\Service\Document\Product\Attribute
  */
 class Visibility extends IntegrationPropertyHandlerAbstract
@@ -25,17 +28,17 @@ class Visibility extends IntegrationPropertyHandlerAbstract
         foreach ($datProvider->getData() as $item)
         {
             try{
-                $content[$this->_getDocKey($item)][$this->getAttributeCode()] =
-                    $this->getSchemaByItem($languages, $datProvider->getContextVisibility($item));
+                $content[$this->_getDocKey($item)][$this->getAttributeCode()][] =
+                    $this->getSchemaByItem($languages, $datProvider->getContextVisibility($item))->toArray();
 
-                $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()] =
-                    $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item));
+                $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()][] =
+                    $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item))->toArray();
 
                 $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING][] =
                     $this->getStringAttributeSchema(
                         $datProvider->getIndividualVisibility($item),
                         DocSchemaInterface::FIELD_STRING_INDIVIDUAL_VISIBILITY
-                    );
+                    )->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logWarning("Error on ". $this->getResolverType() . "with exception: "

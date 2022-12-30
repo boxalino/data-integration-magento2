@@ -55,8 +55,9 @@ trait AttributeValueListHelperTrait
      * @param \ArrayObject $attributeContent
      * @param string $languageCode
      * @param bool $addId
+     * @return \ArrayObject
      */
-    protected function addValueToAttributeContent(array $data, \ArrayObject &$attributeContent, string $languageCode, bool $addId = false) : void
+    protected function addValueToAttributeContent(array $data, \ArrayObject $attributeContent, string $languageCode, bool $addId = false) : \ArrayObject
     {
         foreach($data as $id => $value)
         {
@@ -73,6 +74,8 @@ trait AttributeValueListHelperTrait
             $content->offsetSet($languageCode, $value);
             $attributeContent->offsetSet($id, $content);
         }
+
+        return $attributeContent;
     }
 
     /**
@@ -81,8 +84,9 @@ trait AttributeValueListHelperTrait
      * @param string $attributeCode
      * @param bool $addId
      * @param bool $hasList
+     * @return \ArrayObject
      */
-    protected function addValueTranslationToAttributeContent(array $data, \ArrayObject &$attributeContent, string $attributeCode, bool $addId = false, bool $hasList = false) : void
+    protected function addValueTranslationToAttributeContent(array $data, \ArrayObject $attributeContent, string $attributeCode, bool $addId = false, bool $hasList = false) : \ArrayObject
     {
         foreach($data as $row)
         {
@@ -121,6 +125,8 @@ trait AttributeValueListHelperTrait
             }
             $attributeContent->offsetSet($entityId, $content);
         }
+
+        return $attributeContent;
     }
 
 

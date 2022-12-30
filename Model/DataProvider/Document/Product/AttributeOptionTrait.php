@@ -31,7 +31,7 @@ trait AttributeOptionTrait
                 $attributeId, $storeId
             );
 
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, false);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, false);
         }
 
         return $attributeContent;
@@ -53,11 +53,11 @@ trait AttributeOptionTrait
                 $this->getEntityAttributeTableType()
             );
 
-            $this->addValueTranslationToAttributeContent(
-                $data, 
-                $attributeContent, 
-                $this->getAttributeCode(),  
-                true, 
+            $attributeContent = $this->addValueTranslationToAttributeContent(
+                $data,
+                $attributeContent,
+                $this->getAttributeCode(),
+                true,
                 $this->getAttributeValueAsList()
             );
         }

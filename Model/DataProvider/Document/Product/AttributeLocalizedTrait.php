@@ -38,7 +38,7 @@ trait AttributeLocalizedTrait
                 $entityTypeTable ?? $this->getEntityAttributeTableType()
             );
 
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
         }
 
         return $attributeContent->getArrayCopy();

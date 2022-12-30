@@ -86,25 +86,23 @@ class DocHandler extends DocProduct implements
         $this->generateDocData();
 
         $productGroups = $this->getDocProductGroups();
-
         $this->logTime("start" . __FUNCTION__);
         foreach($productGroups as $productGroup)
         {
-            $document = $this->getDocSchemaGenerator();
-
-            /** @var Line $productLine */
-            $productLine = $this->getSchemaGeneratorByType(DocProductHandlerInterface::DOC_PRODUCT_LEVEL_LINE);
-            $productLine->addProductGroup($productGroup);
-
-            $document->setProductLine($productLine)->setCreationTm(date("Y-m-d H:i:s"));
-            $this->addDocLine($document);
-
+            $this->addDocLine(
+                $this->getDocSchemaGenerator()
+                    ->setProductLine(
+                        $this->getSchemaGeneratorByType(DocProductHandlerInterface::DOC_PRODUCT_LEVEL_LINE)
+                            ->addProductGroup($productGroup)
+                    )->setCreationTm(date("Y-m-d H:i:s"))
+            );
         }
+        unset($productGroups);
+
+        $this->resetDocData();
 
         $this->logTime("end" . __FUNCTION__);
         $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
-
-        $this->resetDocData();
     }
 
     /**
@@ -136,7 +134,7 @@ class DocHandler extends DocProduct implements
                 $parentIds = array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD]));
                 if(empty($parentIds))
                 {
-                    $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
+                    $productGroups = $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
                 }
 
                 if(empty($parentIds) && empty($content[DocSchemaInterface::DI_AS_VARIANT]))
@@ -150,20 +148,21 @@ class DocHandler extends DocProduct implements
                     {
                         continue;
                     }
-                    $this->_treatVariantSchema($id, $content[DocSchemaInterface::DI_AS_VARIANT], $content, $productGroups);
+                    $productGroups = $this->_treatVariantSchema($id, $content[DocSchemaInterface::DI_AS_VARIANT], $content, $productGroups);
                 }
 
-                $this->_treatSkusWithParentIds($id, $schema, $content, $productGroups, $productSkus);
+                list($productGroups, $productSkus) = $this->_treatSkusWithParentIds($id, $schema, $content, $productGroups, $productSkus);
             } catch (\Throwable $exception)
             {
                 if($this->getSystemConfiguration()->isTest())
                 {
-                    $this->logger->info($exception->getMessage() . json_encode($content));
+                    $this->logger->info($exception->getMessage());
                 }
             }
         }
 
-        $this->_loadSkusOnGroups($productSkus, $productGroups);
+        $productGroups = $this->_loadSkusOnGroups($productSkus, $productGroups);
+        unset($productSkus);
 
         $this->logTime("end" . __FUNCTION__);
         $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
@@ -180,8 +179,9 @@ class DocHandler extends DocProduct implements
      * @param array $content
      * @param array $productGroups
      * @param array $productSkus
+     * @return array
      */
-    protected function _treatSkusWithParentIds(string $id, Sku $schema, array $content, array &$productGroups, array &$productSkus) : void
+    protected function _treatSkusWithParentIds(string $id, Sku $schema, array $content, array $productGroups, array $productSkus) : array
     {
         $duplicate = count(array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD]))) > 1;
         $parentIdTypesList = array_combine(
@@ -231,13 +231,16 @@ class DocHandler extends DocProduct implements
 
             $productSkus[$parentId][] = $schema;
         }
+
+        return [$productGroups, $productSkus];
     }
 
     /**
      * @param array $productSkus
      * @param array $productGroups
+     * @return array
      */
-    protected function _loadSkusOnGroups(array &$productSkus, array &$productGroups) : void
+    protected function _loadSkusOnGroups(array $productSkus, array $productGroups) : array
     {
         foreach($productSkus as $parentId => $skus)
         {
@@ -270,6 +273,8 @@ class DocHandler extends DocProduct implements
 
             $productGroups[$parentId] = $schema->addSkus($skus);
         }
+
+        return $productGroups;
     }
 
     /**
@@ -280,13 +285,14 @@ class DocHandler extends DocProduct implements
      * @param string $docType
      * @param array $content
      * @param array $productGroups
+     * @return array
      */
-    protected function _treatVariantSchema(string $id, string $docType, array $content, array &$productGroups) : void
+    protected function _treatVariantSchema(string $id, string $docType, array $content, array $productGroups) : array
     {
         $content = $this->_fixPropertyForDuplicateDoc($content, DocSchemaInterface::FIELD_VISIBILITY);
         $schema = $this->getSchemaGeneratorByType($docType, $content);
 
-        $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
+        return $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
     }
 
     /**
@@ -298,8 +304,9 @@ class DocHandler extends DocProduct implements
      * @param Group $schema
      * @param array $content
      * @param array $productGroups
+     * @return $array
      */
-    protected function _treatProductGroupDocLine(string $id, Group $schema, array $content, array &$productGroups) : void
+    protected function _treatProductGroupDocLine(string $id, Group $schema, array $content, array $productGroups) : array
     {
         $sku = $this->docTypePropDiffDuplicate(
             DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP,
@@ -309,6 +316,9 @@ class DocHandler extends DocProduct implements
 
         $schema->addSkus([$sku]);
         $productGroups[$id] = $schema;
+        unset($sku); unset($schema);
+
+        return $productGroups;
     }
 
     /**
@@ -360,6 +370,8 @@ class DocHandler extends DocProduct implements
                     {
                         $child->setValue($parent->getValue());
                     }
+
+                    $child = $child->toArray();
                 }
             }
         }

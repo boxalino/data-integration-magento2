@@ -69,7 +69,7 @@ trait DiIntegrateTypedSchemaTrait
                     $schema->set($propertyName, $propertyValue);
                 }
 
-                $content[$id][$this->getResolverType()][] = $schema;
+                $content[$id][$this->getResolverType()][] = $schema->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logDebug("Error on " . get_called_class() . " content export: " . $exception->getMessage());
@@ -111,17 +111,17 @@ trait DiIntegrateTypedSchemaTrait
 
             foreach($dataProvider->getStringOptions($item) as $optionLabel => $optionValues)
             {
-                $content[$id][DocSchemaInterface::FIELD_STRING][] = $this->getStringAttributeSchema($optionValues, $optionLabel);
+                $content[$id][DocSchemaInterface::FIELD_STRING][] = $this->getStringAttributeSchema($optionValues, $optionLabel)->toArray();
             }
 
             foreach($dataProvider->getNumericOptions($item) as $optionLabel => $optionValues)
             {
-                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema($optionValues, $optionLabel, null);
+                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema($optionValues, $optionLabel, null)->toArray();
             }
 
             foreach($dataProvider->getDateTimeOptions($item) as $optionLabel => $optionValues)
             {
-                $content[$id][DocSchemaInterface::FIELD_DATETIME][] = $this->getDatetimeAttributeSchema($optionValues, $optionLabel);
+                $content[$id][DocSchemaInterface::FIELD_DATETIME][] = $this->getDatetimeAttributeSchema($optionValues, $optionLabel)->toArray();
             }
         }
 
@@ -138,8 +138,7 @@ trait DiIntegrateTypedSchemaTrait
      */
     protected function getSchemaPropertyNames() : array
     {
-        $schema = $this->getPropertyHandlerSchema();
-        return array_keys($schema->toList());
+        return $this->getPropertyHandlerSchema()->toList();
     }
 
     /**

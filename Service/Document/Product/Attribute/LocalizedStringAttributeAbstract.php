@@ -34,7 +34,7 @@ abstract class LocalizedStringAttributeAbstract extends IntegrationPropertyHandl
             }
 
             try{
-                $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item, $languages, $this->getAttributeCode());
+                $content[$id][$this->getDocSchemaPropertyNode()][] = $this->getSchema($item, $languages, $this->getAttributeCode())->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logWarning("Error on ". $this->getResolverType() . " with exception: "

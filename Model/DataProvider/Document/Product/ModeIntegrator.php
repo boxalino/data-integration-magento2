@@ -8,7 +8,6 @@ use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Service\Document\DocMviewDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 

@@ -73,7 +73,7 @@ class Visibility extends ModeIntegrator
     }
 
     /**
-     * Pre-loading visibility data for each contexts (self and context)
+     * Preloading visibility data for each contexts (self and context)
      */
     public function resolve(): void
     {
@@ -98,7 +98,7 @@ class Visibility extends ModeIntegrator
                 $storeId
             );
 
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
         }
 
         $this->attributeNameValuesList->offsetSet($attributeName, $attributeContent);

@@ -45,7 +45,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
 
                 $name = $dataProvider->getValueLabel((string)$id);
-                $this->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_VALUE_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
@@ -57,7 +57,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 if(!is_null($key))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
-                        $this->getStringAttributeSchema([$key], DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY);
+                        $this->getStringAttributeSchema([$key], DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY)->toArray();
                 }
 
                 /** adding the swatch value as string property swatch */
@@ -65,7 +65,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 if(!is_null($swatch))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
-                        $this->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH);
+                        $this->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH)->toArray();
                 }
 
                 /** adding the sort_order value as string property sort_order */
@@ -73,16 +73,16 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 if(!is_null($sortOrder))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
-                        $this->getStringAttributeSchema([$sortOrder], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER);
+                        $this->getStringAttributeSchema([$sortOrder], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER)->toArray();
                 }
 
                 $content[$attributeName][] = $schema;
+                unset($schema);
             }
         } catch(MissingSchemaDataProviderDefinitionException $exception)
         {
             $this->logger->alert($exception->getMessage());
         }
-
 
         return $content;
     }

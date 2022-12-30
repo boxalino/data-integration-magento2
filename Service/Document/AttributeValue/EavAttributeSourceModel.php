@@ -44,7 +44,7 @@ class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
                     $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $attributeName;
                     $schema[DocSchemaInterface::FIELD_NUMERICAL] = $dataProvider->isNumerical((string)$id);
                     $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
-                    $this->addingLocalizedPropertyToSchema(
+                    $schema = $this->addingLocalizedPropertyToSchema(
                         DocSchemaInterface::FIELD_VALUE_LABEL,
                         $schema,
                         $this->getSystemConfiguration()->getLanguages(),
@@ -52,6 +52,7 @@ class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
                     );
 
                     $content[$attributeName][] = $schema;
+                    unset($schema);
                 }
             }
         } catch(MissingSchemaDataProviderDefinitionException $exception)

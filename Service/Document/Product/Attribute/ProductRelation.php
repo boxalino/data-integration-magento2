@@ -24,7 +24,7 @@ class ProductRelation extends IntegrationPropertyHandlerAbstract
             /** @var \ArrayObject $relation */
             foreach($relations as $relation)
             {
-                $content[$id][$this->getResolverType()][] = $this->getProductRelationSchema($relation);
+                $content[$id][$this->getResolverType()][] = $this->getProductRelationSchema($relation)->toArray();
             }
         }
 

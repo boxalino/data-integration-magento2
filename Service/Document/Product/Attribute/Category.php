@@ -39,7 +39,8 @@ class Category extends IntegrationPropertyHandlerAbstract
                 $languages
             );
 
-            $content[$id][$this->getDocSchemaPropertyNode()][] = $schema;
+            $content[$id][$this->getDocSchemaPropertyNode()][] = $schema->toArray();
+            unset($schema);
         }
 
         $this->logInfo(count($content) . " items have content for " . $this->getResolverType());

@@ -78,7 +78,7 @@ class Brand extends ModeIntegrator
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
             $data = $this->getResourceModel()->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($this->getAttributeId(), $storeId);
-            $this->addValueToAttributeContent($data, $this->attributeNameValuesList, $languageCode);
+            $this->attributeNameValuesList = $this->addValueToAttributeContent($data, $this->attributeNameValuesList, $languageCode);
         }
     }
 

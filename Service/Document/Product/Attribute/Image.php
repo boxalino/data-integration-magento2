@@ -20,7 +20,7 @@ class Image extends IntegrationPropertyHandlerAbstract
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
         $dataProvider = $this->getDataProvider();
-        
+
         foreach($dataProvider->getAttributes() as $attribute)
         {
             $this->setAttribute($attribute);
@@ -41,7 +41,7 @@ class Image extends IntegrationPropertyHandlerAbstract
                     $content[$id][$this->getResolverType()] = [];
                 }
 
-                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $this->getImagesSchema($item, $languages, $attributeCode);
+                $content[$this->_getDocKey($item)][$this->getResolverType()][] = $this->getImagesSchema($item, $languages, $attributeCode)->toArray();
             }
         }
 

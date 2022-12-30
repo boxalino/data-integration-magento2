@@ -69,17 +69,17 @@ class EavAttributeOption implements
             }
 
             /** adding the admin value */
-            $this->_loadOptionIdTranslation($attributeId, 0,
+            $attributeContent = $this->_loadOptionIdTranslation($attributeId, 0,
                 DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY, $attributeContent
             );
 
             /** adding the swatch value */
-            $this->_loadOptionIdSwatch($attributeId,
+            $attributeContent = $this->_loadOptionIdSwatch($attributeId,
                 DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH, $attributeContent
             );
 
             /** adding the sort_order value */
-            $this->_loadOptionIdSortOrder($attributeId,
+            $attributeContent = $this->_loadOptionIdSortOrder($attributeId,
                 DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER, $attributeContent
             );
 
@@ -91,12 +91,12 @@ class EavAttributeOption implements
      * @param int $attributeId
      * @param string $languageCode
      * @param \ArrayObject $attributeContent
-     * @return void
+     * @return \ArrayObject
      */
-    protected function _loadOptionIdSwatch(int $attributeId, string $languageCode, \ArrayObject $attributeContent) : void
+    protected function _loadOptionIdSwatch(int $attributeId, string $languageCode, \ArrayObject $attributeContent) : \ArrayObject
     {
         $data = $this->resourceModel->getFetchPairsAttributeOptionSwatchByAttributeId($attributeId);
-        $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+        return $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
     }
 
     /**
@@ -104,24 +104,24 @@ class EavAttributeOption implements
      * @param int $storeId
      * @param string $languageCode
      * @param \ArrayObject $attributeContent
-     * @return void
+     * @return \ArrayObject
      */
-    protected function _loadOptionIdTranslation(int $attributeId, int $storeId, string $languageCode, \ArrayObject $attributeContent) : void
+    protected function _loadOptionIdTranslation(int $attributeId, int $storeId, string $languageCode, \ArrayObject $attributeContent) : \ArrayObject
     {
         $data = $this->resourceModel->getFetchPairsAttributeOptionValuesByStoreAndAttributeId($attributeId, $storeId);
-        $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+        return $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
     }
 
     /**
      * @param int $attributeId
      * @param string $languageCode
      * @param \ArrayObject $attributeContent
-     * @return void
+     * @return \ArrayObject
      */
-    protected function _loadOptionIdSortOrder(int $attributeId, string $languageCode, \ArrayObject $attributeContent) : void
+    protected function _loadOptionIdSortOrder(int $attributeId, string $languageCode, \ArrayObject $attributeContent) : \ArrayObject
     {
         $data = $this->resourceModel->getFetchPairsAttributeOptionSortOrderByAttributeId($attributeId);
-        $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+        return $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
     }
 
     /**

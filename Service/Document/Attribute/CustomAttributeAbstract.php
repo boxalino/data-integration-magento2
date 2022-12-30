@@ -46,7 +46,7 @@ abstract class CustomAttributeAbstract extends IntegrationPropertyHandlerAbstrac
                 $schema[DocSchemaInterface::FIELD_LOCALIZED] =  $attribute->isLocalized();
                 $schema[DocSchemaInterface::FIELD_FILTER_BY] =  $attribute->isFilterBy();
                 $schema[DocSchemaInterface::FIELD_FORMAT] =  $attribute->getFormat();
-                $this->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),

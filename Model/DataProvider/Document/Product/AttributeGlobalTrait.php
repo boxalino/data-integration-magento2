@@ -37,7 +37,7 @@ trait AttributeGlobalTrait
 
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
         }
 
         return $attributeContent->getArrayCopy();

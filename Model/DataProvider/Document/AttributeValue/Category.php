@@ -143,7 +143,7 @@ class Category implements
         foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
         {
             $data = $this->resourceModel->getUrlRewriteByTypeStoreId("category", $storeId);
-            $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
         }
 
         $this->attributeNameValuesList->offsetSet("request_path", $attributeContent);
@@ -176,7 +176,7 @@ class Category implements
             foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
             {
                 $data = $this->resourceModel->getAttributeValueByAttributeTableStoreId($attributeCode, $attributeTable, $storeId);
-                $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
+                $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
             }
 
             $this->attributeNameValuesList->offsetSet($attributeCode, $attributeContent);

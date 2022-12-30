@@ -56,7 +56,7 @@ class AttributeOption extends AttributeAbstract
 
                 try{
                     $content[$id][$this->getDocSchemaPropertyNode()][] =
-                        $this->getSchema($item, $languages, $attributeName, $attributeCode);
+                        $this->getSchema($item, $languages, $attributeName, $attributeCode)->toArray();
                 } catch (\Throwable $exception)
                 {
                     $this->logWarning("Error on ". $this->getResolverType() . " for $attributeCode with exception: "
