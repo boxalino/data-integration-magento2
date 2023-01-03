@@ -70,7 +70,7 @@ class Configuration
      */
     public function getApiKey() : string
     {
-        $value = $this->getStore()->getConfig($this->getScopeConfigPath("apiKey"));
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath("api_key"));
         if(empty($value))
         {
             throw new MissingConfigurationException("Boxalino DI Configuration: API KEY has not been configured.");
@@ -85,7 +85,7 @@ class Configuration
      */
     public function getApiSecret() : string
     {
-        $value = $this->getStore()->getConfig($this->getScopeConfigPath("apiSecret"));
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath("api_secret"));
         if(empty($value))
         {
             throw new MissingConfigurationException("Boxalino DI Configuration: API SECRET has not been configured.");
@@ -100,7 +100,7 @@ class Configuration
      */
     public function isDev() : bool
     {
-        $value = $this->getStore()->getConfig($this->getScopeConfigPath("devIndex"));
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath("is_dev"));
         if(empty($value))
         {
             return false;
@@ -115,7 +115,7 @@ class Configuration
      */
     public function isTest() : bool
     {
-        $value = $this->getStore()->getConfig($this->getScopeConfigPath("isTest"));
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath("is_test"));
         if(empty($value))
         {
             return false;
@@ -130,7 +130,7 @@ class Configuration
      */
     public function getBatchSize() : int
     {
-        $value = $this->getStore()->getConfig($this->getScopeConfigPath("batchSize"));
+        $value = $this->getStore()->getConfig($this->getScopeConfigPath("batch_size"));
         if(empty($value))
         {
             return 0;

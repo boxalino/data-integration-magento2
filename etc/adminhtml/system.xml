@@ -22,29 +22,29 @@
                     <validate>required-entry validate-no-empty</validate>
                     <comment><![CDATA[Don't have a Boxalino account? Find out about <a href="https://www.winning-interactions.ai/" target="_blank">getting started with Boxalino</a>.]]></comment>
                 </field>
-                <field id="apiKey" translate="label comment" sortOrder="3" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="api_key" translate="label comment" sortOrder="3" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Boxalino API Key (ADMIN role)</label>
                     <validate>required-entry validate-no-empty</validate>
                     <comment><![CDATA[Don't know the API credentials? Locate the <a href="https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/713785345/API+Credentials#Roles" target="_blank">API credentials with <b>ADMIN</b> role</a>.]]></comment>
                 </field>
-                <field id="apiSecret" translate="label comment" sortOrder="3" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="api_secret" translate="label comment" sortOrder="3" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Boxalino API Secret (ADMIN role)</label>
                     <validate>required-entry validate-no-empty</validate>
                     <comment><![CDATA[Don't know the API credentials? Locate the <a href="https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/713785345/API+Credentials#Roles" target="_blank">API credentials with <b>ADMIN</b> role</a>.]]></comment>
                 </field>
-                <field id="devIndex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="is_dev" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Use development data index</label>
                     <validate>validate-select</validate>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If "YES", the API requests will have the dev:true parameter; If "NO", the API request will use the "dev":false parameter. Find out about <a href="https://github.com/boxalino/data-integration-magento2/wiki/Data-Indexes" target="_blank">the Boxalino data indexes</a>.]]></comment>
                 </field>
-                <field id="isTest" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="is_test" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Test Mode</label>
                     <validate>validate-select</validate>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>When in test mode, the DI process is logged and profiled</comment>
                 </field>
-                <field id="batchSize" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="batch_size" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Batch Size</label>
                     <validate>validate-digits validate-not-negative-number</validate>
                     <comment>Batch Size for export in full mode (product, customers, orders, etc)</comment>

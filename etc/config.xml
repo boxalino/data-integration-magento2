@@ -4,8 +4,8 @@
         <boxalino_di>
             <di_config>
                 <status>0</status>
-                <isTest>1</isTest>
-                <batchSize>300000</batchSize>
+                <is_test>1</is_test>
+                <batch_size>300000</batch_size>
             </di_config>
         </boxalino_di>
         <boxalino_di_F>
