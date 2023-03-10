@@ -4,14 +4,14 @@
     "type": "magento2-module",
     "homepage": "http://www.boxalino.com",
     "keywords": ["boxalino", "data integration", "magento"],
-    "version": "2.0.1",
+    "version": "2.0.2",
     "support": {
         "email": "support@boxalino.com"
     },
     "license": ["MIT"],
     "require": {
         "php": ">=7.2",
-        "boxalino/data-integration-doc-php":"~4.0.2"
+        "boxalino/data-integration-doc-php":"~4.0.3"
     },
     "autoload": {
         "files": ["registration.php"],
