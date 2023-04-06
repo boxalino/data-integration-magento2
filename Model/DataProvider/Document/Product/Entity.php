@@ -43,6 +43,7 @@ class Entity extends ModeIntegrator
              new \Zend_Db_Expr("GROUP_CONCAT(c_p_r.parent_id SEPARATOR ',') AS " . DocSchemaInterface::DI_PARENT_ID_FIELD),
              new \Zend_Db_Expr("GROUP_CONCAT(c_p_r.parent_type_id SEPARATOR ',') AS " . DocSchemaInterface::DI_PARENT_ID_TYPE_FIELD),
              new \Zend_Db_Expr("IF(c_p_r_p.child_id IS NULL, NULL, '" .  DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP . "') AS " . DocSchemaInterface::DI_AS_VARIANT),
+             new \Zend_Db_Expr("c_p_e.entity_id AS " . DocSchemaInterface::FIELD_EXTERNAL_ID),
              'c_p_e.entity_id',
              "c_p_e.sku",
              "c_p_e.created_at",
