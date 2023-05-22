@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\CategoryEntityResourceTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\EavAttributeResourceTrait;
 
 /**
@@ -12,6 +13,7 @@ class Category extends DiSchemaDataProviderResource
 {
 
     use EavAttributeResourceTrait;
+    use CategoryEntityResourceTrait;
 
     /**
      * @param string $rootCategoryId
@@ -19,48 +21,7 @@ class Category extends DiSchemaDataProviderResource
      */
     public function getEntityByRootCategoryId(string $rootCategoryId) : array
     {
-        $rootCategoryIdPath = $this->getRootCategoryIdPath($rootCategoryId);
-        $select = $this->adapter->select()
-            ->from(
-                $this->adapter->getTableName('catalog_category_entity'),
-                ["*"]
-            )
-            ->where('path LIKE "'. $rootCategoryIdPath.'/%"')
-            ->orWhere('entity_id IN (?)', explode("/", $rootCategoryIdPath));
-
-        return $this->adapter->fetchAll($select);
-    }
-
-    /**
-     * @param string $rootCategoryId
-     * @param string $column
-     * @return array
-     */
-    public function getEntityColumnByRootCategoryId(string $rootCategoryId, string $column) : array
-    {
-        $rootCategoryIdPath = $this->getRootCategoryIdPath($rootCategoryId);
-        $select = $this->adapter->select()
-            ->from(
-                $this->adapter->getTableName('catalog_category_entity'),
-                ["entity_id", $column]
-            )
-            ->where('path LIKE "'. $rootCategoryIdPath.'/%"')
-            ->orWhere('entity_id IN (?)', explode("/", $rootCategoryIdPath));
-
-        return $this->adapter->fetchPairs($select);
-    }
-
-    /**
-     * @param string $rootCategoryId
-     * @return string
-     */
-    protected function getRootCategoryIdPath(string $rootCategoryId) : string
-    {
-        return  $this->adapter->fetchOne(
-            $this->adapter->select()
-                ->from($this->adapter->getTableName('catalog_category_entity'),['path'])
-                ->where("entity_id= ?", $rootCategoryId)
-        );
+        return $this->adapter->fetchAll($this->getEntityByRootCategoryIdSql($rootCategoryId));
     }
 
     /**

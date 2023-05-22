@@ -25,7 +25,9 @@ class Category extends ModeIntegrator
      */
     public function _getData(): array
     {
-        return $this->getResourceModel()->getFetchAllByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
+        return $this->getResourceModel()
+            ->setRootCategoryId($this->getSystemConfiguration()->getRootCategoryId())
+            ->getFetchAllByFieldsWebsite($this->getFields(), $this->getSystemConfiguration()->getWebsiteId());
     }
 
     /**
