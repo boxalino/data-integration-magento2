@@ -12,7 +12,7 @@ trait CategoryEntityResourceTrait
 
     /**
      * @param string $rootCategoryId
-     * @return 
+     * @return Select
      */
     public function getEntityByRootCategoryIdSql(string $rootCategoryId) : Select
     {
@@ -31,9 +31,9 @@ trait CategoryEntityResourceTrait
     /**
      * @param string $rootCategoryId
      * @param string $column
-     * @return array
+     * @return Select
      */
-    public function getEntityColumnByRootCategoryId(string $rootCategoryId, string $column) : array
+    public function getEntityColumnByRootCategoryIdSql(string $rootCategoryId, string $column) : Select
     {
         $rootCategoryIdPath = $this->getRootCategoryIdPath($rootCategoryId);
         $select = $this->adapter->select()
@@ -44,9 +44,9 @@ trait CategoryEntityResourceTrait
             ->where('path LIKE "'. $rootCategoryIdPath.'/%"')
             ->orWhere('entity_id IN (?)', explode("/", $rootCategoryIdPath));
 
-        return $this->adapter->fetchPairs($select);
+        return $select;
     }
-    
+
     /**
      * @param string $rootCategoryId
      * @return string

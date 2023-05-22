@@ -25,6 +25,16 @@ class Category extends DiSchemaDataProviderResource
     }
 
     /**
+     * @param string $rootCategoryId
+     * @param string $column
+     * @return array
+     */
+    public function getEntityColumnByRootCategoryId(string $rootCategoryId, string $column) : array
+    {
+        return $this->adapter->fetchPairs($this->getEntityColumnByRootCategoryIdSql($rootCategoryId, $column));
+    }
+
+    /**
      * @param string $attributeName ex: name, description,url_key, url_path, is_active, position, level,
      * @param string $tableName ex: catalog_category_entity_varchar
      * @param int $storeId

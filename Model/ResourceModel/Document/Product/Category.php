@@ -48,7 +48,7 @@ class Category extends ModeIntegrator
      */
     protected function getWebsiteCategoryRelationSql() : Select
     {
-        $categoryEntitySelect = $this->getEntityColumnByRootCategoryId($this->rootCategoryId, 'path');
+        $categoryEntitySelect = $this->getEntityColumnByRootCategoryIdSql($this->rootCategoryId, 'path');
         return $this->adapter->select()
             ->from(
                 ['c_c_p' => $this->adapter->getTableName('catalog_category_product')],
