@@ -123,7 +123,7 @@ class DocHandler extends DocProduct implements
                 if(!isset($content[DocSchemaInterface::DI_DOC_TYPE_FIELD]))
                 {
                     $this->logWarning("Boxalino DI: incomplete content for $id: "
-                        . json_encode($content) . ". This error usually means the property handlers are missconfigured."
+                        . json_encode($content) . ". This error usually means the property handlers are misconfigured."
                     );
 
                     continue;
@@ -134,6 +134,7 @@ class DocHandler extends DocProduct implements
                 $parentIds = array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD]));
                 if(empty($parentIds))
                 {
+                    // the entity has no parent
                     $productGroups = $this->_treatProductGroupDocLine($id, $schema, $content, $productGroups);
                 }
 
@@ -148,9 +149,20 @@ class DocHandler extends DocProduct implements
                     {
                         continue;
                     }
-                    $productGroups = $this->_treatVariantSchema($id, $content[DocSchemaInterface::DI_AS_VARIANT], $content, $productGroups);
+                    // the entity is available as a parent to other entities
+                    $productGroups = $this->_treatVariantSchema($id, DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP, $content, $productGroups);
                 }
 
+                if($content[DocSchemaInterface::DI_DOC_TYPE_FIELD] === DocProductHandlerInterface::DOC_PRODUCT_LEVEL_SKU)
+                {
+                    if(count($parentIds))
+                    {
+                        // the entity is a child to other items - must exist as a group with it`s own details (status & visibility)
+                        $productGroups = $this->_treatVariantSchema($id, DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP, $content, $productGroups);
+                    }
+                }
+
+                // the entity is a child to other items & must exist replicated at the level of each entity as a SKU with the parent`s properties for status & visibility
                 list($productGroups, $productSkus) = $this->_treatSkusWithParentIds($id, $schema, $content, $productGroups, $productSkus);
             } catch (\Throwable $exception)
             {
@@ -183,7 +195,6 @@ class DocHandler extends DocProduct implements
      */
     protected function _treatSkusWithParentIds(string $id, Sku $schema, array $content, array $productGroups, array $productSkus) : array
     {
-        $duplicate = count(array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD]))) > 1;
         $parentIdTypesList = array_combine(
             array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_FIELD])),
             array_filter(explode(",", $content[DocSchemaInterface::DI_PARENT_ID_TYPE_FIELD]))
@@ -191,19 +202,11 @@ class DocHandler extends DocProduct implements
 
         foreach($parentIdTypesList as $parentId => $parentType)
         {
-            if($duplicate)
-            {
-                if(!isset($productGroups[$id]))
-                {
-                    $this->_treatVariantSchema($id, DocProductHandlerInterface::DOC_PRODUCT_LEVEL_GROUP, $content, $productGroups);
-                }
-
-                /** @var Sku DocGeneratorInterface $schema */
-                $schema = $this->getSchemaGeneratorByType($content[DocSchemaInterface::DI_DOC_TYPE_FIELD], $content);
-                $schema->setInternalId($parentId . "_" . $id)
-                    ->setExternalId($id)
-                    ->setIndividuallyVisible(false);
-            }
+            /** @var Sku DocGeneratorInterface $schema */
+            $schema = $this->getSchemaGeneratorByType($content[DocSchemaInterface::DI_DOC_TYPE_FIELD], $content);
+            $schema->setInternalId($parentId . "_" . $id)
+                ->setExternalId($id)
+                ->setIndividuallyVisible(false);
 
             if(isset($productGroups[$parentId]))
             {
