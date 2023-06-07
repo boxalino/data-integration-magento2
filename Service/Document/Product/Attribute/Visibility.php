@@ -4,6 +4,7 @@ namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductVisibilityPropertyInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringLocalizedAttribute;
 use Boxalino\DataIntegrationDoc\Doc\Schema\Visibility as VisibilitySchema;
 
 /**
@@ -39,6 +40,13 @@ class Visibility extends IntegrationPropertyHandlerAbstract
                         $datProvider->getIndividualVisibility($item),
                         DocSchemaInterface::FIELD_STRING_INDIVIDUAL_VISIBILITY
                     )->toArray();
+
+                $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->getRepeatedGenericLocalizedSchema(
+                    $datProvider->getSelfVisibility($item),
+                    $languages,
+                    DocSchemaInterface::DI_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode(),
+                    new StringLocalizedAttribute(), null
+                )->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logWarning("Error on ". $this->getResolverType() . "with exception: "
