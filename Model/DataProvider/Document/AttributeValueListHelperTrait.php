@@ -97,6 +97,7 @@ trait AttributeValueListHelperTrait
                 $optionIds = array_filter(explode(",", $row[$attributeCode]), 'strlen');
             }
 
+            $content = new \ArrayObject();
             foreach($optionIds as $optionId)
             {
                 $content = new \ArrayObject();
@@ -123,6 +124,7 @@ trait AttributeValueListHelperTrait
 
                 $content->offsetSet($optionId, $optionIdContent);
             }
+
             $attributeContent->offsetSet($entityId, $content);
         }
 
