@@ -30,10 +30,10 @@ class Visibility extends IntegrationPropertyHandlerAbstract
         {
             try{
                 $content[$this->_getDocKey($item)][$this->getAttributeCode()][] =
-                    $this->getSchemaByItem($languages, $datProvider->getContextVisibility($item))->toArray();
+                    $this->getSchemaByItem($languages, $datProvider->getContextData($item))->toArray();
 
                 $content[$this->_getDocKey($item)][DocProductPropertyInterface::DOC_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode()][] =
-                    $this->getSchemaByItem($languages, $datProvider->getSelfVisibility($item))->toArray();
+                    $this->getSchemaByItem($languages, $datProvider->getAsIsData($item))->toArray();
 
                 $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING][] =
                     $this->getStringAttributeSchema(
@@ -42,7 +42,7 @@ class Visibility extends IntegrationPropertyHandlerAbstract
                     )->toArray();
 
                 $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->getRepeatedGenericLocalizedSchema(
-                    $datProvider->getSelfVisibility($item),
+                    $datProvider->getAsIsData($item),
                     $languages,
                     DocSchemaInterface::DI_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode(),
                     new StringLocalizedAttribute(), null

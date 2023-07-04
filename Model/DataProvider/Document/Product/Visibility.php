@@ -46,7 +46,7 @@ class Visibility extends ModeIntegrator
      * @param array $item
      * @return array
      */
-    public function getContextVisibility(array $item) : array
+    public function getContextData(array $item) : array
     {
         return $this->getDataByCode($this->getDocPropertyNameByContext(), $item[$this->getDiIdField()]);
     }
@@ -55,7 +55,7 @@ class Visibility extends ModeIntegrator
      * @param array $item
      * @return array
      */
-    public function getSelfVisibility(array $item) : array
+    public function getAsIsData(array $item) : array
     {
         return $this->getDataByCode($this->getDocPropertyNameByContext(false), $item[$this->getDiIdField()]);
     }
@@ -79,8 +79,8 @@ class Visibility extends ModeIntegrator
     {
         $this->_resolveDataDelta();
 
-        $this->_loadVisibilityData($this->getDocPropertyNameByContext(), $this->getContextVisibilityFields());
-        $this->_loadVisibilityData($this->getDocPropertyNameByContext(false), $this->getSelfVisibilityFields());
+        $this->_loadVisibilityData($this->getDocPropertyNameByContext(), $this->getContextualFields());
+        $this->_loadVisibilityData($this->getDocPropertyNameByContext(false), $this->getAsIsFields());
     }
 
     /**
@@ -107,7 +107,7 @@ class Visibility extends ModeIntegrator
     /**
      * @return array
      */
-    protected function getContextVisibilityFields() : array
+    protected function getContextualFields() : array
     {
         $configurableType = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
         $groupedType = \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
@@ -128,7 +128,7 @@ class Visibility extends ModeIntegrator
     /**
      * @return array
      */
-    protected function getSelfVisibilityFields() : array
+    protected function getAsIsFields() : array
     {
         return [
             $this->getDiIdField() => "c_p_e_s.entity_id",

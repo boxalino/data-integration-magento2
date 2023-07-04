@@ -87,7 +87,8 @@ class Status extends ModeIntegrator
                     "entity_select.entity_id",
                     "entity_select.parent_id",
                     "entity_select.store_id",
-                    "value" => new \Zend_Db_Expr("
+                    "value" => "entity_select.entity_status",
+                    "contextual" => new \Zend_Db_Expr("
                         (CASE
                             WHEN (entity_select.type_id = '{$configurableType}' OR entity_select.type_id = '{$groupedType}') AND entity_select.entity_status = '1' THEN IF(child_count.child_count > 0, 1, 2)
                             WHEN entity_select.parent_id IS NULL THEN entity_select.entity_status

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
+use Boxalino\DataIntegration\Api\DataProvider\DocProductContextualPropertyInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringLocalizedAttribute;
 
@@ -17,7 +18,10 @@ class Status extends IntegrationPropertyHandlerAbstract
     {
         $content = [];
         $languages = $this->getSystemConfiguration()->getLanguages();
-        foreach ($this->getDataProvider()->getData() as $id => $item)
+        /** @var DocProductContextualPropertyInterface $datProvider */
+        $datProvider = $this->getDataProvider();
+
+        foreach ($datProvider->getData() as $item)
         {
             if($item instanceof \ArrayIterator)
             {
@@ -30,9 +34,9 @@ class Status extends IntegrationPropertyHandlerAbstract
                 $content[$id][DocSchemaInterface::FIELD_STRING_LOCALIZED] = [];
             }
 
-            $content[$id][$this->getAttributeCode()] = $this->getLocalizedSchema($item, $languages);
+            $content[$id][$this->getAttributeCode()] = $this->getLocalizedSchema($datProvider->getContextData($item), $languages);
             $content[$id][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->getRepeatedGenericLocalizedSchema(
-                $item,
+                $datProvider->getAsIsData($item),
                 $languages,
                 DocSchemaInterface::DI_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode(),
                 new StringLocalizedAttribute(), null
