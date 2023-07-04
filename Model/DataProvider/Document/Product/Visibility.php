@@ -16,10 +16,7 @@ class Visibility extends ModeIntegrator
     implements DocProductVisibilityPropertyInterface
 {
 
-    /**
-     * @var \ArrayObject
-     */
-    protected $attributeNameValuesList;
+    use ContextualAttributeTrait;
 
     /**
      * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
@@ -46,28 +43,10 @@ class Visibility extends ModeIntegrator
      * @param array $item
      * @return array
      */
-    public function getContextData(array $item) : array
-    {
-        return $this->getDataByCode($this->getDocPropertyNameByContext(), $item[$this->getDiIdField()]);
-    }
-
-    /**
-     * @param array $item
-     * @return array
-     */
-    public function getAsIsData(array $item) : array
-    {
-        return $this->getDataByCode($this->getDocPropertyNameByContext(false), $item[$this->getDiIdField()]);
-    }
-
-    /**
-     * @param array $item
-     * @return array
-     */
     public function getIndividualVisibility(array $item) : array
     {
         return array_unique(array_values(array_intersect_key(
-                    $this->getSelfVisibility($item), array_flip($this->getSystemConfiguration()->getLanguages()))
+                    $this->getAsIsData($item), array_flip($this->getSystemConfiguration()->getLanguages()))
             )
         );
     }
@@ -79,29 +58,8 @@ class Visibility extends ModeIntegrator
     {
         $this->_resolveDataDelta();
 
-        $this->_loadVisibilityData($this->getDocPropertyNameByContext(), $this->getContextualFields());
-        $this->_loadVisibilityData($this->getDocPropertyNameByContext(false), $this->getAsIsFields());
-    }
-
-    /**
-     * @param string $attributeName
-     * @param array $fields
-     */
-    protected function _loadVisibilityData(string $attributeName, array $fields) : void
-    {
-        $attributeContent = new \ArrayObject();
-        foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $languageCode)
-        {
-            $data = $this->getResourceModel()->getFetchPairsByFieldsWebsiteStore(
-                $fields,
-                $this->getSystemConfiguration()->getWebsiteId(),
-                $storeId
-            );
-
-            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, true);
-        }
-
-        $this->attributeNameValuesList->offsetSet($attributeName, $attributeContent);
+        $this->_loadData($this->getDocPropertyNameByContext(), $this->getContextualFields());
+        $this->_loadData($this->getDocPropertyNameByContext(false), $this->getAsIsFields());
     }
 
     /**
