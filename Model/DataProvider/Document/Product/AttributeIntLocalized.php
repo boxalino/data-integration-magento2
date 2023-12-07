@@ -24,7 +24,7 @@ class AttributeIntLocalized extends AttributeLocalizedAbstract
 
     public function getExcludeConditionals(): array
     {
-        return ['e_a.source_model IS NULL'];
+        return ['e_a.source_model IS NULL OR e_a.source_model=\'Magento\\\Eav\\\Model\\\Entity\\\Attribute\\\Source\\\Boolean\''];
     }
 
 }
