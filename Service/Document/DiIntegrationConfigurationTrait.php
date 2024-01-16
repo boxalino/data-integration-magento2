@@ -7,6 +7,7 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegration
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Trait DiIntegrationConfigurationTrait
@@ -25,6 +26,11 @@ trait DiIntegrationConfigurationTrait
      * @var string
      */
     protected $handlerIntegrateTime;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @return ConfigurationDataObject

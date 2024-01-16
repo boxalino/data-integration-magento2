@@ -22,6 +22,11 @@ class Gallery extends ModeIntegrator
     protected $addMediaPath;
 
     /**
+     * @var DirectoryList
+     */
+    protected $directory;
+
+    /**
      * @param DataProviderResourceModel | DiSchemaDataProviderResourceInterface $resource
      * @param ScopeConfigInterface $scopeConfig
      * @param DirectoryList $directoryList
