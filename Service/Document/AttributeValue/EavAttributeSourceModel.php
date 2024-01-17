@@ -3,7 +3,6 @@ namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
 
 /**
@@ -19,7 +18,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
 class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
 {
 
-    use DiPropertyTrait;
     use AttributeHelperTrait;
 
     /**
@@ -44,7 +42,7 @@ class EavAttributeSourceModel extends IntegrationPropertyHandlerAbstract
                     $schema[DocSchemaInterface::FIELD_ATTRIBUTE_NAME] = $attributeName;
                     $schema[DocSchemaInterface::FIELD_NUMERICAL] = $dataProvider->isNumerical((string)$id);
                     $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
-                    $schema = $this->addingLocalizedPropertyToSchema(
+                    $schema = $this->schemaGetter()->addingLocalizedPropertyToSchema(
                         DocSchemaInterface::FIELD_VALUE_LABEL,
                         $schema,
                         $this->getSystemConfiguration()->getLanguages(),

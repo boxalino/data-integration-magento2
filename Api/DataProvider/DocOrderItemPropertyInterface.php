@@ -5,7 +5,7 @@ namespace Boxalino\DataIntegration\Api\DataProvider;
  * Interface DocOrderItemPropertyInterface
  * Handling the item information for the doc_order line
  */
-interface DocOrderItemPropertyInterface extends DocOrderPropertyInterface
+interface DocOrderItemPropertyInterface extends GenericDocInterface
 {
 
     /**

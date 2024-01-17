@@ -20,6 +20,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
  *
  * @package Boxalino\DataIntegration\Service\Document\Attribute
  */
+#[\AllowDynamicProperties]
 class DocHandler extends DocAttribute
     implements DocAttributeHandlerInterface, DiIntegrationConfigurationInterface
 {

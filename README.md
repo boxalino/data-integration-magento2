@@ -9,6 +9,9 @@ This repository is to be used for the following data integration scopes:
 2. Order
 3. Customers
 
+## Changelog
+Follow the changelog on [wiki page](https://github.com/boxalino/data-integration-magento2/wiki/Changelog)
+
 ## Setup
 Consult with the [wiki page on Setup](https://github.com/boxalino/data-integration-magento2/wiki/Setup)
 

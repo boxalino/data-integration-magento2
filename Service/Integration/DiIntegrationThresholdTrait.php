@@ -25,7 +25,7 @@ trait DiIntegrationThresholdTrait
     public function reviewModeBasedOnSyncSize(int $size) : void
     {
         $this->getLogger()->info(
-            "Boxalino DI: {$size} items found for {$this->getLogProcessName()}"
+            "Boxalino DI: $size items found for {$this->getLogProcessName()}"
         );
 
         if($this->getFullConversionThreshold() > 0)

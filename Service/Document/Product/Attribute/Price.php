@@ -37,7 +37,7 @@ class Price extends IntegrationPropertyHandlerAbstract
                 }
 
                 $id = $this->_getDocKey($item);
-                $schema = $this->getLocalizedPriceSchema($languages, $currencyCodes, $currencyFactor,
+                $schema = $this->schemaGetter()->getLocalizedPriceSchema($languages, $currencyCodes, $currencyFactor,
                     $salesPrice, $listPrice,
                     $dataProvider->getGrossMarginPrices($item),
                     $dataProvider->getOtherPrices($item)

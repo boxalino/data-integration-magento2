@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
+use Boxalino\DataIntegration\Model\ResourceModel\Document\Entity\ProductResourceTrait;
 use Magento\Framework\DB\Select;
 
 /**
@@ -9,6 +10,8 @@ use Magento\Framework\DB\Select;
  */
 trait EntityResourceTrait
 {
+    use ProductResourceTrait;
+
     /**
      * @var \Magento\Framework\DB\Adapter\AdapterInterface
      */
@@ -29,7 +32,7 @@ trait EntityResourceTrait
      */
     public function getEntityByWebsiteIdSelect(string $websiteId): Select
     {
-        $select = $this->_getEntityByWebsiteIdSelect($websiteId);
+        $select = $this->_getProductEntityByWebsiteIdSelect($websiteId);
         if($this->useDeltaIdsConditionals)
         {
             return $this->addDeltaIdsConditional($select);
@@ -50,34 +53,13 @@ trait EntityResourceTrait
     }
 
     /**
-     * Generic ENTITY SELECT for FULL export
-     *
-     * @param string $websiteId
-     * @return Select
-     */
-    protected function _getEntityByWebsiteIdSelect(string $websiteId): Select
-    {
-        return $this->adapter->select()
-            ->from(
-                ['e' => $this->adapter->getTableName('catalog_product_entity')],
-                ["*"]
-            )
-            ->joinLeft(
-                ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
-                'e.entity_id = c_p_w.product_id AND c_p_w.website_id = ' . $websiteId,
-                []
-            )
-            ->where("c_p_w.website_id= ? " , $websiteId);
-    }
-
-    /**
      * MVIEW / DELTA DRIVEN EXPORTS
      *
      * @return Select
      */
     protected function _getEntityIdsWithRelationsBySelect(Select $mainEntitySelect) : Select
     {
-        $relationParentTypeSelect = $this->getRelationEntityTypeSelect();
+        $relationParentTypeSelect = $this->getProductRelationEntityTypeSelect();
         $affectedGroupSelect = $this->getAffectedParentGroupSelect();
         return $this->adapter->select()
             ->from(
@@ -98,26 +80,6 @@ trait EntityResourceTrait
                 ['c_p_r_r' => new \Zend_Db_Expr("( ". $affectedGroupSelect->__toString() . ' )')],
                 "c_p_r_r.affected = c_p_e.entity_id",
                 []
-            )
-            ->where("c_p_e.entity_id IS NOT NULL");
-    }
-
-    /**
-     * Filter out parent_ids which no longer exist in the DB
-     *
-     * @return Select
-     */
-    protected function getRelationEntityTypeSelect() : Select
-    {
-        return $this->adapter->select()
-            ->from(
-                ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
-                ["parent_id", "child_id"]
-            )
-            ->joinLeft(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
-                "c_p_r.parent_id = c_p_e.entity_id",
-                ["parent_type_id"=>"type_id"]
             )
             ->where("c_p_e.entity_id IS NOT NULL");
     }

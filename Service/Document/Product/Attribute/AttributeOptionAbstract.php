@@ -16,7 +16,7 @@ abstract class AttributeOptionAbstract extends AttributeAbstract
 
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedLocalizedSchema($item, $languages, $attributeName, $attributeCode);
+        return $this->schemaGetter()->getRepeatedLocalizedSchema($item, $languages, $attributeName, $attributeCode);
     }
 
     /**
@@ -26,6 +26,6 @@ abstract class AttributeOptionAbstract extends AttributeAbstract
     {
         return DocSchemaInterface::FIELD_STRING_LOCALIZED;
     }
-    
+
 
 }

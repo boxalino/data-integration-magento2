@@ -82,7 +82,7 @@ class Link extends ModeIntegrator
                 ['entity_visibility'=>'c_p_e_v.value']
             );
 
-        $finalSelect = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ["entity_select" => new \Zend_Db_Expr("( ". $select->__toString() . " )")],
                 [
@@ -90,15 +90,13 @@ class Link extends ModeIntegrator
                     "value" => new \Zend_Db_Expr("
                         (CASE
                             WHEN entity_select.parent_id IS NULL THEN entity_select.entity_value
-                            WHEN entity_select.entity_visibility IN ({$visibilityOptions}) THEN entity_select.entity_value
+                            WHEN entity_select.entity_visibility IN ($visibilityOptions) THEN entity_select.entity_value
                             ELSE entity_select.parent_value
                          END
                         )"
                     )
                 ]
             );
-
-        return $finalSelect;
     }
 
 

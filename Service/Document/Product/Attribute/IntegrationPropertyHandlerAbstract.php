@@ -5,8 +5,7 @@ use Boxalino\DataIntegration\Api\DataProvider\DocProductPricePropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductPropertyInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocAttributeListInterface;
 use Boxalino\DataIntegration\Api\DataProvider\DocProductVisibilityPropertyInterface;
-use Boxalino\DataIntegration\Service\Document\BaseIntegrationPropertyHandlerAbstract;
-use Boxalino\DataIntegrationDoc\Doc\DocProductAttributeTrait;
+use Boxalino\DataIntegration\Service\Document\BasePropertyHandlerAbstract;
 
 /**
  * Class IntegrationPropertyHandlerAbstract for doc_product context
@@ -14,10 +13,8 @@ use Boxalino\DataIntegrationDoc\Doc\DocProductAttributeTrait;
  *
  * @package Boxalino\DataIntegration\Service\Document\Product\Attribute
  */
-abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropertyHandlerAbstract
+abstract class IntegrationPropertyHandlerAbstract extends BasePropertyHandlerAbstract
 {
-
-    use DocProductAttributeTrait;
 
     /**
      * @var DocProductPropertyInterface | DocAttributeListInterface | DocProductPricePropertyInterface | DocProductVisibilityPropertyInterface

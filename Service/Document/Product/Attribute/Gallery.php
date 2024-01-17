@@ -25,7 +25,7 @@ class Gallery extends AttributeAbstract
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
         $values = array_filter(explode(",", $item[$attributeCode]),'strlen');
-        return $this->getStringAttributeSchema($values, $attributeName);
+        return $this->schemaGetter()->getStringAttributeSchema($values, $attributeName);
     }
 
     /**

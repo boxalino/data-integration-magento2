@@ -54,7 +54,7 @@ abstract class LocalizedNumericAttributeAbstract extends IntegrationPropertyHand
      */
     public function getSchema(array $item, array $languages, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedGenericLocalizedSchema($item, $languages, $attributeCode, new NumericLocalizedAttribute(), null);
+        return $this->schemaGetter()->getRepeatedGenericLocalizedSchema($item, $languages, $attributeCode, new NumericLocalizedAttribute(), null);
     }
 
     /**

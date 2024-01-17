@@ -2,7 +2,6 @@
 namespace Boxalino\DataIntegration\Service\Document\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
 
 /**
@@ -15,8 +14,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
  */
 class EavAttribute extends IntegrationPropertyHandlerAbstract
 {
-    use DiPropertyTrait;
-
     public const DI_SCHEMA_RESOLVER_TYPE = "eavAttributes";
 
     /**
@@ -44,13 +41,13 @@ class EavAttribute extends IntegrationPropertyHandlerAbstract
                 $schema[DocSchemaInterface::FIELD_SEARCH_SUGGESTION] = $dataProvider->isSearchSuggestion($row);
                 $schema[DocSchemaInterface::FIELD_FILTER_BY] = $dataProvider->isFilterBy($row);
                 $schema[DocSchemaInterface::FIELD_ORDER_BY] = $dataProvider->isOrderBy($row);
-                $schema = $this->addingLocalizedPropertyToSchema(
+                $schema = $this->schemaGetter()->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
                     $dataProvider->getLabel($row)
                 );
-                $schema = $this->addingLocalizedPropertyToSchema(
+                $schema = $this->schemaGetter()->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_ATTRIBUTE_GROUP,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),

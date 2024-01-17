@@ -65,7 +65,7 @@ trait SpecialPriceDateTrait
 
             if($specialToDate && empty($specialFromDate))
             {
-                if($this->_compareDateWith($specialToDate, true))
+                if($this->_compareDateWith($specialToDate))
                 {
                     return $specialPrice;
                 }
@@ -83,7 +83,7 @@ trait SpecialPriceDateTrait
                 return [];
             }
 
-            if($this->_compareDateWith($specialFromDate, false) && $this->_compareDateWith($specialToDate, true))
+            if($this->_compareDateWith($specialFromDate, false) && $this->_compareDateWith($specialToDate))
             {
                 return $specialPrice;
             }

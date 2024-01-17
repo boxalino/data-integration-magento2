@@ -47,7 +47,7 @@ abstract class NumericAttributeAbstract extends IntegrationPropertyHandlerAbstra
      */
     public function getSchema(array $item): DocPropertiesInterface
     {
-        return $this->getNumericAttributeSchema([(string)$item[$this->getAttributeCode()]], $this->getAttributeCode(), null);
+        return $this->schemaGetter()->getNumericAttributeSchema([(string)$item[$this->getAttributeCode()]], $this->getAttributeCode(), null);
     }
 
     /**

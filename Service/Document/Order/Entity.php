@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Order;
 
-use Boxalino\DataIntegration\Service\Document\DiIntegrateTypedSchemaTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
 use Boxalino\DataIntegrationDoc\Doc\Order;
 
@@ -13,8 +12,6 @@ use Boxalino\DataIntegrationDoc\Doc\Order;
  */
 class Entity extends IntegrationPropertyHandlerAbstract
 {
-
-    use DiIntegrateTypedSchemaTrait;
 
     /**
      * @return array

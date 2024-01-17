@@ -40,7 +40,7 @@ class AttributeSourceModelInt extends AttributeAbstract
      */
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getStringAttributeSchema([$item[$attributeCode]], $attributeName);
+        return $this->schemaGetter()->getStringAttributeSchema([$item[$attributeCode]], $attributeName);
     }
 
 

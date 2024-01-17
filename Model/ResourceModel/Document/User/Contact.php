@@ -19,7 +19,7 @@ class Contact extends ModeIntegrator
      */
     public function getFetchAllByFieldsWebsiteId(array $fields, string $websiteId) : array
     {
-        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $mainEntitySelect = $this->getResourceByWebsiteIdWithChunkSelect($websiteId);
         $selectBilling = $this->adapter->select()
             ->from(
                 ['c_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
@@ -45,7 +45,7 @@ class Contact extends ModeIntegrator
         $select = $this->adapter->select()
             ->union(
                 [$selectBilling, $selectShipping],
-                \Magento\Framework\DB\Select::SQL_UNION_ALL
+                Select::SQL_UNION_ALL
             );
 
         return $this->adapter->fetchAll($select);

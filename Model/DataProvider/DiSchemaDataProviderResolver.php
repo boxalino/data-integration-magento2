@@ -6,8 +6,7 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
 /**
  * Composite class for entity data provider
  */
-class DiSchemaDataProviderResolver
-    implements DiSchemaDataProviderResolverInterface
+class DiSchemaDataProviderResolver implements DiSchemaDataProviderResolverInterface
 {
     /**
      * @var DiSchemaDataProviderInterface[]
@@ -15,14 +14,14 @@ class DiSchemaDataProviderResolver
     private $diSchemaDataProviders;
 
     /**
-     * @var string
+     * @var string | null
      */
     private $document;
 
     /**
      * @param DiSchemaDataProviderInterface[] $dataProviders
      */
-    public function __construct(string $document, array $dataProviders = [])
+    public function __construct(?string $document = null, array $dataProviders = [])
     {
         $this->document = $document;
         $this->diSchemaDataProviders = $dataProviders;

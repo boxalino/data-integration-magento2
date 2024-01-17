@@ -7,7 +7,7 @@ use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\AttributeHelperTrait;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\AttributeValue\EavAttributeSourceModel as DataProviderResourceModel;
-use \Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\ObjectManagerInterface;
 
 /**
  * Data provider for any product eav-attribute-option relevant information

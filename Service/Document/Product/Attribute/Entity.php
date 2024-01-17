@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Boxalino\DataIntegrationDoc\Helper\Product\DocPropertyGrouping;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
 use Psr\Log\LoggerInterface;
 
@@ -38,6 +39,7 @@ class Entity extends IntegrationPropertyHandlerAbstract
     public function _getValues(): array
     {
         $content = [];
+        $schemaProperties = new DocPropertyGrouping();
         foreach($this->getDataProvider()->getData() as $item)
         {
             $id = $this->_getDocKey($item);
@@ -52,20 +54,20 @@ class Entity extends IntegrationPropertyHandlerAbstract
                 if($this->handlerHasProperty($propertyName))
                 {
                     $docAttributeName = $this->properties[$propertyName];
-                    if(in_array($docAttributeName, $this->getProductSingleValueSchemaTypes()))
+                    if(in_array($docAttributeName, $schemaProperties->getSingleValueSchemaTypes()))
                     {
                         $content[$id][$docAttributeName] = (string)$value;
                         continue;
                     }
 
-                    if(in_array($docAttributeName, $this->getProductMultivalueSchemaTypes()))
+                    if(in_array($docAttributeName, $schemaProperties->getMultivalueSchemaTypes()))
                     {
                         if(!isset($content[$id][$docAttributeName]))
                         {
                             $content[$id][$docAttributeName]  = [];
                         }
 
-                        if(in_array($docAttributeName, $this->getTypedSchemaProperties()))
+                        if(in_array($docAttributeName, $schemaProperties->getTypedSchemaProperties()))
                         {
                             $typedProperty = $this->getAttributeSchema($docAttributeName);
                             if($typedProperty)

@@ -56,7 +56,7 @@ class AttributeGlobal extends ModeIntegrator
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $eavPropertySelect = $this->getEavJoinAttributeSQLByStoresAttrIdTable($attributeId, $storeIds, "catalog_product_entity_$type");
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 $fields
@@ -67,8 +67,6 @@ class AttributeGlobal extends ModeIntegrator
                 []
             )
             ->where("c_p_e_a_s.value IS NOT NULL");
-
-        return $select;
     }
 
 

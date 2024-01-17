@@ -1,42 +1,15 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document;
 
-use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
-use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
-use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandler;
-use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
-use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
-use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
-use Boxalino\DataIntegrationDoc\Service\Flow\DiLogTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
-use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class BaseIntegrationPropertyHandlerAbstract for any doc_X context
+ * Class BasePropertyHandlerAbstract for any doc_X context
  * @package Boxalino\DataIntegration\Service\Document\Order
  */
-abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandler
-    implements \JsonSerializable,
-    DocSchemaPropertyHandlerInterface,
-    DiIntegrationConfigurationInterface,
-    DocDeltaIntegrationInterface,
-    DocInstantIntegrationInterface,
-    DocMviewDeltaIntegrationInterface
+abstract class BasePropertyHandlerAbstract extends GenericPropertyHandler
 {
-
-    use DiIntegrationConfigurationTrait, DiLogTrait
-    {
-        DiIntegrationConfigurationTrait::getDiConfiguration insteadof DiLogTrait;
-    }
-    use DocDeltaIntegrationTrait;
-    use DocInstantIntegrationTrait;
-    use DocMviewDeltaIntegrationTrait;
-    use DiPropertyTrait;
 
     /**
      * @var DiSchemaDataProviderResolverInterface
@@ -53,9 +26,8 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
         array $docAttributePropertiesMapping = [],
         bool $instantMode = false
     ){
-        parent::__construct();
+        parent::__construct($logger);
 
-        $this->logger = $logger;
         $this->diSchemaDataProviderResolver = $diSchemaDataProviderResolver;
         $this->instantMode = $instantMode;
 
@@ -64,30 +36,6 @@ abstract class BaseIntegrationPropertyHandlerAbstract extends DocSchemaPropertyH
             $this->addPropertyNameDocAttributeMapping($key, $name);
         }
     }
-
-    /**
-     * @return array
-     */
-    public function getValues(): array
-    {
-        if($this->filterByIds())
-        {
-            if($this->hasModeEnabled())
-            {
-                return $this->_getValues();
-            }
-
-            return [];
-        }
-
-        return $this->_getValues();
-    }
-
-    /**
-     * Added an abstract in order to adjust the
-     * @return array
-     */
-    abstract public function _getValues() : array;
 
     /**
      * Connection between the property handler and the data provider

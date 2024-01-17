@@ -13,6 +13,9 @@
                 <product>0</product>
                 <user>0</user>
                 <order>0</order>
+                <content>0</content>
+                <user_selection>0</user_selection>
+                <user_generated_content>0</user_generated_content>
                 <dispatch>0</dispatch>
             </di_config>
         </boxalino_di_F>
@@ -21,6 +24,9 @@
                 <product>0</product>
                 <user>0</user>
                 <order>0</order>
+                <content>0</content>
+                <user_selection>0</user_selection>
+                <user_generated_content>0</user_generated_content>
                 <outsource>1</outsource>
             </di_config>
         </boxalino_di_D>

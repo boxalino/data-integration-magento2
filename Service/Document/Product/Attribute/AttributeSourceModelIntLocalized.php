@@ -19,7 +19,7 @@ class AttributeSourceModelIntLocalized extends AttributeAbstract
 
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedGenericLocalizedSchema($item, $languages, $attributeName, new StringLocalizedAttribute(), null);
+        return $this->schemaGetter()->getRepeatedGenericLocalizedSchema($item, $languages, $attributeName, new StringLocalizedAttribute(), null);
     }
 
     /**

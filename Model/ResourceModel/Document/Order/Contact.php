@@ -19,7 +19,7 @@ class Contact extends ModeIntegrator
      */
     public function getFetchAllByFieldsStoreIds(array $fields, array $storeIds) : array
     {
-        $mainEntitySelect = $this->getEntityByStoreIdsSelect($storeIds);
+        $mainEntitySelect = $this->getResourceByStoreIdsWithChunkSelect($storeIds);
         $customerSelect = $this->appendPrefixToColumnsGroupBySelect("customer_entity", "c_e", "entity_id");
         $select = $this->adapter->select()
             ->from(

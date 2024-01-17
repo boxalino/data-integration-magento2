@@ -2,7 +2,7 @@
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Order;
 
 use Boxalino\DataIntegration\Model\ResourceModel\DiSchemaDataProviderResource;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\ModeIntegratorConditionalsTrait;
+use Boxalino\DataIntegration\Model\ResourceModel\Document\GenericEntityResourceTrait;
 use Magento\Framework\DB\Select;
 
 /**
@@ -15,48 +15,77 @@ use Magento\Framework\DB\Select;
 abstract class ModeIntegrator extends DiSchemaDataProviderResource
 {
 
-    use EntityResourceTrait;
-    use ModeIntegratorConditionalsTrait;
+    use GenericEntityResourceTrait;
 
     /**
-     * On a daily basis, the orders can be exported for the past week
-     * OR since last update
-     *
-     * If the integration for delta is supported via MVIEW - it will also apply a filter by IDs
-     *
+     * @var string 
+     */
+    protected $defaultWebsiteId = "0";
+
+    /**
+     * @param array $storeIds
+     * @return array
+     */
+    public function getEntityByStoreIds(array $storeIds): array
+    {
+        return $this->adapter->fetchAll($this->getResourceByStoreIdsWithChunkSelect($storeIds, $this->defaultWebsiteId));
+    }
+
+    /**
+     * @param array $storeIds
+     * @return Select
+     */
+    public function getResourceByStoreIdsWithChunkSelect(array $storeIds) : Select
+    {
+        $select = $this->getResourceByStoreIdsWebsiteIdSelect($storeIds, $this->defaultWebsiteId);
+        if($this->useDeltaIdsConditionals)
+        {
+            return $select;
+        }
+
+        /** @heldchen fix: must use ASC as in production systems */
+        $select->where("{$this->getIdPrimaryKeyField()} > ?", $this->getChunk())
+            ->order("{$this->getIdPrimaryKeyField()} ASC")
+            ->limit((int)$this->getBatch());
+
+        return $select;
+    }
+
+    /**
+     * @param array $storeIds
+     * @param string $websiteId
+     * @return Select
+     */
+    public function getMainSelectByStoreIdsWebsiteId(array $storeIds, string $websiteId) : Select
+    {
+        return $this->adapter->select()
+            ->from(
+                ['s_o' => $this->adapter->getTableName('sales_order')],
+                ["*"]
+            )
+            ->where("s_o.store_id IN (?) OR s_o.store_id = 0" , $storeIds);
+    }
+
+    public function getIdPrimaryKeyField() : string
+    {
+        return 's_o.entity_id';
+    }
+
+    /**
      * @return string
      */
-    public function getDeltaDateConditional() : string
+    public function getCreatedAtField(): string
     {
-        return $this->getResourceDateConditional(
-            ["s_o.updated_at", "s_o.created_at"],
-            $this->dateConditional,
-            true
-        );
+        return "s_o.created_at";
     }
 
     /**
-     * Adding the instant filter condition on the main query
-     * (as a general rule - the filter is by IDs provided from the MVIEW)
-     *
-     * @param Select $query
-     * @return Select
+     * @return string
      */
-    public function addInstantConditional(Select $query) : Select
+    public function getUpdatedAtField(): string
     {
-        return $this->addResourceIdsConditional($query, "s_o.entity_id", $this->idsConditional);
+        return "s_o.updated_at";
     }
-
-    /**
-     * For the delta updates that use the MVIEW
-     *
-     * @param Select $query
-     * @return Select
-     */
-    public function addDeltaIdsConditional(Select $query) : Select
-    {
-        return $this->addResourceIdsConditional($query, "s_o.entity_id", $this->idsConditional);
-    }
-
+    
 
 }

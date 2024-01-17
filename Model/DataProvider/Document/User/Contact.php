@@ -2,9 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\User\Contact as DataProviderResourceModel;
-use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
  * Class Contact
@@ -45,9 +43,10 @@ class Contact extends ModeIntegrator
 
     /**
      * Creating a list of label-value elements to be added as datetime attributes
-     * backend_type="datetime"
+     *  backend_type="datetime"
      * @param array $item
      * @return array
+     * @throws \Exception
      */
     public function getDateTimeOptions(array $item) : array
     {

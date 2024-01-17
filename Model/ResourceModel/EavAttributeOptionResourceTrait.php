@@ -112,7 +112,7 @@ trait EavAttributeOptionResourceTrait
      */
     public function getAttributeOptionCodeByAttributeIdSelect(int $attributeId) : Select
     {
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
@@ -124,8 +124,6 @@ trait EavAttributeOptionResourceTrait
                 'b_o.option_id = a_o.option_id AND b_o.store_id = 0',
                 []
             )->where('a_o.attribute_id = ?', $attributeId);
-
-        return $select;
     }
 
 

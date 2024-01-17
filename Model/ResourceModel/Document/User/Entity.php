@@ -21,7 +21,7 @@ class Entity extends ModeIntegrator
      */
     public function getFetchAllByFieldsWebsiteId(array $fields, string $websiteId)
     {
-        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
+        $mainEntitySelect = $this->getResourceByWebsiteIdWithChunkSelect($websiteId);
         $shippingSelect = $this->appendPrefixToColumnsGroupBySelect("customer_address_entity", "billing", "entity_id");
         $select = $this->adapter->select()
             ->from(

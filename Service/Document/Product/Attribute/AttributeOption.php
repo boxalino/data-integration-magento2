@@ -76,7 +76,7 @@ class AttributeOption extends AttributeAbstract
 
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedLocalizedSchema($item, $languages, $attributeName, $this->getDiIdField());
+        return $this->schemaGetter()->getRepeatedLocalizedSchema($item, $languages, $attributeName, $this->getDiIdField());
     }
 
     /**

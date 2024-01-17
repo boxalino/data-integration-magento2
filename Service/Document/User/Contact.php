@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\User;
 
-use Boxalino\DataIntegration\Service\Document\DiIntegrateTypedSchemaTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocPropertiesInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Doc\Schema\User\Contact as UserContactSchema;
@@ -15,8 +14,6 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\User\Contact as UserContactSchema;
  */
 class Contact extends IntegrationPropertyHandlerAbstract
 {
-
-    use DiIntegrateTypedSchemaTrait;
 
     public function _getValues(): array
     {

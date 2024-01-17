@@ -32,9 +32,6 @@ trait DiIntegrateTrait
             //logical exception to break the loop
             //reset the docs in case the attributeHandlers were not run in the random order
             $this->resetDocs();
-        } catch (\Throwable $exception)
-        {
-            throw $exception;
         }
 
         /** for instant data integrations - the generic load is sufficient */

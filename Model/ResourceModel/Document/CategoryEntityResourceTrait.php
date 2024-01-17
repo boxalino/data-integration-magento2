@@ -17,15 +17,13 @@ trait CategoryEntityResourceTrait
     public function getEntityByRootCategoryIdSql(string $rootCategoryId) : Select
     {
         $rootCategoryIdPath = $this->getRootCategoryIdPath($rootCategoryId);
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 $this->adapter->getTableName('catalog_category_entity'),
                 ["*"]
             )
             ->where('path LIKE "'. $rootCategoryIdPath.'/%"')
             ->orWhere('entity_id IN (?)', explode("/", $rootCategoryIdPath));
-
-        return $select;
     }
 
     /**
@@ -36,15 +34,13 @@ trait CategoryEntityResourceTrait
     public function getEntityColumnByRootCategoryIdSql(string $rootCategoryId, string $column) : Select
     {
         $rootCategoryIdPath = $this->getRootCategoryIdPath($rootCategoryId);
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 $this->adapter->getTableName('catalog_category_entity'),
                 ["entity_id", $column]
             )
             ->where('path LIKE "'. $rootCategoryIdPath.'/%"')
             ->orWhere('entity_id IN (?)', explode("/", $rootCategoryIdPath));
-
-        return $select;
     }
 
     /**

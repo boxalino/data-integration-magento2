@@ -37,7 +37,7 @@ class Pricing extends IntegrationPropertyHandlerAbstract
 
             try{
                 /** @var PricingSchema $schema */
-                $schema = $this->getPricingSchema($languages, $currencyCodes, $currencyFactors,
+                $schema = $this->schemaGetter()->getPricingSchema($languages, $currencyCodes, $currencyFactors,
                     $item[$this->getAttributeCode()],
                     $dataProvider->getLabelForPriceByRow($item));
 

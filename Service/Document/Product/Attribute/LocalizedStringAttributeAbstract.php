@@ -55,7 +55,7 @@ abstract class LocalizedStringAttributeAbstract extends IntegrationPropertyHandl
      */
     public function getSchema(array $item, array $languages, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getRepeatedGenericLocalizedSchema($item, $languages, $attributeCode, new StringLocalizedAttribute(), null);
+        return $this->schemaGetter()->getRepeatedGenericLocalizedSchema($item, $languages, $attributeCode, new StringLocalizedAttribute(), null);
     }
 
     /**

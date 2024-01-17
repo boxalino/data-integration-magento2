@@ -48,7 +48,7 @@ class Visibility extends ModeIntegrator
         $visibilityId = $this->getAttributeIdByAttributeCodeAndEntityTypeId("visibility", \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
         $visibilitySql = $this->getEavJoinAttributeSQLByStoreAttrIdTable((int)$visibilityId, $storeId, "catalog_product_entity_int");
 
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 ['c_p_e.entity_id', 'c_p_e.type_id']
@@ -68,8 +68,6 @@ class Visibility extends ModeIntegrator
                 "c_p_r.parent_id = c_p_e_v_p.entity_id",
                 ['parent_value'=>'c_p_e_v.value']
             );
-        
-        return $select;
     }
 
     

@@ -31,7 +31,7 @@ trait AttributeOptionTrait
                 $attributeId, $storeId
             );
 
-            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode, false);
+            $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
         }
 
         return $attributeContent;

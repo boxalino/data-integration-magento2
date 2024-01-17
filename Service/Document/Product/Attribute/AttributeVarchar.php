@@ -30,7 +30,7 @@ class AttributeVarchar extends AttributeAbstract
             $values = array_filter(explode(",", $item[$attributeCode]),'strlen');
         }
 
-        return $this->getStringAttributeSchema($values, $attributeName);
+        return $this->schemaGetter()->getStringAttributeSchema($values, $attributeName);
     }
 
     /**

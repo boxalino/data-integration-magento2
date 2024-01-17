@@ -21,7 +21,7 @@ class Configuration implements DiConfigurationInterface
 {
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $storeManager;
 
@@ -211,6 +211,9 @@ class Configuration implements DiConfigurationInterface
             "allowProductSync" => $storeConfigurationHandler->getSyncStatusByModeType( GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_PRODUCT),
             "allowUserSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_USER),
             "allowOrderSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_ORDER),
+            "allowContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_CONTENT),
+            "allowUserSelectionSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_USER_SELECTION),
+            "allowUserGeneratedContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_USER_GENERATED_CONTENT),
         ];
     }
 
@@ -250,6 +253,9 @@ class Configuration implements DiConfigurationInterface
             "allowProductSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_PRODUCT),
             "allowUserSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_USER),
             "allowOrderSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_ORDER),
+            "allowContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_CONTENT),
+            "allowUserSelectionSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_USER_SELECTION),
+            "allowUserGeneratedContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_USER_GENERATED_CONTENT),
         ];
     }
 

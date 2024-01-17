@@ -1,44 +1,17 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Order;
 
-use Boxalino\DataIntegration\Api\DataProvider\DocOrderContactPropertyInterface;
-use Boxalino\DataIntegration\Api\DataProvider\DocOrderItemPropertyInterface;
-use Boxalino\DataIntegration\Api\DataProvider\DocOrderLineInterface;
-use Boxalino\DataIntegration\Api\DataProvider\DocOrderPropertyInterface;
-use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderInterface;
-use Boxalino\DataIntegration\Service\Document\BaseIntegrationPropertyHandlerAbstract;
-use Boxalino\DataIntegrationDoc\Doc\DocOrderAttributeTrait;
+use Boxalino\DataIntegration\Service\Document\BasePropertyHandlerAbstract;
+use Boxalino\DataIntegration\Service\Document\DiDataProviderTrait;
+use Boxalino\DataIntegration\Service\Document\DiIntegrateTypedSchemaTrait;
 
 /**
- * Class IntegrationPropertyHandlerAbstract for doc_order context
- * Handles the data provider access for the export of doc_order properties and structures
- *
- * @package Boxalino\DataIntegration\Service\Document\Order
+ * The class can be deprecated, it is only left as to avoid telling integrators not declare the diSchemaDataProviderResolver property
  */
-abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropertyHandlerAbstract
+abstract class IntegrationPropertyHandlerAbstract extends BasePropertyHandlerAbstract
 {
-
-    use DocOrderAttributeTrait;
-
-    /**
-     * @var DocOrderPropertyInterface | DocOrderLineInterface | DocOrderItemPropertyInterface | DocOrderContactPropertyInterface
-     */
-    protected $dataProvider;
-
-    /**
-     * @return DocOrderPropertyInterface | DocOrderLineInterface | DiSchemaDataProviderInterface | DocOrderItemPropertyInterface | DocOrderContactPropertyInterface
-     */
-    public function getDataProvider() : DocOrderPropertyInterface
-    {
-        $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
-        $this->dataProvider->setSystemConfiguration($this->getSystemConfiguration());
-        $this->dataProvider->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
-        $this->dataProvider->setSyncCheck($this->getSyncCheck());
-        $this->dataProvider->setMviewIds($this->getIds());
-        $this->dataProvider->resolve();
-
-        return $this->dataProvider;
-    }
-
-
+    use DiIntegrateTypedSchemaTrait;
+    use DiDataProviderTrait;
+    
+    
 }

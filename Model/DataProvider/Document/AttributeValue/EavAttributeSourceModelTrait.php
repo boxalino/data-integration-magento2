@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\AttributeValue;
 
-use \Magento\Framework\ObjectManagerInterface;
-use \Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
 
 /**
  * Data provider for any product eav-attribute-option relevant information

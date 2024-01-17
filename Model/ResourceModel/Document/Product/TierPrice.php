@@ -54,7 +54,7 @@ class TierPrice extends ModeIntegrator
             )
             ->group(["main.entity_id","main.customer_group_id"]);
 
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ['t_p' => new \Zend_Db_Expr("( ". $valuesGroupSelect->__toString() . ' )')],
                 [
@@ -69,8 +69,6 @@ class TierPrice extends ModeIntegrator
             )
             ->where("c_p_e_s.entity_id IS NOT NULL")
             ->group("t_p.entity_id");
-
-        return $select;
     }
 
     /**
@@ -81,7 +79,7 @@ class TierPrice extends ModeIntegrator
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $tierPriceSelect = $this->_getTierPriceJoinSelect(
-            $this->getTierPriceByWebsiteIdAllGroupsMinQtySelect(0),
+            $this->getTierPriceByWebsiteIdAllGroupsMinQtySelect(),
             $this->getTierPriceByWebsiteIdAllGroupsMinQtySelect((int)$websiteId),
             ["c_p_e_t_p.entity_id", new \Zend_Db_Expr("IF(c_p_e_t_p_w.value IS NULL, c_p_e_t_p.value, c_p_e_t_p_w.value) AS value")]
         );
@@ -123,7 +121,7 @@ class TierPrice extends ModeIntegrator
     }
 
     /**
-     * @param string $websiteId
+     * @param int $websiteId
      * @return Select
      */
     public function getTierPriceByWebsiteIdAllGroupsMinQtySelect(int $websiteId = 0): Select

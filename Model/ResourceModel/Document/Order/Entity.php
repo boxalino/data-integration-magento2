@@ -24,7 +24,7 @@ class Entity extends ModeIntegrator
      */
     public function getFetchAllByFieldsStoreIds(array $fields, array $storeIds)
     {
-        $mainEntitySelect = $this->getEntityByStoreIdsSelect($storeIds);
+        $mainEntitySelect = $this->getResourceByStoreIdsWithChunkSelect($storeIds);
         $taxSelect = $this->appendPrefixToColumnsSelect("sales_order_tax", "s_o_t");
         $paymentSelect = $this->appendPrefixToColumnsSelect("sales_order_payment", "s_o_p");
         $shipmentTrackSelect = $this->appendPrefixToColumnsSelect("sales_shipment_track", "s_s_t");

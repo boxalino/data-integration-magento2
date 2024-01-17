@@ -34,8 +34,8 @@ class Status extends IntegrationPropertyHandlerAbstract
                 $content[$id][DocSchemaInterface::FIELD_STRING_LOCALIZED] = [];
             }
 
-            $content[$id][$this->getAttributeCode()] = $this->getLocalizedSchema($datProvider->getContextData($item), $languages);
-            $content[$id][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->getRepeatedGenericLocalizedSchema(
+            $content[$id][$this->getAttributeCode()] = $this->schemaGetter()->getLocalizedSchema($datProvider->getContextData($item), $languages);
+            $content[$id][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->schemaGetter()->getRepeatedGenericLocalizedSchema(
                 $datProvider->getAsIsData($item),
                 $languages,
                 DocSchemaInterface::DI_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode(),

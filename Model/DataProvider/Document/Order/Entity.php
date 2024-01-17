@@ -263,7 +263,7 @@ class Entity extends ModeIntegrator
      */
     public function getTaxFree(array $row): ?bool
     {
-        return (bool) !((float) $row["tax_amount"] > 0);
+        return !((float) $row["tax_amount"] > 0);
     }
 
     /**

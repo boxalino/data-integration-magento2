@@ -6,7 +6,7 @@ namespace Boxalino\DataIntegration\Api\DataProvider;
  * Handling the contact information for the doc_order line
  */
 interface DocOrderContactPropertyInterface
-    extends DocOrderPropertyInterface, DocSchemaContactInterface
+    extends GenericDocInterface, DocSchemaContactInterface
 {
 
 }

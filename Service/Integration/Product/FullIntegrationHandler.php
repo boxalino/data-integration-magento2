@@ -13,12 +13,11 @@ use Psr\Log\LoggerInterface;
 /**
  * Class FullIntegrationHandler
  *
- * @package Boxalino\DataIntegrationDoc\Service
+ * @package Boxalino\DataIntegration\Service\Integration\Product
  */
 class FullIntegrationHandler extends Full
     implements ProductIntegrationHandlerInterface
 {
-
     use ProductTrait;
 
     public function __construct(

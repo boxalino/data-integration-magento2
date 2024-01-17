@@ -50,7 +50,7 @@ abstract class StringAttributeAbstract extends IntegrationPropertyHandlerAbstrac
      */
     public function getSchema(array $item): DocPropertiesInterface
     {
-        return $this->getStringAttributeSchema([(string)$item[$this->getAttributeCode()]], $this->getAttributeCode(), null);
+        return $this->schemaGetter()->getStringAttributeSchema([(string)$item[$this->getAttributeCode()]], $this->getAttributeCode(), null);
     }
 
     /**

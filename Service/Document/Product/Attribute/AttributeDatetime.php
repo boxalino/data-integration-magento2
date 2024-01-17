@@ -37,7 +37,7 @@ class AttributeDatetime extends AttributeAbstract
             $item[$attributeCode] = NULL;
         }
 
-        return $this->getDatetimeAttributeSchema([$item[$attributeCode]], $attributeName);
+        return $this->schemaGetter()->getDatetimeAttributeSchema([$item[$attributeCode]], $attributeName);
     }
 
     /**

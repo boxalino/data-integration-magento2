@@ -40,7 +40,7 @@ trait BaseResourceTrait
         $columns =  $this->adapter->fetchPairs($select);
         if (empty($columns))
         {
-            throw new NoSuchEntityException(__("{$table} does not exist."));
+            throw new NoSuchEntityException(__("$table does not exist."));
         }
 
         return $columns;
@@ -62,6 +62,7 @@ trait BaseResourceTrait
      * @param string $table
      * @param string $prefix
      * @return Select
+     * @throws \Exception
      */
     public function appendPrefixToColumnsSelect(string $table, string $prefix) : Select
     {
@@ -75,7 +76,9 @@ trait BaseResourceTrait
     /**
      * @param string $table
      * @param string $prefix
+     * @param string $groupBy
      * @return Select
+     * @throws \Exception
      */
     public function appendPrefixToColumnsGroupBySelect(string $table, string $prefix, string $groupBy) : Select
     {

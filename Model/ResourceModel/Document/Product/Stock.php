@@ -39,7 +39,7 @@ class Stock extends ModeIntegrator
      */
     public function getStockInformation() : Select
     {
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ["c_s_s" => $this->adapter->getTableName('cataloginventory_stock_status')],
                 ['product_id', 'stock_status', 'qty']
@@ -50,8 +50,6 @@ class Stock extends ModeIntegrator
                 ["stock_name"]
             )
             ->group("c_s_s.product_id");
-
-        return $select;
     }
 
 

@@ -22,7 +22,7 @@ class Translation extends IntegrationPropertyHandlerAbstract
      * @param array $docAttributePropertiesMapping
      */
     public function __construct(
-        LoggerInterface$logger,
+        LoggerInterface $logger,
         DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
         array $docAttributePropertiesMapping = [
             "name" => DocSchemaInterface::FIELD_TITLE,
@@ -56,7 +56,7 @@ class Translation extends IntegrationPropertyHandlerAbstract
                     $content[$id][$this->getDocPropertyByField($attributeCode)] = [];
                 }
 
-                $content[$id][$this->getDocPropertyByField($attributeCode)] = $this->getLocalizedSchema($item, $languages);
+                $content[$id][$this->getDocPropertyByField($attributeCode)] = $this->schemaGetter()->getLocalizedSchema($item, $languages);
             }
         }
 

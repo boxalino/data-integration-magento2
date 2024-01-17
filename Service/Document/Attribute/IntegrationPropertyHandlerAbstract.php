@@ -5,7 +5,7 @@ use Boxalino\DataIntegration\Api\DataProvider\DocAttributeLineInterface;
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandler;
-use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
+use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Psr\Log\LoggerInterface;
 
@@ -16,13 +16,12 @@ use Psr\Log\LoggerInterface;
  * @package Boxalino\DataIntegration\Service\Document\Attribute
  */
 abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandler
-    implements \JsonSerializable,
-    DocSchemaPropertyHandlerInterface,
-    DiIntegrationConfigurationInterface
+    implements DiIntegrationConfigurationInterface
 {
 
     use DiIntegrationConfigurationTrait;
-
+    use DiPropertyTrait;
+    
     /**
      * @var DiSchemaDataProviderResolverInterface
      */

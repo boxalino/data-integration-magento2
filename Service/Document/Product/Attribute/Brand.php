@@ -30,7 +30,7 @@ class Brand extends IntegrationPropertyHandlerAbstract
                 );
 
                 /** @var Repeated $schema value_id is the default store code set for the brand */
-                $schema = $this->getRepeatedLocalizedSchema($item, $languages, null, $this->getAttributeCode());
+                $schema = $this->schemaGetter()->getRepeatedLocalizedSchema($item, $languages, null, $this->getAttributeCode());
                 $content[$this->_getDocKey($item)][$this->getResolverType()][] = $schema->toArray();
                 unset($schema);
             }

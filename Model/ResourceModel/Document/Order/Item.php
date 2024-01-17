@@ -58,10 +58,10 @@ class Item extends ModeIntegrator
         ];
         $fieldsForConfigurable = array_diff($this->getColumnsByTableName("sales_order_item"), $fieldsForGrouped);
 
-        $mainEntitySelect = $this->getEntityByStoreIdsSelect($storeIds);
+        $mainEntitySelect = $this->getResourceByStoreIdsWithChunkSelect($storeIds);
         $groupedProductType = \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
         $configurableProductType = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ['s_o_i' => $this->adapter->getTableName("sales_order_item")],
                 $fieldsForGrouped
@@ -79,8 +79,6 @@ class Item extends ModeIntegrator
             ->where("s_o.entity_id IS NOT NULL")
             ->where("s_o_i.product_type='$groupedProductType'")
             ->where("s_o_i.parent_item_id IS NOT NULL");
-
-        return $select;
     }
 
     /**
@@ -92,10 +90,10 @@ class Item extends ModeIntegrator
      */
     protected function getConfigurableSalesOrderItemSelect(array $fields, array $storeIds) : Select
     {
-        $mainEntitySelect = $this->getEntityByStoreIdsSelect($storeIds);
+        $mainEntitySelect = $this->getResourceByStoreIdsWithChunkSelect($storeIds);
         $groupedProductType = \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
         $configurableProductType = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
-        $select = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ['s_o_i' => $this->adapter->getTableName("sales_order_item")],
                 $fields
@@ -119,8 +117,6 @@ class Item extends ModeIntegrator
             ->where("s_o_i.product_type='$configurableProductType'")
             ->where("s_o_i.parent_item_id IS NULL")
             ->where("s_o_i_grouped.item_id IS NULL");
-
-        return $select;
     }
 
     /**
@@ -132,8 +128,8 @@ class Item extends ModeIntegrator
     protected function getSalesOrderItemSelectByType(array $fields, array $storeIds, string $productType) : Select
     {
         $fields = array_merge(["main_product_id" => "product_id", "product_id"=>"product_id"], $fields);
-        $mainEntitySelect = $this->getEntityByStoreIdsSelect($storeIds);
-        $select = $this->adapter->select()
+        $mainEntitySelect = $this->getResourceByStoreIdsWithChunkSelect($storeIds);
+        return $this->adapter->select()
             ->from(
                 ['s_o_i' => $this->adapter->getTableName("sales_order_item")],
                 $fields
@@ -146,8 +142,6 @@ class Item extends ModeIntegrator
             ->where("s_o.entity_id IS NOT NULL")
             ->where("s_o_i.product_type='$productType'")
             ->where("s_o_i.parent_item_id IS NULL");
-
-        return $select;
     }
 
 

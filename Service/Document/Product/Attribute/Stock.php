@@ -25,8 +25,8 @@ class Stock extends IntegrationPropertyHandlerAbstract
             }
 
             try{
-                $content[$id][$this->getResolverType()][] = $this->getStockSchema($item[$this->getAttributeCode()], NULL, $item["stock_name"])->toArray();
-                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema([$item["stock_status"]], "stock_status", null)->toArray();
+                $content[$id][$this->getResolverType()][] = $this->schemaGetter()->getStockSchema($item[$this->getAttributeCode()], NULL, $item["stock_name"])->toArray();
+                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->schemaGetter()->getNumericAttributeSchema([$item["stock_status"]], "stock_status", null)->toArray();
             } catch (\Throwable $exception)
             {
                 $this->logWarning("Error on ". $this->getResolverType() . "with exception: "

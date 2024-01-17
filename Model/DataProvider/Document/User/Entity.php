@@ -2,9 +2,7 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserLineInterface;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\User\Entity as DataProviderResourceModel;
-use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 
 /**
@@ -169,6 +167,7 @@ class Entity extends ModeIntegrator
     /**
      * @param array $item
      * @return string|null
+     * @throws \Exception
      */
     public function getDateOfBirth(array $item): ?string
     {
@@ -275,7 +274,7 @@ class Entity extends ModeIntegrator
      */
     public function getVatIsValid(array $item): ?bool
     {
-        return $item["billing_vat_is_valid"];;
+        return $item["billing_vat_is_valid"];
     }
 
     /**

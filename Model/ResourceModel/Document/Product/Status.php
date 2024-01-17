@@ -39,7 +39,7 @@ class Status extends ModeIntegrator
      *
      * @param string $websiteId
      * @param int $storeId
-     * @return \Magento\Framework\DB\Select
+     * @return Select
      */
     public function getStatusParentDependabilityByStore(string $websiteId, int $storeId) : Select
     {
@@ -76,11 +76,11 @@ class Status extends ModeIntegrator
         $configurableType = \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
         $groupedType = \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
         $visibilityOptions = implode(',', [
-            \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
-            \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_CATALOG,
-            \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH]
+                \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+                \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_CATALOG,
+                \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH]
         );
-        $finalSelect = $this->adapter->select()
+        return $this->adapter->select()
             ->from(
                 ["entity_select" => new \Zend_Db_Expr("( ". $select->__toString() . " )")],
                 [
@@ -90,10 +90,10 @@ class Status extends ModeIntegrator
                     "value" => "entity_select.entity_status",
                     "contextual" => new \Zend_Db_Expr("
                         (CASE
-                            WHEN (entity_select.type_id = '{$configurableType}' OR entity_select.type_id = '{$groupedType}') AND entity_select.entity_status = '1' THEN IF(child_count.child_count > 0, 1, 2)
+                            WHEN (entity_select.type_id = '$configurableType' OR entity_select.type_id = '$groupedType') AND entity_select.entity_status = '1' THEN IF(child_count.child_count > 0, 1, 2)
                             WHEN entity_select.parent_id IS NULL THEN entity_select.entity_status
                             WHEN entity_select.entity_status = '2' THEN 2
-                            WHEN entity_select.entity_status = '1' AND entity_select.entity_visibility IN ({$visibilityOptions}) THEN 1
+                            WHEN entity_select.entity_status = '1' AND entity_select.entity_visibility IN ($visibilityOptions) THEN 1
                             ELSE IF(entity_select.entity_status = '1' AND (parent_count.count > 0 OR parent_count.count IS NOT NULL), 1, 2)
                          END
                         )"
@@ -110,21 +110,19 @@ class Status extends ModeIntegrator
                 "child_count.entity_id = entity_select.entity_id",
                 ["child_count"]
             );
-
-        return $finalSelect;
     }
 
     /**
      * Getting count of parent products that have a certain value for an attribute
      * Used for validation of child values
-     * 
+     *
      * @param string $websiteId
      * @param int $attributeId
      * @param int $value
      * @param int $storeId
      * @return Select
      */
-    protected function getAttributeParentCountSqlByAttrIdValueStoreId(string $websiteId, int $attributeId, int $value, int $storeId) : \Magento\Framework\DB\Select
+    protected function getAttributeParentCountSqlByAttrIdValueStoreId(string $websiteId, int $attributeId, int $value, int $storeId) : Select
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
         $storeAttributeValue = $this->getEavJoinAttributeSQLByStoreAttrIdTable($attributeId, $storeId, "catalog_product_entity_int");

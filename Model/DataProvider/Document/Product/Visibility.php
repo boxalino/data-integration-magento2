@@ -74,7 +74,7 @@ class Visibility extends ModeIntegrator
             $this->getDiIdField() => "c_p_e_s.entity_id",
             $this->getAttributeCode() => new \Zend_Db_Expr("
                 (CASE
-                    WHEN (c_p_e_s.type_id = '{$configurableType}' OR c_p_e_s.type_id = '{$groupedType}') THEN c_p_e_s.entity_value
+                    WHEN (c_p_e_s.type_id = '$configurableType' OR c_p_e_s.type_id = '$groupedType') THEN c_p_e_s.entity_value
                     WHEN c_p_e_s.parent_id IS NULL THEN c_p_e_s.entity_value
                     ELSE c_p_e_s.parent_value
                  END

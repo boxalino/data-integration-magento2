@@ -1,42 +1,17 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\User;
 
-use Boxalino\DataIntegration\Api\DataProvider\DocUserLineInterface;
-use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
-use Boxalino\DataIntegration\Service\Document\BaseIntegrationPropertyHandlerAbstract;
-use Boxalino\DataIntegrationDoc\Doc\DocUserAttributeTrait;
+use Boxalino\DataIntegration\Service\Document\BasePropertyHandlerAbstract;
+use Boxalino\DataIntegration\Service\Document\DiDataProviderTrait;
+use Boxalino\DataIntegration\Service\Document\DiIntegrateTypedSchemaTrait;
 
 /**
- * Class IntegrationPropertyHandlerAbstract for doc_order context
- * Handles the data provider access for the export of doc_order properties and structures
- *
- * @package Boxalino\DataIntegration\Service\Document\User
+ * The class can be deprecated, it is only left as to avoid telling integrators not declare the diSchemaDataProviderResolver property
  */
-abstract class IntegrationPropertyHandlerAbstract extends BaseIntegrationPropertyHandlerAbstract
+abstract class IntegrationPropertyHandlerAbstract extends BasePropertyHandlerAbstract
 {
-
-    use DocUserAttributeTrait;
-
-    /**
-     * @var DocUserPropertyInterface | DocUserLineInterface
-     */
-    protected $dataProvider;
-
-    /**
-     * @return DocUserPropertyInterface | DocUserLineInterface
-     */
-    public function getDataProvider() : DocUserPropertyInterface
-    {
-        $this->dataProvider = $this->diSchemaDataProviderResolver->get($this->getResolverType());
-        $this->dataProvider->setSystemConfiguration($this->getSystemConfiguration());
-        $this->dataProvider->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
-        $this->dataProvider->setSyncCheck($this->getSyncCheck());
-        $this->dataProvider->setMviewIds($this->getIds());
-        $this->dataProvider->resolve();
-
-        return $this->dataProvider;
-    }
-
-
-
+    use DiIntegrateTypedSchemaTrait;
+    use DiDataProviderTrait;
+    
+    
 }

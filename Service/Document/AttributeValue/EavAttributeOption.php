@@ -3,7 +3,6 @@ namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocAttributeValueLineInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
 
 /**
@@ -17,8 +16,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
  */
 class EavAttributeOption extends IntegrationPropertyHandlerAbstract
 {
-
-    use DiPropertyTrait;
 
     /**
      * Structure: [property-name => [$schema, $schema], property-name => [], [..]]
@@ -45,7 +42,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 $schema[DocSchemaInterface::FIELD_VALUE_ID] = (string)$id;
 
                 $name = $dataProvider->getValueLabel((string)$id);
-                $schema = $this->addingLocalizedPropertyToSchema(
+                $schema = $this->schemaGetter()->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_VALUE_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
@@ -57,7 +54,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 if(!is_null($key))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
-                        $this->getStringAttributeSchema([$key], DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY)->toArray();
+                        $this->schemaGetter()->getStringAttributeSchema([$key], DocAttributeValueLineInterface::STRING_ATTRIBUTES_KEY)->toArray();
                 }
 
                 /** adding the swatch value as string property swatch */
@@ -65,7 +62,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 if(!is_null($swatch))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
-                        $this->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH)->toArray();
+                        $this->schemaGetter()->getStringAttributeSchema([$swatch], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SWATCH)->toArray();
                 }
 
                 /** adding the sort_order value as string property sort_order */
@@ -73,7 +70,7 @@ class EavAttributeOption extends IntegrationPropertyHandlerAbstract
                 if(!is_null($sortOrder))
                 {
                     $schema[DocSchemaInterface::FIELD_STRING][] =
-                        $this->getStringAttributeSchema([$sortOrder], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER)->toArray();
+                        $this->schemaGetter()->getStringAttributeSchema([$sortOrder], DocAttributeValueLineInterface::STRING_ATTRIBUTES_SORT_ORDER)->toArray();
                 }
 
                 $content[$attributeName][] = $schema;

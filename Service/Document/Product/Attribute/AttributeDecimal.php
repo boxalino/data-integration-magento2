@@ -40,7 +40,7 @@ class AttributeDecimal extends AttributeAbstract
      */
     public function getSchema(array $item, array $languages, string $attributeName, string $attributeCode): DocPropertiesInterface
     {
-        return $this->getNumericAttributeSchema([$item[$attributeCode]], $attributeName, null);
+        return $this->schemaGetter()->getNumericAttributeSchema([$item[$attributeCode]], $attributeName, null);
     }
 
 

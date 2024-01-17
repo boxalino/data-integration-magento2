@@ -20,7 +20,7 @@ class Entity extends ModeIntegrator
     public function getFetchAllByFieldsWebsite(array $fields, string $websiteId)
     {
         $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
-        $relationParentTypeSelect = $this->getRelationEntityTypeSelect();
+        $relationParentTypeSelect = $this->getProductRelationEntityTypeSelect();
         $select = $this->adapter->select()
             ->from(
                 ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],

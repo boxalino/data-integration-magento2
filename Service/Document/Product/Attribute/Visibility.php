@@ -36,12 +36,12 @@ class Visibility extends IntegrationPropertyHandlerAbstract
                     $this->getSchemaByItem($languages, $datProvider->getAsIsData($item))->toArray();
 
                 $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING][] =
-                    $this->getStringAttributeSchema(
+                    $this->schemaGetter()->getStringAttributeSchema(
                         $datProvider->getIndividualVisibility($item),
                         DocSchemaInterface::FIELD_STRING_INDIVIDUAL_VISIBILITY
                     )->toArray();
 
-                $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->getRepeatedGenericLocalizedSchema(
+                $content[$this->_getDocKey($item)][DocSchemaInterface::FIELD_STRING_LOCALIZED][] = $this->schemaGetter()->getRepeatedGenericLocalizedSchema(
                     $datProvider->getAsIsData($item),
                     $languages,
                     DocSchemaInterface::DI_SCHEMA_CONTEXTUAL_PROPERTY_PREFIX . $this->getAttributeCode(),
@@ -65,7 +65,7 @@ class Visibility extends IntegrationPropertyHandlerAbstract
      */
     protected function getSchemaByItem(array $languages, array $data) : VisibilitySchema
     {
-        return $this->getVisibilitySchema($languages, $data);
+        return $this->schemaGetter()->getVisibilitySchema($languages, $data);
     }
 
     /**

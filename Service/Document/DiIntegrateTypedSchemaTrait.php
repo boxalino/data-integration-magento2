@@ -41,21 +41,21 @@ trait DiIntegrateTypedSchemaTrait
                 foreach($dataProvider->getStringOptions($item) as $optionLabel => $optionValues)
                 {
                     $schema->addStringAttribute(
-                        $this->getStringAttributeSchema($optionValues, $optionLabel)
+                        $this->schemaGetter()->getStringAttributeSchema($optionValues, $optionLabel)
                     );
                 }
 
                 foreach($dataProvider->getNumericOptions($item) as $optionLabel => $optionValues)
                 {
                     $schema->addNumericAttribute(
-                        $this->getNumericAttributeSchema($optionValues, $optionLabel, null)
+                        $this->schemaGetter()->getNumericAttributeSchema($optionValues, $optionLabel, null)
                     );
                 }
 
                 foreach($dataProvider->getDateTimeOptions($item) as $optionLabel => $optionValues)
                 {
                     $schema->addDatetimeAttribute(
-                        $this->getDatetimeAttributeSchema($optionValues, $optionLabel)
+                        $this->schemaGetter()->getDatetimeAttributeSchema($optionValues, $optionLabel)
                     );
                 }
 
@@ -111,17 +111,17 @@ trait DiIntegrateTypedSchemaTrait
 
             foreach($dataProvider->getStringOptions($item) as $optionLabel => $optionValues)
             {
-                $content[$id][DocSchemaInterface::FIELD_STRING][] = $this->getStringAttributeSchema($optionValues, $optionLabel)->toArray();
+                $content[$id][DocSchemaInterface::FIELD_STRING][] = $this->schemaGetter()->getStringAttributeSchema($optionValues, $optionLabel)->toArray();
             }
 
             foreach($dataProvider->getNumericOptions($item) as $optionLabel => $optionValues)
             {
-                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->getNumericAttributeSchema($optionValues, $optionLabel, null)->toArray();
+                $content[$id][DocSchemaInterface::FIELD_NUMERIC][] = $this->schemaGetter()->getNumericAttributeSchema($optionValues, $optionLabel, null)->toArray();
             }
 
             foreach($dataProvider->getDateTimeOptions($item) as $optionLabel => $optionValues)
             {
-                $content[$id][DocSchemaInterface::FIELD_DATETIME][] = $this->getDatetimeAttributeSchema($optionValues, $optionLabel)->toArray();
+                $content[$id][DocSchemaInterface::FIELD_DATETIME][] = $this->schemaGetter()->getDatetimeAttributeSchema($optionValues, $optionLabel)->toArray();
             }
         }
 

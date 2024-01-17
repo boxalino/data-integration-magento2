@@ -5,7 +5,7 @@ namespace Boxalino\DataIntegration\Api\DataProvider;
  * Interface DocOrderLineInterface
  * doc_order schema match
  */
-interface DocOrderLineInterface extends DocOrderPropertyInterface
+interface DocOrderLineInterface extends GenericDocInterface
 {
 
     /**
