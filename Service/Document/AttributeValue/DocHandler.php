@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document\AttributeValue;
 
 use Boxalino\DataIntegration\Service\Document\GenericDocHandlerTrait;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\DocAttributeValuesHandlerInterface;
@@ -44,6 +45,27 @@ class DocHandler extends DocAttributeValues implements
 
         $this->createDocLines();
         parent::integrate();
+    }
+
+    /**
+     * The doc_attribute_values are grouped by the property-name as to avoid overlap of
+     * @param DocSchemaPropertyHandlerInterface $handler
+     */
+    protected function _createDocLinesByHandler(DocSchemaPropertyHandlerInterface $handler) : void
+    {
+        /** @var array: [property-name => [$schema, $schema], property-name => [], [..]] $data */
+        foreach($handler->getValues() as $propertyName => $content)
+        {
+            foreach($content as $schema)
+            {
+                $this->addDocLine(
+                    $this->getDocSchemaGenerator($schema)
+                        ->setCreationTm(date("Y-m-d H:i:s"))
+                );
+            }
+
+            unset($content);
+        }
     }
 
 
