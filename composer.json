@@ -4,7 +4,7 @@
     "type": "magento2-module",
     "homepage": "http://www.boxalino.com",
     "keywords": ["boxalino", "data integration", "magento"],
-    "version": "3.0.0",
+    "version": "3.0.1",
     "support": {
         "email": "support@boxalino.com"
     },
