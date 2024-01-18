@@ -3,7 +3,6 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\UserGeneratedCont
 
 use Boxalino\DataIntegration\Model\DataProvider\Document\GenericDataProvider;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\UserGeneratedContent\Review AS ReviewResource;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\GenericResourceProvider;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
@@ -20,6 +19,16 @@ class Review extends GenericDataProvider
         ReviewResource $resource
     ) {
         $this->resourceModel = $resource;
+    }
+
+    public function getTitle(array $item): array
+    {
+        return $this->_getLocalizedForSingleStoreValue(DocSchemaInterface::FIELD_TITLE, $item);
+    }
+
+    public function getDescription(array $item): array
+    {
+        return $this->_getLocalizedForSingleStoreValue(DocSchemaInterface::FIELD_DESCRIPTION, $item);
     }
 
     public function getProducts(array $item) : array
@@ -42,6 +51,34 @@ class Review extends GenericDataProvider
             'rating_percent' => [$item['percent']]
         ];
     }
+
+    /**
+     * @param string $field
+     * @param array $item
+     * @return array
+     */
+    protected function _getLocalizedForSingleStoreValue(string $field, array $item) : array
+    {
+        if($item[DocSchemaInterface::FIELD_STORES] == 0)
+        {
+            return [];
+        }
+
+        $values = [];
+        foreach($this->getSystemConfiguration()->getStoreIdsLanguagesMap() as $storeId => $language)
+        {
+            if($storeId == $item[DocSchemaInterface::FIELD_STORES])
+            {
+                $values[$language] = $item[$field];
+                continue;
+            }
+
+            $values[$language] = "";
+        }
+
+        return $values;
+    }
+
 
 
 }

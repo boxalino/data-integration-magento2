@@ -57,7 +57,7 @@ trait GenericDocHandlerTrait
         try {
             foreach($this->getHandlers() as $handler)
             {
-                $this->handlerLogMemory($handler);
+                $this->logMemory($handler->getResolverType());
                 $this->logTime("startTimeHandler");
 
                 if($handler instanceof DocSchemaPropertyHandlerInterface)
@@ -66,7 +66,7 @@ trait GenericDocHandlerTrait
                 }
 
                 $this->logTime("endTimeHandler");
-                $this->handlerLogMemory($handler, false);
+                $this->logMemory($handler->getResolverType(), false);
                 $this->logMessage(get_class($handler), "endTimeHandler", "startTimeHandler");
             }
         } catch (\Throwable $exception)
@@ -76,22 +76,6 @@ trait GenericDocHandlerTrait
 
         $this->logTime("end" . __FUNCTION__);
         $this->logMessage(__FUNCTION__, "end" . __FUNCTION__, "start" . __FUNCTION__);
-    }
-
-    /**
-     * @param $handler
-     * @param bool $start
-     * @return void
-     */
-    protected function handlerLogMemory($handler, bool $start = true)
-    {
-        if($handler instanceof GenericDocLineHandler)
-        {
-            $this->logMemory($handler->getResolverType(), $start);
-            return;
-        }
-
-        $this->logMemory(get_class($handler), $start);
     }
 
     /**
@@ -116,7 +100,6 @@ trait GenericDocHandlerTrait
         {
             $this->logInfo($exception->getMessage());
         }
-
     }
 
     /**

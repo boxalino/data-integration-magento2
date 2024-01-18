@@ -2,9 +2,6 @@
 namespace Boxalino\DataIntegration\Model\DataProvider\Document;
 
 use Boxalino\DataIntegration\Api\DataProvider\GenericDocInterface;
-use Boxalino\DataIntegration\Model\DataProvider\Document\ConfigurationHelperTrait;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderResourceInterface;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\GenericResourceProvider;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 
 /**

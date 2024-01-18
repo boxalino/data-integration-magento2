@@ -125,10 +125,9 @@ class GenericDocLineHandler extends GenericPropertyHandler
                     $localizedData = $dataProvider->get($propertyName, $item);
                     if(empty($localizedData))
                     {
-                        $localizedData = $this->schemaGetter()->getLocalizedSchema([$value], $languages);
+                        $localizedData = [$value];
                     }
-                    $content[$id][$propertyName] = $localizedData;
-                    continue;
+                    $content[$id][$propertyName] = $this->schemaGetter()->getLocalizedSchema($localizedData, $languages);
                 }
             }
 
