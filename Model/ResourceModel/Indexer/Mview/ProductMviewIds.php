@@ -35,7 +35,7 @@ class ProductMviewIds implements DiViewIdResourceInterface
      */
     public function getIdsByMviewIdsWebsiteId($ids, $websiteId) : array
     {
-        $mainSelect = $this->_getEntityByWebsiteIdSelect($websiteId);
+        $mainSelect = $this->_getProductEntityByWebsiteIdSelect($websiteId);
         $select = $this->adapter->select()
             ->distinct(true)
             ->from(
