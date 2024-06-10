@@ -71,7 +71,7 @@ trait AttributeValueListHelperTrait
             {
                 $content = $attributeContent->offsetGet($id);
             }
-            $content->offsetSet($languageCode, $value);
+            $content->offsetSet($languageCode, trim($value));
             $attributeContent->offsetSet($id, $content);
         }
 
