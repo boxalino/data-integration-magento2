@@ -57,7 +57,7 @@ trait EavAttributeOptionResourceTrait
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
                     'option_id',
-                    new \Zend_Db_Expr("CASE WHEN c_o.value IS NULL THEN b_o.value ELSE c_o.value END as value")
+                    new \Zend_Db_Expr("CASE WHEN c_o.value IS NULL THEN TRIM(b_o.value) ELSE TRIM(c_o.value) END as value")
                 ]
             )->joinLeft(
                 ['b_o' => $this->adapter->getTableName('eav_attribute_option_value')],
@@ -81,7 +81,7 @@ trait EavAttributeOptionResourceTrait
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
                     'option_id',
-                    's_o.value'
+                    'TRIM(s_o.value)'
                 ]
             )->joinRight(
                 ['s_o' => $this->adapter->getTableName('eav_attribute_option_swatch')],
@@ -117,7 +117,7 @@ trait EavAttributeOptionResourceTrait
                 ['a_o' => $this->adapter->getTableName('eav_attribute_option')],
                 [
                     'option_id',
-                    new \Zend_Db_Expr("b_o.value as value")
+                    new \Zend_Db_Expr("TRIM(b_o.value) as value")
                 ]
             )->joinLeft(
                 ['b_o' => $this->adapter->getTableName('eav_attribute_option_value')],
