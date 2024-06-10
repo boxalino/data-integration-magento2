@@ -67,7 +67,7 @@ class Category extends DiSchemaDataProviderResource
                 array('joins' => new \Zend_Db_Expr("( " . $select->__toString() . ")")),
                 array(
                     'entity_id' => 'joins.entity_id',
-                    new \Zend_Db_Expr("IF (joins.value IS NULL OR joins.value='', joins.value_default, joins.value) AS value")
+                    new \Zend_Db_Expr("IF (joins.value IS NULL OR joins.value='', TRIM(joins.value_default), TRIM(joins.value)) AS value")
                 )
             );
 

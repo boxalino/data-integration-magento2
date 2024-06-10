@@ -71,7 +71,7 @@ trait AttributeValueListHelperTrait
             {
                 $content = $attributeContent->offsetGet($id);
             }
-            $content->offsetSet($languageCode, trim($value));
+            $content->offsetSet($languageCode, $value);
             $attributeContent->offsetSet($id, $content);
         }
 
@@ -114,7 +114,7 @@ trait AttributeValueListHelperTrait
                 $translation = $this->getDataByCode($attributeCode, $optionId);
                 foreach($translation as $languageCode => $value)
                 {
-                    $optionIdContent->offsetSet($languageCode, trim($value));
+                    $optionIdContent->offsetSet($languageCode, $value);
                 }
                 if($addId)
                 {
