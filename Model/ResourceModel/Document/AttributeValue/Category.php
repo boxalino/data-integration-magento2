@@ -71,6 +71,18 @@ class Category extends DiSchemaDataProviderResource
                 )
             );
 
+        if($attributeName == "name")
+        {
+            $selectSql = $this->adapter->select()
+                ->from(
+                    array('joins' => new \Zend_Db_Expr("( " . $select->__toString() . ")")),
+                    array(
+                        'entity_id' => 'joins.entity_id',
+                        new \Zend_Db_Expr("IF (joins.value IS NULL OR joins.value='', REPLACE(TRIM(joins.value_default), '/', '\\\/'), REPLACE(TRIM(joins.value), '/', '\\\/')) AS value")
+                    )
+                );
+        }
+
         return $this->adapter->fetchPairs($selectSql);
     }
 
