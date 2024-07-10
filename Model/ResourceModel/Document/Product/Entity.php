@@ -27,6 +27,11 @@ class Entity extends ModeIntegrator
                 $fields
             )
             ->joinLeft(
+                ['e_a_s' => $this->adapter->getTableName('eav_attribute_set')],
+                "e_a_s.attribute_set_id = c_p_e.attribute_set_id",
+                []
+            )
+            ->joinLeft(
                 ['c_p_r' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
                 "c_p_r.child_id = c_p_e.entity_id",
                 []

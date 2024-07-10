@@ -49,7 +49,9 @@ class Entity extends ModeIntegrator
              new \Zend_Db_Expr("TRIM(LEADING '-' FROM c_p_e.created_at) AS created_at"),
              new \Zend_Db_Expr("TRIM(LEADING '-' FROM c_p_e.updated_at) AS updated_at"),
              "c_p_e.type_id",
-             "c_p_e.has_options"
+             "c_p_e.has_options",
+             "c_p_e.attribute_set_id",
+             "e_a_s.attribute_set_name"
          ];
     }
 

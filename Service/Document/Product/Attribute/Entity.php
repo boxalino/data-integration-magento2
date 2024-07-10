@@ -23,8 +23,10 @@ class Entity extends IntegrationPropertyHandlerAbstract
             "entity_id" => DocSchemaInterface::FIELD_INTERNAL_ID,
             DocSchemaInterface::FIELD_SKU => DocSchemaInterface::FIELD_SKU,
             "created_at" => DocSchemaInterface::FIELD_CREATION,
-            "updated_at"=> DocSchemaInterface::FIELD_UPDATE,
+            "updated_at" => DocSchemaInterface::FIELD_UPDATE,
             "type_id" => DocSchemaInterface::FIELD_STRING,
+            "attribute_set_id" => DocSchemaInterface::FIELD_NUMERIC,
+            "attribute_set_name" => DocSchemaInterface::FIELD_STRING,
             "has_options" => DocSchemaInterface::FIELD_NUMERIC
         ],
         bool $instantMode = true
