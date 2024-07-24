@@ -122,7 +122,7 @@ class Category implements
      */
     public function getLink(string $id): array
     {
-        return $this->getDataByCode("request_path", $id);
+        return $this->getDataByCode("link", $id);
     }
 
     /**
@@ -136,6 +136,7 @@ class Category implements
 
     /**
      * Adds category localized link data
+     * Takes into account 301 redirects as well.
      */
     protected function loadLinkData() : void
     {
@@ -146,7 +147,7 @@ class Category implements
             $attributeContent = $this->addValueToAttributeContent($data, $attributeContent, $languageCode);
         }
 
-        $this->attributeNameValuesList->offsetSet("request_path", $attributeContent);
+        $this->attributeNameValuesList->offsetSet("link", $attributeContent);
     }
 
     /**

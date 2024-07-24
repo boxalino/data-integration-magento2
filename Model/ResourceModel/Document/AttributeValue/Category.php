@@ -97,7 +97,7 @@ class Category extends DiSchemaDataProviderResource
         $select = $this->adapter->select()
             ->from(
                 $this->adapter->getTableName('url_rewrite'),
-                ["entity_id", "request_path"]
+                ["entity_id", new \Zend_Db_Expr("IF(redirect_type=301, target_path, request_path) AS link")]
             )
             ->where('entity_type=?', $entityType)
             ->where('store_id=?', $storeId)
