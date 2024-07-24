@@ -7,7 +7,6 @@ use Boxalino\DataIntegration\Model\ResourceModel\Document\DiSchemaDataProviderRe
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeGlobal as GlobalDataProviderResourceModel;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\AttributeLocalized as LocalizedDataProviderResourceModel;
 use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\TierPrice;
-use Boxalino\DataIntegration\Model\ResourceModel\Document\Product\IndexPrice;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 
 /**
@@ -18,7 +17,6 @@ class Price extends AttributeStrategyAbstract
 {
     use SpecialPriceDateTrait;
     use TierPriceTrait;
-    use IndexPriceTrait;
 
     /**
      * @var array
@@ -32,13 +30,11 @@ class Price extends AttributeStrategyAbstract
     public function __construct(
         GlobalDataProviderResourceModel $globalResource,
         LocalizedDataProviderResourceModel $localizedResource,
-        TierPrice $tierPriceResource,
-        IndexPrice $indexPriceResource
+        TierPrice $tierPriceResource
     ){
         parent::__construct($globalResource, $localizedResource);
 
         $this->tierPriceResource = $tierPriceResource;
-        $this->indexPriceResource = $indexPriceResource;
         $this->attributeNameValuesList = new \ArrayObject();
     }
 
@@ -89,7 +85,6 @@ class Price extends AttributeStrategyAbstract
 
         $this->loadSpecialPriceDateAttributes();
         $this->loadTierPriceAllGroups();
-        $this->loadIndexPriceAllGroups();
     }
 
     /**
@@ -123,51 +118,16 @@ class Price extends AttributeStrategyAbstract
      */
     public function getListPrice(array $item): array
     {
-        $indexPrice = $this->getDataByCode("index_price", $item[$this->getDiIdField()]);
-        if($indexPrice[DocSchemaInterface::FIELD_TYPE] != \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
-        {
-            if(in_array($indexPrice["price"], [null, 0]))
-            {
-                return [];
-            }
-
-            return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["price"]);
-        }
-
         return $this->getDataByCode("price", $item[$this->getDiIdField()]);
     }
 
     /**
      * The origin for the sales_price is the "special_price" attribute (for simple items)
-     * For grouped & configurable items - get the min_price from the indexed table
      *
      * @param array $item
      * @return array
      */
     public function getSalesPrice(array $item): array
-    {
-        $indexPrice = $this->getDataByCode("index_price", $item[$this->getDiIdField()]);
-        $types = [
-            \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
-            \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE,
-            \Magento\Bundle\Model\Product\Type::TYPE_CODE
-        ];
-        if(in_array($indexPrice[DocSchemaInterface::FIELD_TYPE], $types))
-        {
-            if($indexPrice["min_price"] > 0)
-            {
-                return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["min_price"]);
-            }
-        }
-
-        return $this->_getSalesPriceFromPrice($item);
-    }
-
-    /**
-     * @param array $item
-     * @return array
-     */
-    protected function _getSalesPriceFromPrice(array $item) : array
     {
         $specialFromDate = $this->getDataByCode("special_from_date", $item[$this->getDiIdField()]);
         $specialToDate = $this->getDataByCode("special_to_date", $item[$this->getDiIdField()]);
@@ -213,15 +173,6 @@ class Price extends AttributeStrategyAbstract
     {
         $this->_resolveDataDeltaTierPrice();
         $this->_loadTierPriceAllGroups();
-    }
-
-    /**
-     * @return void
-     */
-    protected function loadIndexPriceAllGroups() : void
-    {
-        $this->_resolveDataDeltaIndexPrice();
-        $this->_loadIndexPriceAllGroups();
     }
 
 
