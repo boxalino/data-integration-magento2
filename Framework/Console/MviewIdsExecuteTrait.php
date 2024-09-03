@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Framework\Console;
 
 use Boxalino\DataIntegration\Service\ErrorHandler\EmptyBacklogException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 
 /**
@@ -33,7 +34,7 @@ trait MviewIdsExecuteTrait
             if($this->canRun($configuration))
             {
                 try{
-                    if($this->getIntegrationHandler()->getIntegrationMode() === DeltaIntegrationInterface::INTEGRATION_MODE)
+                    if(in_array($this->getIntegrationHandler()->getIntegrationMode(), [DeltaIntegrationInterface::INTEGRATION_MODE, InstantIntegrationInterface::INTEGRATION_MODE]))
                     {
                         $ids = $this->getAffectedIds();
                     }

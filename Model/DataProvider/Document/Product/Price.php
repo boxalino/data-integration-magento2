@@ -147,16 +147,19 @@ class Price extends AttributeStrategyAbstract
     public function getSalesPrice(array $item): array
     {
         $indexPrice = $this->getDataByCode("index_price", $item[$this->getDiIdField()]);
-        $types = [
-            \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
-            \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE,
-            \Magento\Bundle\Model\Product\Type::TYPE_CODE
-        ];
-        if(in_array($indexPrice[DocSchemaInterface::FIELD_TYPE], $types))
+        if($indexPrice)
         {
-            if($indexPrice["min_price"] > 0)
+            $types = [
+                \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
+                \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE,
+                \Magento\Bundle\Model\Product\Type::TYPE_CODE
+            ];
+            if(in_array($indexPrice[DocSchemaInterface::FIELD_TYPE], $types))
             {
-                return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["min_price"]);
+                if($indexPrice["min_price"] > 0)
+                {
+                    return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["min_price"]);
+                }
             }
         }
 

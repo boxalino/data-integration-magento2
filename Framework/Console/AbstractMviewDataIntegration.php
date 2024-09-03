@@ -7,6 +7,7 @@ use Boxalino\DataIntegrationDoc\Framework\Console\DiGenericAbstractCommand;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\ModeDisabledException;
 use Boxalino\DataIntegrationDoc\Service\Integration\Mode\DeltaIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Service\Integration\Mode\InstantIntegrationInterface;
 use Magento\Framework\Mview\View\ChangelogTableNotExistsException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,12 +25,12 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
 {
 
     /**
-     * @var strin | null
+     * @var string | null
      */
     protected $mviewViewId;
 
     /**
-     * @var strin | null
+     * @var string | null
      */
     protected $mviewGroupId;
 
@@ -47,6 +48,11 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
      * @var int | null
      */
     protected $changelogVersionId = null;
+
+    /**
+     * @var array
+     */
+    protected $affectedIds = [];
 
     public function __construct(
         DiViewHandlerInterface $diViewHandler,
@@ -138,20 +144,20 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
         try{
             if($this->mviewViewId)
             {
-                $this->mviewVersionId = $this->mviewViewHandler->getMviewVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
+                $this->mviewVersionId = $this->getMviewViewHandler()->getMviewVersionIdByViewId($this->getMviewViewId(), $this->getMviewGroupId());
                 if(is_null($this->mviewVersionId))
                 {
                     throw new ModeDisabledException(
                         "MVIEW mode is not enabled on your project. In order to pursue, make sure your delta indexers are in `Update by Schedule` mode."
                     );
                 }
-                $this->changelogVersionId = $this->mviewViewHandler->getChangelogVersionIdByViewId($this->mviewViewId, $this->mviewGroupId);
+                $this->changelogVersionId = $this->getMviewViewHandler()->getChangelogVersionIdByViewId($this->getMviewViewId(), $this->getMviewGroupId());
 
-                $backlog = $this->mviewViewHandler->getBacklogSizeByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId);
+                $backlog = $this->getMviewViewHandler()->getBacklogSizeByViewId($this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId());
                 $affected = $backlog;
-                if($this->getIntegrationHandler()->getIntegrationMode() === DeltaIntegrationInterface::INTEGRATION_MODE)
+                if(in_array($this->getIntegrationHandler()->getIntegrationMode(), [DeltaIntegrationInterface::INTEGRATION_MODE, InstantIntegrationInterface::INTEGRATION_MODE]))
                 {
-                    $affected = count($this->mviewViewHandler->getAffectedBacklogByViewId($this->mviewViewId, $this->mviewVersionId, $this->changelogVersionId));
+                    $affected = count($this->getAffectedIds());
                 }
 
                 $this->getLogger()->info("Boxalino DI: Mview information: " .
@@ -184,10 +190,10 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     {
         try{
             $this->getLogger()->info("Boxalino DI: Updating the mview version for $this->mviewGroupId:$this->mviewViewId from $this->mviewVersionId to $this->changelogVersionId");
-            $this->mviewViewHandler->updateVersionIdByViewId($this->mviewViewId, $this->changelogVersionId, $this->mviewGroupId);
+            $this->getMviewViewHandler()->updateVersionIdByViewId($this->mviewViewId, $this->changelogVersionId, $this->mviewGroupId);
 
             $this->getLogger()->info("Boxalino DI: Clearing the $this->mviewGroupId:$this->mviewViewId  changelog for version older than $this->changelogVersionId");
-            $this->mviewViewHandler->clearChangelogByViewId($this->mviewViewId, $this->mviewGroupId);
+            $this->getMviewViewHandler()->clearChangelogByViewId($this->mviewViewId, $this->mviewGroupId);
         } catch (\Throwable $exception)
         {
             $exception = new \Exception("Boxalino DI: Failed to update the mview for $this->mviewGroupId:$this->mviewViewId:" . $exception->getMessage());
@@ -201,9 +207,14 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
      */
     public function getAffectedIds() : array
     {
-        return $this->getMviewViewHandler()->getAffectedBacklogByViewId(
-            $this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId()
-        );
+        if(empty($this->affectedIds))
+        {
+            $this->affectedIds = $this->getMviewViewHandler()->getAffectedBacklogByViewId(
+                $this->getMviewViewId(), $this->getMviewVersionId(), $this->getChangelogVersionId(), $this->getMviewGroupId()
+            );
+        }
+
+        return $this->affectedIds;
     }
 
     /**
