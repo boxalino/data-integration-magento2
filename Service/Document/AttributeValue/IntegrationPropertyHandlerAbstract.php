@@ -8,6 +8,7 @@ use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandler;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
+use Boxalino\DataIntegrationDoc\Service\Flow\DiLogTrait;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -20,7 +21,9 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
     implements DiIntegrationConfigurationInterface
 {
 
-    use DiIntegrationConfigurationTrait;
+    use DiIntegrationConfigurationTrait, DiLogTrait {
+        DiIntegrationConfigurationTrait::getDiConfiguration insteadof DiLogTrait;
+    }
     use DiPropertyTrait;
 
     /**
@@ -38,13 +41,10 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
      * @param DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
      */
     public function __construct(
-        LoggerInterface $logger,
         DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
     ){
-        $this->logger = $logger;
-        $this->diSchemaDataProviderResolver = $diSchemaDataProviderResolver;
-
         parent::__construct();
+        $this->diSchemaDataProviderResolver = $diSchemaDataProviderResolver;
     }
 
     /**

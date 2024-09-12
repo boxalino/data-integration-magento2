@@ -5,7 +5,6 @@ use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInte
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Boxalino\DataIntegrationDoc\Helper\Product\DocPropertyGrouping;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class Entity
@@ -17,7 +16,6 @@ class Entity extends IntegrationPropertyHandlerAbstract
 {
 
     public function __construct(
-        LoggerInterface $logger,
         DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
         array $docAttributePropertiesMapping = [
             "entity_id" => DocSchemaInterface::FIELD_INTERNAL_ID,
@@ -31,7 +29,7 @@ class Entity extends IntegrationPropertyHandlerAbstract
         ],
         bool $instantMode = true
     ){
-        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping, $instantMode);
+        parent::__construct($diSchemaDataProviderResolver, $docAttributePropertiesMapping, $instantMode);
 
         $this->addSchemaDefinition(DocSchemaInterface::FIELD_STRING, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringAttribute");
         $this->addSchemaDefinition(DocSchemaInterface::FIELD_NUMERIC, "Boxalino\DataIntegrationDoc\Doc\Schema\Typed\NumericAttribute");

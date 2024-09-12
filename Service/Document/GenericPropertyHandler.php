@@ -11,7 +11,6 @@ use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegration
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationTrait;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationTrait;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class GenericPropertyHandler for any doc_X context
@@ -36,15 +35,6 @@ abstract class GenericPropertyHandler extends DocSchemaPropertyHandler
     use DocMviewDeltaIntegrationTrait;
     use DiPropertyTrait;
 
-    /**
-     * @param LoggerInterface $logger
-     */
-    public function __construct(
-        LoggerInterface $logger,
-    ){
-        parent::__construct();
-        $this->logger = $logger;
-    }
 
     /**
      * @return array

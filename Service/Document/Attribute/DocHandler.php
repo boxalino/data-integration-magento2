@@ -89,6 +89,7 @@ class DocHandler extends DocAttribute
      */
     protected function _createDocLinesByHandler(DocSchemaPropertyHandlerInterface $handler) : void
     {
+        $handler->setLogger($this->getLogger());
         /** @var array: [property-name => [$schema, $schema], property-name => [], [..]] $data */
         foreach($handler->getValues() as $propertyName => $content)
         {

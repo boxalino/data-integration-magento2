@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document;
 
 use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
@@ -83,6 +84,12 @@ trait DiIntegrationConfigurationTrait
                 $handler->setSystemConfiguration($this->getSystemConfiguration());
                 $handler->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             }
+            
+            try{
+                $handler->setLogger($this->logger);
+            } catch (\Throwable $exception) {
+                //do nothing
+            }
 
             try{
                 if($handler instanceof DocDeltaIntegrationInterface)
@@ -106,9 +113,12 @@ trait DiIntegrationConfigurationTrait
             try{
                 if($handler instanceof DocInstantIntegrationInterface)
                 {
-                    if($handler->filterByIds())
+                    if($handler->allowInstantMode())
                     {
-                        $handler->setIds($this->getIds());
+                        if($handler->filterByIds())
+                        {
+                            $handler->setIds($this->getIds());
+                        }
                     }
                 }
             } catch (\Throwable $exception) {}

@@ -21,12 +21,11 @@ abstract class BasePropertyHandlerAbstract extends GenericPropertyHandler
      * @param DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
      */
     public function __construct(
-        LoggerInterface $logger,
         DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
         array $docAttributePropertiesMapping = [],
         bool $instantMode = false
     ){
-        parent::__construct($logger);
+        parent::__construct();
 
         $this->diSchemaDataProviderResolver = $diSchemaDataProviderResolver;
         $this->instantMode = $instantMode;

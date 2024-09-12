@@ -12,7 +12,6 @@ use Boxalino\DataIntegrationDoc\Doc\Schema\Typed\StringLocalizedAttribute;
 use Boxalino\DataIntegrationDoc\Helper\Generic\DocPropertyGrouping;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyException;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\NoRecordsFoundException;
-use Psr\Log\LoggerInterface;
 
 /**
  * Used as a virtualType type for any property handler used for doc_content, doc_user_selection, doc_voucher,..
@@ -38,17 +37,15 @@ class GenericDocLineHandler extends GenericPropertyHandler
     protected $resolverType;
 
     /**
-     * @param LoggerInterface $logger
      * @param DiSchemaDataProviderInterface $dataProvider
      * @param DocPropertiesInterface $docSchema
      */
     public function __construct(
-        LoggerInterface $logger,
         DiSchemaDataProviderInterface $dataProvider,
         DocPropertiesInterface $docSchema,
         string $resolverType
     ) {
-        parent::__construct($logger);
+        parent::__construct();
         $this->docSchema = $docSchema;
         $this->dataProvider = $dataProvider;
         $this->resolverType = $resolverType;

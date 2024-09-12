@@ -3,7 +3,6 @@ namespace Boxalino\DataIntegration\Service\Document\Product\Attribute;
 
 use Boxalino\DataIntegration\Model\DataProvider\DiSchemaDataProviderResolverInterface;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class Translation
@@ -17,12 +16,10 @@ class Translation extends IntegrationPropertyHandlerAbstract
 {
 
     /**
-     * @param LoggerInterface $logger
      * @param DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver
      * @param array $docAttributePropertiesMapping
      */
     public function __construct(
-        LoggerInterface $logger,
         DiSchemaDataProviderResolverInterface $diSchemaDataProviderResolver,
         array $docAttributePropertiesMapping = [
             "name" => DocSchemaInterface::FIELD_TITLE,
@@ -31,7 +28,7 @@ class Translation extends IntegrationPropertyHandlerAbstract
         ],
         bool $instantMode = false
     ){
-        parent::__construct($logger, $diSchemaDataProviderResolver, $docAttributePropertiesMapping, $instantMode);
+        parent::__construct($diSchemaDataProviderResolver, $docAttributePropertiesMapping, $instantMode);
     }
 
     public function _getValues(): array
