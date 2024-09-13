@@ -22,7 +22,7 @@ trait MviewIdsExecuteTrait
         if(empty($ids))
         {
             throw new EmptyBacklogException(
-                "Boxalino DI MVIEW: no mview ids in backlog for {$this->getIntegrationHandler()->getIntegrationType()} run at {$this->getIntegrationHandler()->getTm()}."
+                "[MVIEW] no mview ids in backlog for {$this->getIntegrationHandler()->getIntegrationType()} run at {$this->getIntegrationHandler()->getTm()}."
             );
         }
 
@@ -41,12 +41,12 @@ trait MviewIdsExecuteTrait
 
                     $websiteIds = $this->getIdsByWebsite($ids, $configuration->getWebsiteId());
                     $this->getIntegrationHandler()->setMviewIds($websiteIds);
-                    $this->logger->info("Boxalino DI MVIEW: " . count($websiteIds) . " items identified for "
+                    $this->logger->info("[MVIEW] " . count($websiteIds) . " items identified for "
                         . $configuration->getAccount()
                     );
                 } catch (\Throwable $exception)
                 {
-                    $this->logger->info("Boxalino DI MVIEW: Declared handler can not be used with the mview integration: " . $exception->getMessage());
+                    $this->logger->info("[MVIEW] Declared handler can not be used with the mview integration: " . $exception->getMessage());
                 }
 
                 try{

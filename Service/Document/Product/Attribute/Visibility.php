@@ -55,6 +55,7 @@ class Visibility extends IntegrationPropertyHandlerAbstract
             }
         }
 
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
         return $content;
     }
 

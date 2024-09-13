@@ -160,7 +160,7 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
                     $affected = count($this->getAffectedIds());
                 }
 
-                $this->getLogger()->info("Boxalino DI: Mview information: " .
+                $this->getLogger()->info("Mview information: " .
                     json_encode([
                         "group" => $this->mviewGroupId,
                         "viewId" => $this->mviewViewId,
@@ -189,14 +189,14 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     protected function _updateMview() : void
     {
         try{
-            $this->getLogger()->info("Boxalino DI: Updating the mview version for $this->mviewGroupId:$this->mviewViewId from $this->mviewVersionId to $this->changelogVersionId");
+            $this->getLogger()->info("Updating the mview version for $this->mviewGroupId:$this->mviewViewId from $this->mviewVersionId to $this->changelogVersionId");
             $this->getMviewViewHandler()->updateVersionIdByViewId($this->mviewViewId, $this->changelogVersionId, $this->mviewGroupId);
 
-            $this->getLogger()->info("Boxalino DI: Clearing the $this->mviewGroupId:$this->mviewViewId  changelog for version older than $this->changelogVersionId");
+            $this->getLogger()->info("Clearing the $this->mviewGroupId:$this->mviewViewId changelog for version older than $this->changelogVersionId");
             $this->getMviewViewHandler()->clearChangelogByViewId($this->mviewViewId, $this->mviewGroupId);
         } catch (\Throwable $exception)
         {
-            $exception = new \Exception("Boxalino DI: Failed to update the mview for $this->mviewGroupId:$this->mviewViewId:" . $exception->getMessage());
+            $exception = new \Exception("Failed to update the mview for $this->mviewGroupId:$this->mviewViewId:" . $exception->getMessage());
             $this->logOrThrowException($exception);
         }
     }

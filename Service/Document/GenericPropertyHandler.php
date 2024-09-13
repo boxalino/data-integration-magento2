@@ -48,6 +48,7 @@ abstract class GenericPropertyHandler extends DocSchemaPropertyHandler
                 return $this->_getValues();
             }
 
+            $this->logInfo("SKIPPED " . get_class($this));
             return [];
         }
 

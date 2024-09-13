@@ -18,7 +18,8 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingRequiredPropertyExce
 class GenericDataProvider implements GenericDocInterface
 {
     use ConfigurationHelperTrait;
-
+    use DataValidationTrait;
+    
     /**
      * Call adjacent resources to create related resources (ex: list of key-values) for the document schema
      *

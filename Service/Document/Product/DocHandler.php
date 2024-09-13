@@ -119,10 +119,9 @@ class DocHandler extends DocProduct implements
         {
             try{
                 $id = (string)$content[DocSchemaInterface::FIELD_INTERNAL_ID];
-
                 if(!isset($content[DocSchemaInterface::DI_DOC_TYPE_FIELD]))
                 {
-                    $this->logWarning("Boxalino DI: incomplete content for $id: "
+                    $this->logWarning("[doc_product] incomplete content for $id: "
                         . json_encode($content) . ". This error usually means the property handlers are misconfigured."
                     );
 

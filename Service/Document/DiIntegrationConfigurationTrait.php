@@ -113,7 +113,7 @@ trait DiIntegrationConfigurationTrait
             try{
                 if($handler instanceof DocInstantIntegrationInterface)
                 {
-                    if($handler->allowInstantMode())
+                    if($handler->hasModeEnabled())
                     {
                         if($handler->filterByIds())
                         {

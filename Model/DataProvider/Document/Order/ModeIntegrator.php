@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\Order;
 
 use Boxalino\DataIntegration\Api\DataProvider\GenericDocInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\ConfigurationHelperTrait;
+use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
 
 /**
  * Abstract class ModeIntegrator
@@ -14,6 +15,7 @@ abstract class ModeIntegrator implements GenericDocInterface
 {
 
     use ConfigurationHelperTrait;
+    use DataValidationTrait;
 
     /**
      * Access property data (internal flow)

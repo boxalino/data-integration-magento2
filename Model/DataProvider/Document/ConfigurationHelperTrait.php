@@ -17,7 +17,6 @@ trait ConfigurationHelperTrait
     use DocDeltaIntegrationTrait;
     use DocInstantIntegrationTrait;
     use DocMviewDeltaIntegrationTrait;
-    use DataValidationTrait;
     use DocPropertyAccessorTrait;
 
     /**

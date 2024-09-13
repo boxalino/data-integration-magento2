@@ -20,7 +20,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Logger</argument>
+            <argument name="name" xsi:type="string">Boxalino DI</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Handler</item>
             </argument>
@@ -34,7 +34,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Content\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Logger: Content</argument>
+            <argument name="name" xsi:type="string">Boxalino DI: Content</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Content\Handler</item>
             </argument>
@@ -48,7 +48,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Order\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Logger: Order</argument>
+            <argument name="name" xsi:type="string">Boxalino DI: Order</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Order\Handler</item>
             </argument>
@@ -62,7 +62,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\User\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Logger: User</argument>
+            <argument name="name" xsi:type="string">Boxalino DI: User</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\User\Handler</item>
             </argument>
@@ -78,7 +78,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Full\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Full Logger</argument>
+            <argument name="name" xsi:type="string">Boxalino DI Full</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Handler</item>
             </argument>
@@ -92,7 +92,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Full\Content\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Full Logger: Content</argument>
+            <argument name="name" xsi:type="string">Boxalino DI Full: Content</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Content\Handler</item>
             </argument>
@@ -108,7 +108,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Delta\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Delta Logger</argument>
+            <argument name="name" xsi:type="string">Boxalino DI Delta</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Handler</item>
             </argument>
@@ -122,7 +122,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Delta\Content\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Delta Logger: Content</argument>
+            <argument name="name" xsi:type="string">Boxalino DI Delta: Content</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Delta\Content\Handler</item>
             </argument>
@@ -138,7 +138,7 @@
     </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Instant\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">Boxalino DI Instant Logger</argument>
+            <argument name="name" xsi:type="string">Boxalino DI Instant</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Instant\Handler</item>
             </argument>

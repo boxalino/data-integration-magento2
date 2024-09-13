@@ -3,6 +3,7 @@ namespace Boxalino\DataIntegration\Model\DataProvider\Document\User;
 
 use Boxalino\DataIntegration\Api\DataProvider\DocUserPropertyInterface;
 use Boxalino\DataIntegration\Model\DataProvider\Document\ConfigurationHelperTrait;
+use Boxalino\DataIntegration\Model\DataProvider\Document\DataValidationTrait;
 
 /**
  * @package Boxalino\DataIntegration\Model\DataProvider\Document\User
@@ -11,6 +12,7 @@ abstract class ModeIntegrator implements DocUserPropertyInterface
 {
 
     use ConfigurationHelperTrait;
+    use DataValidationTrait;
 
     /**
      * @var \ArrayObject

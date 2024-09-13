@@ -72,10 +72,9 @@ class Entity extends IntegrationPropertyHandlerAbstract
                             $typedProperty = $this->getAttributeSchema($docAttributeName);
                             if($typedProperty)
                             {
-                                $typedProperty->setName($propertyName)
-                                    ->addValue($value);
-
+                                $typedProperty->setName($propertyName)->addValue($value);
                                 $content[$id][$docAttributeName][] = $typedProperty->toArray();
+                                
                                 unset($typedProperty);
                             }
 
