@@ -131,7 +131,7 @@ class Status extends ModeIntegrator
                 ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
                 ['c_p_r.parent_id']
             )
-            ->joinLeft(
+            ->join(
                 ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 'c_p_e.entity_id = c_p_r.child_id',
                 ['c_p_e.entity_id']
@@ -169,7 +169,7 @@ class Status extends ModeIntegrator
                 ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
                 ['c_p_r.child_id']
             )
-            ->joinLeft(
+            ->join(
                 ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 'c_p_e.entity_id = c_p_r.parent_id',
                 ['c_p_e.entity_id']
