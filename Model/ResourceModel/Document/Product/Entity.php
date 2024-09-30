@@ -19,11 +19,9 @@ class Entity extends ModeIntegrator
      */
     public function getFetchAllByFieldsWebsite(array $fields, string $websiteId)
     {
-        $mainEntitySelect = $this->getEntityByWebsiteIdSelect($websiteId);
-        $relationParentTypeSelect = $this->getProductRelationEntityTypeSelect();
         $select = $this->adapter->select()
             ->from(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
+                ['c_p_e' => new \Zend_Db_Expr("( ". $this->getEntityByWebsiteIdSelect($websiteId)->__toString() . ' )')],
                 $fields
             )
             ->joinLeft(
@@ -32,21 +30,15 @@ class Entity extends ModeIntegrator
                 []
             )
             ->joinLeft(
-                ['c_p_r' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
+                ['c_p_r' => new \Zend_Db_Expr("( ". $this->getProductRelationByFieldWebsiteSelect("parent_id", $websiteId)->__toString() . ' )')],
                 "c_p_r.child_id = c_p_e.entity_id",
                 []
             )
             ->joinLeft(
-                ['c_p_r_p' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
+                ['c_p_r_p' => new \Zend_Db_Expr("( ". $this->getProductRelationByFieldWebsiteSelect("child_id", $websiteId)->__toString() . ' )')],
                 "c_p_r_p.parent_id = c_p_e.entity_id",
                 []
             )
-            ->joinLeft(
-                ['c_p_e_s' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
-                "c_p_e_s.entity_id=c_p_e.entity_id",
-                []
-            )
-            ->where("c_p_e_s.entity_id IS NOT NULL")
             ->group("c_p_e.entity_id");
 
         return $this->adapter->fetchAll($select);

@@ -106,9 +106,12 @@ trait DiIntegrationConfigurationTrait
             try{
                 if($handler instanceof DocInstantIntegrationInterface)
                 {
-                    if($handler->filterByIds())
+                    if($handler->hasModeEnabled())
                     {
-                        $handler->setIds($this->getIds());
+                        if($handler->filterByIds())
+                        {
+                            $handler->setIds($this->getIds());
+                        }
                     }
                 }
             } catch (\Throwable $exception) {}

@@ -71,26 +71,6 @@ class Review extends GenericResourceProvider
             ->where('r_d.review_id IS NOT NULL');
     }
 
-    /**
-     * Access linked product information: entity_id, type_id, parent_id, sku
-     *
-     * @return Select
-     */
-    protected function _getProductEntityDetails(array $storeIds, string $websiteId) : Select
-    {
-        $productMainSelect = $this->_getProductEntityByWebsiteIdSelect($websiteId);
-        $productRelationSelect = $this->getProductRelationEntityTypeSelect();
-        return $this->adapter->select()
-            ->from(
-                ['c_p_e' => new \Zend_Db_Expr("( ". $productMainSelect->__toString() . ' )')],
-                ['entity_id', 'sku', 'type_id']
-            )->joinLeft(
-                ['c_p_r' => new \Zend_Db_Expr("( ". $productRelationSelect->__toString() . ' )')],
-                "c_p_e.entity_id = c_p_r.child_id",
-                ["parent_id"]
-            )->group("c_p_e.entity_id");
-    }
-
     public function getIdPrimaryKeyField() : string
     {
         return 'r.review_id';

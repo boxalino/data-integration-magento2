@@ -20,29 +20,44 @@ trait ProductResourceTrait
             )
             ->joinLeft(
                 ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
-                'e.entity_id = c_p_w.product_id AND c_p_w.website_id = ' . $websiteId,
+                'e.entity_id = c_p_w.product_id',
                 []
             )
             ->where("c_p_w.website_id= ? " , $websiteId);
     }
 
     /**
-     * Filter out parent_ids which no longer exist in the DB
+     * Filter out parent_ids that are not belonging to the website
+     * Filter out parent_id/child_ids that do not belong to the website
      *
+     * @param string $field
+     * @param string | null $website
      * @return Select
      */
-    protected function getProductRelationEntityTypeSelect() : Select
+    protected function getProductRelationByFieldWebsiteSelect(string $field, ?string $websiteId = null) : Select
     {
-        return $this->adapter->select()
+        $select = $this->adapter->select()
             ->from(
                 ['c_p_r' => $this->adapter->getTableName('catalog_product_relation')],
                 ["parent_id", "child_id"]
-            )
-            ->joinLeft(
-                ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
-                "c_p_r.parent_id = c_p_e.entity_id",
-                ["parent_type_id" => "type_id"]
-            )
+            );
+
+        if(is_null($websiteId))
+        {
+            return $select;;
+        }
+
+        return $select->joinLeft(
+            ['c_p_e' => $this->adapter->getTableName('catalog_product_entity')],
+            "c_p_r.$field = c_p_e.entity_id",
+            ["{$field}_type_id" => "type_id"]
+        )->joinLeft(
+            ['c_p_w' => $this->adapter->getTableName('catalog_product_website')],
+            "c_p_r.$field = c_p_w.product_id",
+            []
+        )->where("c_p_w.website_id= ? " , $websiteId)
             ->where("c_p_e.entity_id IS NOT NULL");
     }
+
+
 }

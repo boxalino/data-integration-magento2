@@ -45,7 +45,7 @@ trait EntityResourceTrait
 
         if($this->delta)
         {
-            $select = $this->_getEntityIdsWithRelationsBySelect($select);
+            $select = $this->_getEntityIdsWithRelationsBySelect($select, $websiteId);
             return $this->addDeltaDateConditional($select);
         }
 
@@ -57,27 +57,25 @@ trait EntityResourceTrait
      *
      * @return Select
      */
-    protected function _getEntityIdsWithRelationsBySelect(Select $mainEntitySelect) : Select
+    protected function _getEntityIdsWithRelationsBySelect(Select $mainEntitySelect, ?string $websiteId = null) : Select
     {
-        $relationParentTypeSelect = $this->getProductRelationEntityTypeSelect();
-        $affectedGroupSelect = $this->getAffectedParentGroupSelect();
         return $this->adapter->select()
             ->from(
                 ['c_p_e' => new \Zend_Db_Expr("( ". $mainEntitySelect->__toString() . ' )')],
                 ['c_p_e.entity_id', 'as_parent'=>'c_p_r.parent_id', 'as_child'=>'c_p_r_p.child_id', 'c_p_r_r.child_id', 'c_p_r_r.parent_id']
             )
             ->joinLeft(
-                ['c_p_r' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
+                ['c_p_r' => new \Zend_Db_Expr("( ". $this->getProductRelationByFieldWebsiteSelect("parent_id", $websiteId)->__toString() . ' )')],
                 "c_p_r.child_id = c_p_e.entity_id",
                 []
             )
             ->joinLeft(
-                ['c_p_r_p' => new \Zend_Db_Expr("( ". $relationParentTypeSelect->__toString() . ' )')],
+                ['c_p_r_p' => new \Zend_Db_Expr("( ". $this->getProductRelationByFieldWebsiteSelect("child_id", $websiteId)->__toString() . ' )')],
                 "c_p_r_p.parent_id = c_p_e.entity_id",
                 []
             )
             ->joinLeft(
-                ['c_p_r_r' => new \Zend_Db_Expr("( ". $affectedGroupSelect->__toString() . ' )')],
+                ['c_p_r_r' => new \Zend_Db_Expr("( ". $this->getAffectedParentGroupSelect()->__toString() . ' )')],
                 "c_p_r_r.affected = c_p_e.entity_id",
                 []
             )

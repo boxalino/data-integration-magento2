@@ -70,6 +70,7 @@ class Price extends AttributeStrategyAbstract
         {
             $this->_setGetDataStrategy($attribute['is_global']);
             $this->_resolveDataDelta();
+            $this->_resolveDataInstant();
             $this->setAttributeId((int)$attribute['attribute_id']);
             $this->setAttributeCode($attribute['attribute_code']);
             if($this->isLocalized)
@@ -124,14 +125,17 @@ class Price extends AttributeStrategyAbstract
     public function getListPrice(array $item): array
     {
         $indexPrice = $this->getDataByCode("index_price", $item[$this->getDiIdField()]);
-        if($indexPrice[DocSchemaInterface::FIELD_TYPE] != \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
+        if($indexPrice)
         {
-            if(in_array($indexPrice["price"], [null, 0]))
+            if($indexPrice[DocSchemaInterface::FIELD_TYPE] != \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
             {
-                return [];
-            }
+                if(in_array($indexPrice["price"], [null, 0]))
+                {
+                    return [];
+                }
 
-            return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["price"]);
+                return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["price"]);
+            }
         }
 
         return $this->getDataByCode("price", $item[$this->getDiIdField()]);
@@ -224,6 +228,7 @@ class Price extends AttributeStrategyAbstract
     protected function loadIndexPriceAllGroups() : void
     {
         $this->_resolveDataDeltaIndexPrice();
+        $this->_resolveDataInstantIndexPrice();
         $this->_loadIndexPriceAllGroups();
     }
 

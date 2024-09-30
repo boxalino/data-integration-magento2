@@ -47,13 +47,29 @@ trait IndexPriceTrait
     {
         if($this->filterByCriteria())
         {
-            $this->indexedPriceResource->useDelta(true);
+            $this->indexPriceResource->useDelta(true);
             if(count($this->getIds()) > 0)
             {
-                $this->indexedPriceResource->useDeltaIdsConditionals(true);
-                $this->indexedPriceResource->addIdsConditional($this->getIds());
+                $this->indexPriceResource->useDeltaIdsConditionals(true);
+                $this->indexPriceResource->addIdsConditional($this->getIds());
             }
-            $this->indexedPriceResource->addDateConditional($this->_getDeltaSyncCheckDate());
+            $this->indexPriceResource->addDateConditional($this->_getDeltaSyncCheckDate());
+        }
+    }
+
+    /**
+     * In case processing is required at the level of resolve
+     * @return void
+     */
+    protected function _resolveDataInstantIndexPrice() : void
+    {
+        if($this->filterByIds())
+        {
+            $this->indexPriceResource->useInstant(true);
+            if(count($this->getIds()) > 0)
+            {
+                $this->indexPriceResource->addIdsConditional($this->getIds());
+            }
         }
     }
 
