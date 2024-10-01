@@ -1,6 +1,7 @@
 <?php
 namespace Boxalino\DataIntegration\Model\DataProvider\Document\Attribute;
 
+use Boxalino\DataIntegration\Service\Document\DiSystemConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\Attribute;
 use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 
@@ -16,9 +17,21 @@ abstract class CustomAttributeAbstract extends Attribute
 {
 
     use DiPropertyTrait;
+    use DiSystemConfigurationTrait;
 
     /** property code (same as getName) */
     abstract function getCode(): string;
+
+    public function getLabel(): array
+    {
+        $data = [];
+        foreach($this->getSystemConfiguration()->getLanguages() as $language)
+        {
+            $data[$language] = ucwords(str_replace("_", " ", $this->getName()));
+        }
+
+        return $data;
+    }
 
     /**
      * @return string
