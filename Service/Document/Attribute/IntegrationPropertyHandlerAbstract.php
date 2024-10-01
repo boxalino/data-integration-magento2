@@ -7,6 +7,7 @@ use Boxalino\DataIntegration\Service\Document\DiIntegrationConfigurationTrait;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandler;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaPropertyHandlerInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
+use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,6 +23,7 @@ abstract class IntegrationPropertyHandlerAbstract extends DocSchemaPropertyHandl
 {
 
     use DiIntegrationConfigurationTrait;
+    use DiPropertyTrait;
 
     /**
      * @var DiSchemaDataProviderResolverInterface

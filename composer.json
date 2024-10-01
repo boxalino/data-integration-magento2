@@ -2,9 +2,9 @@
     "name": "boxalino/data-integration-magento2",
     "description": "Boxalino Data Integration Layer for Magento2",
     "type": "magento2-module",
-    "homepage": "http://www.boxalino.com",
+    "homepage": "https://www.boxalino.com",
     "keywords": ["boxalino", "data integration", "magento"],
-    "version": "2.0.11",
+    "version": "2.0.12",
     "support": {
         "email": "support@boxalino.com"
     },

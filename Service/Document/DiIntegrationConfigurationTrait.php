@@ -5,8 +5,8 @@ use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
-use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Trait DiIntegrationConfigurationTrait
@@ -16,10 +16,7 @@ use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 trait DiIntegrationConfigurationTrait
 {
 
-    /**
-     * @var ConfigurationDataObject
-     */
-    protected $systemConfiguration;
+    use DiSystemConfigurationTrait;
 
     /**
      * @var string
@@ -27,21 +24,9 @@ trait DiIntegrationConfigurationTrait
     protected $handlerIntegrateTime;
 
     /**
-     * @return ConfigurationDataObject
+     * @var LoggerInterface
      */
-    public function getSystemConfiguration(): ConfigurationDataObject
-    {
-        return $this->systemConfiguration;
-    }
-
-    /**
-     * @param ConfigurationDataObject $configuration
-     * @return void
-     */
-    public function setSystemConfiguration(ConfigurationDataObject $configuration): void
-    {
-        $this->systemConfiguration = $configuration;
-    }
+    protected $logger;
 
     /**
      * @return string
@@ -77,6 +62,12 @@ trait DiIntegrationConfigurationTrait
                 $handler->setSystemConfiguration($this->getSystemConfiguration());
                 $handler->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             }
+            
+            try{
+                $handler->setLogger($this->logger);
+            } catch (\Throwable $exception) {
+                //do nothing
+            }
 
             try{
                 if($handler instanceof DocDeltaIntegrationInterface)
@@ -100,9 +91,12 @@ trait DiIntegrationConfigurationTrait
             try{
                 if($handler instanceof DocInstantIntegrationInterface)
                 {
-                    if($handler->filterByIds())
+                    if($handler->hasModeEnabled())
                     {
-                        $handler->setIds($this->getIds());
+                        if($handler->filterByIds())
+                        {
+                            $handler->setIds($this->getIds());
+                        }
                     }
                 }
             } catch (\Throwable $exception) {}
@@ -125,13 +119,6 @@ trait DiIntegrationConfigurationTrait
         return (int)$this->getSystemConfiguration()->getBatchSize()*$this->getSystemConfiguration()->getChunk();
     }
 
-    /**
-     * @return ConfigurationDataObject
-     */
-    public function getDiConfiguration() : ConfigurationDataObject
-    {
-        return $this->getSystemConfiguration();
-    }
 
 
 }

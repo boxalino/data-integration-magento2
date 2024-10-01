@@ -2,7 +2,6 @@
 namespace Boxalino\DataIntegration\Service\Document\Attribute;
 
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
-use Boxalino\DataIntegrationDoc\Generator\DiPropertyTrait;
 use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDefinitionException;
 
 /**
@@ -12,8 +11,6 @@ use Boxalino\DataIntegrationDoc\Service\ErrorHandler\MissingSchemaDataProviderDe
  */
 abstract class CustomAttributeAbstract extends IntegrationPropertyHandlerAbstract
 {
-    use DiPropertyTrait;
-
     public const DI_SCHEMA_RESOLVER_TYPE = "customAttribute";
 
     /**
@@ -36,17 +33,22 @@ abstract class CustomAttributeAbstract extends IntegrationPropertyHandlerAbstrac
     {
         $content = [];
         try {
+            /** @var \Boxalino\DataIntegration\Model\DataProvider\Document\Attribute\CustomAttributeAbstract $attribute */
             foreach($this->getCustomAttributesDefinition() as $attribute)
             {
                 $schema = [];
+                $attribute->setSystemConfiguration($this->getSystemConfiguration());
                 $attributeCode = $attribute->getCode();
 
                 $schema[DocSchemaInterface::FIELD_NAME] = $this->sanitizePropertyName($attributeCode);
                 $schema[DocSchemaInterface::FIELD_INTERNAL_ID] = $attributeCode;
                 $schema[DocSchemaInterface::FIELD_LOCALIZED] =  $attribute->isLocalized();
                 $schema[DocSchemaInterface::FIELD_FILTER_BY] =  $attribute->isFilterBy();
+                $schema[DocSchemaInterface::FIELD_MULTI_VALUE] =  $attribute->isMultivalue();
                 $schema[DocSchemaInterface::FIELD_FORMAT] =  $attribute->getFormat();
-                $schema = $this->addingLocalizedPropertyToSchema(
+                $schema[DocSchemaInterface::FIELD_SEARCH_SUGGESTION] =  $attribute->isSearchSuggestion();
+                $schema[DocSchemaInterface::FIELD_ORDER_BY] =  $attribute->isOrderBy();
+                $schema = $this->schemaGetter()->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
