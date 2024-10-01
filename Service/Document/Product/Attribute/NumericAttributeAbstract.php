@@ -38,6 +38,8 @@ abstract class NumericAttributeAbstract extends IntegrationPropertyHandlerAbstra
             }
         }
 
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
+
         return $content;
     }
 

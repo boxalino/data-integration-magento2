@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Model\ResourceModel\Document\Product;
 
-use Boxalino\DataIntegration\Model\ResourceModel\Document\Entity\ProductResourceTrait;
 use Magento\Review\Model\Review;
 
 /**
@@ -12,8 +11,6 @@ use Magento\Review\Model\Review;
 class ReviewSummary extends ModeIntegrator
 {
 
-    use ProductResourceTrait;
-
     /**
      * @param array $fields
      * @param string $websiteId
@@ -21,7 +18,6 @@ class ReviewSummary extends ModeIntegrator
      */
     public function getFetchAllByFieldsWebsiteId(array $fields, string $websiteId) : array
     {
-        $productMainSelect = $this->_getProductEntityByWebsiteIdSelect($websiteId);
         $reviewSelect = $this->adapter->select()
             ->from(
                 ['r_e_s' => $this->adapter->getTableName('review_entity_summary')],
@@ -37,13 +33,14 @@ class ReviewSummary extends ModeIntegrator
 
         $select = $this->adapter->select()
             ->from(
-                ["e" => new \Zend_Db_Expr("( " . $this->_getProductEntityByWebsiteIdSelect($websiteId)->__toString() . ")")],
+                ["e" => new \Zend_Db_Expr("( " . $this->getEntityByWebsiteIdSelect($websiteId)->__toString() . ")")],
                 $fields
             )->joinLeft(
                 ["r" => new \Zend_Db_Expr("( " . $reviewSelect->__toString() . ")")],
                 "e.entity_id = r.entity_pk_value",
                 ["*"]
-            )->where("r.rating_summary IS NOT NULL");
+            )->where("r.rating_summary IS NOT NULL")
+            ->where("e.entity_id IS NOT NULL");
 
         return $this->adapter->fetchAll($select);
     }
