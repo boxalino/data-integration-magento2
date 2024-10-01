@@ -37,13 +37,14 @@ class ReviewSummary extends ModeIntegrator
 
         $select = $this->adapter->select()
             ->from(
-                ["e" => new \Zend_Db_Expr("( " . $this->_getProductEntityByWebsiteIdSelect($websiteId)->__toString() . ")")],
+                ["e" => new \Zend_Db_Expr("( " . $this->getEntityByWebsiteIdSelect($websiteId)->__toString() . ")")],
                 $fields
             )->joinLeft(
                 ["r" => new \Zend_Db_Expr("( " . $reviewSelect->__toString() . ")")],
                 "e.entity_id = r.entity_pk_value",
                 ["*"]
-            )->where("r.rating_summary IS NOT NULL");
+            )->where("r.rating_summary IS NOT NULL")
+            ->where("e.entity_id IS NOT NULL");
 
         return $this->adapter->fetchAll($select);
     }

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Attribute;
 
-use Boxalino\DataIntegration\Model\DataProvider\Document\Product\ReviewSummary;
+use Boxalino\DataIntegration\Model\DataProvider\Document\Attribute\ReviewSummary;
 
 /**
  * Class ExtendedAttribute
@@ -16,13 +16,20 @@ class ExtendedAttribute extends CustomAttributeAbstract
      *
      * @return array
      */
-    function getCustomAttributesDefinition() : array
+    public function getCustomAttributesDefinition() : array
     {
         return [
             new ReviewSummary()
         ];
     }
 
+    /**
+     * @return string
+     */
+    public function getResolverType() : string
+    {
+        return "extendedAttribute";
+    }
 
 
 }
