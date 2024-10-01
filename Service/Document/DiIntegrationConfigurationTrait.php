@@ -5,7 +5,6 @@ use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
-use Boxalino\DataIntegrationDoc\Service\Util\ConfigurationDataObject;
 use Boxalino\DataIntegrationDoc\Doc\DocSchemaInterface;
 use Psr\Log\LoggerInterface;
 
@@ -17,10 +16,7 @@ use Psr\Log\LoggerInterface;
 trait DiIntegrationConfigurationTrait
 {
 
-    /**
-     * @var ConfigurationDataObject
-     */
-    protected $systemConfiguration;
+    use DiSystemConfigurationTrait;
 
     /**
      * @var string
@@ -31,23 +27,6 @@ trait DiIntegrationConfigurationTrait
      * @var LoggerInterface
      */
     protected $logger;
-
-    /**
-     * @return ConfigurationDataObject
-     */
-    public function getSystemConfiguration(): ConfigurationDataObject
-    {
-        return $this->systemConfiguration;
-    }
-
-    /**
-     * @param ConfigurationDataObject $configuration
-     * @return void
-     */
-    public function setSystemConfiguration(ConfigurationDataObject $configuration): void
-    {
-        $this->systemConfiguration = $configuration;
-    }
 
     /**
      * @return string
@@ -82,6 +61,12 @@ trait DiIntegrationConfigurationTrait
             {
                 $handler->setSystemConfiguration($this->getSystemConfiguration());
                 $handler->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
+            }
+            
+            try{
+                $handler->setLogger($this->logger);
+            } catch (\Throwable $exception) {
+                //do nothing
             }
 
             try{
@@ -134,13 +119,6 @@ trait DiIntegrationConfigurationTrait
         return (int)$this->getSystemConfiguration()->getBatchSize()*$this->getSystemConfiguration()->getChunk();
     }
 
-    /**
-     * @return ConfigurationDataObject
-     */
-    public function getDiConfiguration() : ConfigurationDataObject
-    {
-        return $this->getSystemConfiguration();
-    }
 
 
 }
