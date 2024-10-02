@@ -43,8 +43,8 @@ abstract class LocalizedStringAttributeAbstract extends IntegrationPropertyHandl
             }
         }
 
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
         return $content;
-
     }
 
     /**

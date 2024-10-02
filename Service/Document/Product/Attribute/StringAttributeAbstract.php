@@ -41,6 +41,7 @@ abstract class StringAttributeAbstract extends IntegrationPropertyHandlerAbstrac
             }
         }
 
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
         return $content;
     }
 

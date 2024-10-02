@@ -43,6 +43,7 @@ abstract class LocalizedNumericAttributeAbstract extends IntegrationPropertyHand
             }
         }
 
+        $this->logInfo(count($content) . " items have content for " . $this->getResolverType());
         return $content;
     }
 

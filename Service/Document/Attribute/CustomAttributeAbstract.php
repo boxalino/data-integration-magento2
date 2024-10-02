@@ -48,7 +48,7 @@ abstract class CustomAttributeAbstract extends IntegrationPropertyHandlerAbstrac
                 $schema[DocSchemaInterface::FIELD_FORMAT] =  $attribute->getFormat();
                 $schema[DocSchemaInterface::FIELD_SEARCH_SUGGESTION] =  $attribute->isSearchSuggestion();
                 $schema[DocSchemaInterface::FIELD_ORDER_BY] =  $attribute->isOrderBy();
-                $schema = $this->schemaGetter()->addingLocalizedPropertyToSchema(
+                $schema = $this->addingLocalizedPropertyToSchema(
                     DocSchemaInterface::FIELD_LABEL,
                     $schema,
                     $this->getSystemConfiguration()->getLanguages(),
