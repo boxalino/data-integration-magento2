@@ -41,5 +41,36 @@ class EavAttribute extends DiSchemaDataProviderResource
     }
 
 
+    /**
+     * @param array $storeLanguageMapping
+     * @return array
+     */
+    public function getEavAttributeLabels(array $storeLanguageMapping) : array
+    {
+        $fields = ["e_a.attribute_code"];
+        foreach($storeLanguageMapping as $storeId => $language)
+        {
+            $fields[] = new \Zend_Db_Expr("IF(e_a_l_$storeId.value IS NULL, e_a.frontend_label, e_a_l_$storeId.value) AS $language");
+        }
+
+        $select = $this->adapter->select()
+            ->from(
+                ['e_a' => $this->adapter->getTableName('eav_attribute')],
+                $fields
+            );
+
+        foreach($storeLanguageMapping as $storeId => $language)
+        {
+            $select->joinLeft(
+                ["e_a_l_$storeId" => $this->adapter->getTableName('eav_attribute_label')],
+                "e_a.attribute_id = e_a_l_$storeId.attribute_id AND e_a_l_$storeId.store_id = $storeId",
+                []
+            );
+        }
+
+        $select->where('e_a.entity_type_id=?', \Magento\Catalog\Setup\CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID);
+        return $this->adapter->fetchAll($select);
+    }
+
 
 }
