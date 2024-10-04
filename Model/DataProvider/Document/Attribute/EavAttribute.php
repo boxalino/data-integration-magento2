@@ -21,12 +21,17 @@ class EavAttribute implements
     /**
      * @var DataProviderResourceModel
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * @var \ArrayObject
      */
-    private $attributeList;
+    protected $attributeList;
+
+    /**
+     * @var \ArrayObject
+     */
+    protected $attributeLabels;
 
     /**
      * @param DataProviderResourceModel $resource
@@ -35,9 +40,8 @@ class EavAttribute implements
         DataProviderResourceModel $resource
     ) {
         $this->resourceModel = $resource;
-
-        /** @var \ArrayObject attributeNameValuesList */
         $this->attributeList = new \ArrayObject();
+        $this->attributeLabels = new \ArrayObject();
     }
 
     public function getData(): array
@@ -45,7 +49,10 @@ class EavAttribute implements
         return $this->resourceModel->getEavAttributes();
     }
 
-    public function resolve() : void {}
+    public function resolve() : void
+    {
+        $this->loadLabels();
+    }
 
     public function getCode(array $row) : string
     {
@@ -54,13 +61,12 @@ class EavAttribute implements
 
     public function getLabel(array $row) : array
     {
-        $content = [];
-        foreach($this->getSystemConfiguration()->getLanguages() as $language)
+        if($this->attributeLabels->offsetExists($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::ATTRIBUTE_CODE]))
         {
-            $content[$language] = $row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::FRONTEND_LABEL];
+            return $this->attributeLabels->offsetGet($row[\Magento\Catalog\Model\ResourceModel\Eav\Attribute::ATTRIBUTE_CODE]);
         }
 
-        return $content;
+        return [];
     }
 
     public function getInternalId(array $row) : string
@@ -163,6 +169,17 @@ class EavAttribute implements
     public function isGroupBy(array $row): bool
     {
         return false;
+    }
+
+    /**
+     * @return void
+     */
+    protected function loadLabels() : void
+    {
+        foreach($this->resourceModel->getEavAttributeLabels($this->getSystemConfiguration()->getStoreIdsLanguagesMap()) as $row)
+        {
+            $this->attributeLabels->offsetSet($row["attribute_code"], $row);
+        }
     }
 
 
