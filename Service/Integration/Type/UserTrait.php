@@ -21,13 +21,5 @@ trait UserTrait
         return GcpRequestInterface::GCP_TYPE_USER;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName() : string
-    {
-        return CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER;
-    }
-
 
 }

@@ -95,18 +95,17 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
         {
             $this->getLogger()->info($exception->getMessage());
             $output->writeln($exception->getMessage());
-            return 0;
         } catch (EmptyBacklogException $exception)
         {
             $this->getLogger()->info($exception->getMessage());
             $output->writeln($exception->getMessage());
-            return 0;
         } catch (\Throwable $exception)
         {
             $this->getLogger()->alert($exception->getMessage());
             $output->writeln($exception->getMessage());
-            return 0;
         }
+
+        return 0;
     }
 
     /**

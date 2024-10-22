@@ -43,10 +43,5 @@ abstract class AbstractIntegrationHandler extends IntegrationHandler
         $this->setFullConversionThreshold($fullConversionThreshold);
     }
 
-    /**
-     * @return string
-     */
-    abstract public function getEntityName() : string;
-
 
 }

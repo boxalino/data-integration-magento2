@@ -20,12 +20,5 @@ trait OrderTrait
         return GcpRequestInterface::GCP_TYPE_ORDER;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName() : string
-    {
-        return TransactionInterface::TYPE_ORDER;
-    }
 
 }

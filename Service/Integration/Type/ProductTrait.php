@@ -20,13 +20,5 @@ trait ProductTrait
         return GcpRequestInterface::GCP_TYPE_PRODUCT;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName() : string
-    {
-        return ProductAttributeInterface::ENTITY_TYPE_CODE;
-    }
-
 
 }

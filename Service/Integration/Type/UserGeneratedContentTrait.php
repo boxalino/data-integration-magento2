@@ -19,13 +19,5 @@ trait UserGeneratedContentTrait
         return GcpRequestInterface::GCP_TYPE_USER_GENERATED_CONTENT;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName() : string
-    {
-        return $this->getIntegrationType();
-    }
-
 
 }

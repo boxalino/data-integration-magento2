@@ -2,6 +2,7 @@
 namespace Boxalino\DataIntegration\Service\Document;
 
 use Boxalino\DataIntegration\Api\Mode\DocMviewDeltaIntegrationInterface;
+use Boxalino\DataIntegrationDoc\Framework\Util\DiHandlerIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiIntegrationConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocDeltaIntegrationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\Doc\Mode\DocInstantIntegrationInterface;
@@ -60,14 +61,16 @@ trait DiIntegrationConfigurationTrait
             if($handler instanceof DiIntegrationConfigurationInterface)
             {
                 $handler->setSystemConfiguration($this->getSystemConfiguration());
+            }
+
+            if($handler instanceof DiHandlerIntegrationConfigurationInterface)
+            {
                 $handler->setHandlerIntegrateTime($this->getHandlerIntegrateTime());
             }
-            
+
             try{
                 $handler->setLogger($this->logger);
-            } catch (\Throwable $exception) {
-                //do nothing
-            }
+            } catch (\Throwable $exception) {}
 
             try{
                 if($handler instanceof DocDeltaIntegrationInterface)

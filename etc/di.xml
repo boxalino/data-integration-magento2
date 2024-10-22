@@ -26,6 +26,20 @@
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="Boxalino\DataIntegration\Logger\Core\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileName" xsi:type="string">/var/log/boxalino-di-core.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Boxalino\DataIntegration\Logger\Core\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">Boxalino DI: Core</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Boxalino\DataIntegration\Logger\Core\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <virtualType name="Boxalino\DataIntegration\Logger\Content\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
@@ -259,6 +273,11 @@
     <type name="Boxalino\DataIntegration\Framework\Console\UserGeneratedContent\FullDataIntegration">
         <arguments>
             <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Full\Content\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Boxalino\DataIntegration\Framework\Console\CoreDataIntegration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Boxalino\DataIntegration\Logger\Content\Logger</argument>
         </arguments>
     </type>
     <type name="Boxalino\DataIntegration\Framework\Console\Product\FullMviewDataIntegration">

@@ -19,13 +19,5 @@ trait UserSelectionTrait
         return GcpRequestInterface::GCP_TYPE_USER_SELECTION;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName() : string
-    {
-        return $this->getIntegrationType();
-    }
-
 
 }

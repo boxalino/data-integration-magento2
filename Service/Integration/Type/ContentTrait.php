@@ -20,12 +20,5 @@ trait ContentTrait
         return GcpRequestInterface::GCP_TYPE_CONTENT;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName() : string
-    {
-        return $this->getIntegrationType();
-    }
 
 }

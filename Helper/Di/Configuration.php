@@ -196,6 +196,30 @@ class Configuration implements DiConfigurationInterface
     }
 
     /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getCoreConfigurations(): array
+    {
+        $configurations = [];
+        $this->initializeWebsitesConfigurations();
+        foreach($this->configurations as $configuration)
+        {
+            $modeConfigurations = array_merge(
+                [
+                    GcpRequestInterface::DI_REQUEST_MODE => GcpRequestInterface::GCP_MODE_TRANSFORMER,
+                    "allowCoreSync" => $configuration["configurationHandler"]->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_CORE)
+                ],
+                $configuration
+            );
+
+            $configurations[] = new ConfigurationDataObject($modeConfigurations);
+        }
+
+        return $configurations;
+    }
+
+    /**
      * Configurations specific for the full data integrations
      *
      * @param StoreConfigurationHandler $storeConfigurationHandler
@@ -214,6 +238,7 @@ class Configuration implements DiConfigurationInterface
             "allowContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_CONTENT),
             "allowUserSelectionSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_USER_SELECTION),
             "allowUserGeneratedContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_USER_GENERATED_CONTENT),
+            "allowCoreSync" => $storeConfigurationHandler->getSyncStatusByModeType( GcpRequestInterface::GCP_MODE_FULL, GcpRequestInterface::GCP_TYPE_CORE)
         ];
     }
 
@@ -256,6 +281,7 @@ class Configuration implements DiConfigurationInterface
             "allowContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_CONTENT),
             "allowUserSelectionSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_USER_SELECTION),
             "allowUserGeneratedContentSync" => $storeConfigurationHandler->getSyncStatusByModeType(GcpRequestInterface::GCP_MODE_DELTA, GcpRequestInterface::GCP_TYPE_USER_GENERATED_CONTENT),
+            "allowCoreSync" => false
         ];
     }
 

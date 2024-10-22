@@ -90,6 +90,11 @@
                     <validate>validate-select</validate>
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                 </field>
+                <field id="core" translate="label" type="select" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Core</label>
+                    <validate>validate-select</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
                 <field id="dispatch" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Dispatch Request Mode</label>
                     <validate>validate-select</validate>
