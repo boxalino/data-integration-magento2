@@ -4,7 +4,7 @@ namespace Boxalino\DataIntegration\Framework\Console\Order;
 use Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface;
 use Boxalino\DataIntegration\Framework\Console\AbstractMviewDataIntegration;
 use Boxalino\DataIntegration\Framework\Console\MviewIdsExecuteTrait;
-use Boxalino\DataIntegrationDoc\Framework\Integrate\Mode\Configuration\FullTrait;
+use Boxalino\DataIntegrationDoc\Framework\Integrate\Mode\Configuration\DeltaTrait;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\Type\OrderTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\OrderDeltaIntegrationHandlerInterface;
@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 class DeltaMviewDataIntegration extends AbstractMviewDataIntegration
 {
 
-    use FullTrait;
+    use DeltaTrait;
     use OrderTrait;
     use MviewIdsExecuteTrait;
 

@@ -44,7 +44,7 @@ trait ProductResourceTrait
 
         if(is_null($websiteId))
         {
-            return $select;;
+            return $select;
         }
 
         return $select->joinLeft(

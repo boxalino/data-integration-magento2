@@ -34,7 +34,7 @@ trait TierPriceTrait
      */
     protected function _getTierPrice(array $tierPrices, array $price) : array
     {
-        if(empty($tierPrices))
+        if(empty($tierPrices) || empty($price))
         {
             return [];
         }
@@ -51,8 +51,11 @@ trait TierPriceTrait
                 {
                     return round((float)$tierPrice, 2);
                 }
-
-                $tierPrice = (string) round((float)$price[$language] * (100 - (int)rtrim($tierPrice, "%")) / 100, 2);
+                
+                if(isset($price[$language]))
+                {
+                    $tierPrice = (string) round((float)$price[$language] * (100 - (int)rtrim($tierPrice, "%")) / 100, 2);
+                }
             }
         );
 

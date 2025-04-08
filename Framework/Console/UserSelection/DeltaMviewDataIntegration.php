@@ -4,7 +4,7 @@ namespace Boxalino\DataIntegration\Framework\Console\UserSelection;
 use Boxalino\DataIntegration\Api\Mview\DiViewHandlerInterface;
 use Boxalino\DataIntegration\Framework\Console\AbstractMviewDataIntegration;
 use Boxalino\DataIntegration\Framework\Console\MviewIdsExecuteTrait;
-use Boxalino\DataIntegrationDoc\Framework\Integrate\Mode\Configuration\FullTrait;
+use Boxalino\DataIntegrationDoc\Framework\Integrate\Mode\Configuration\DeltaTrait;
 use Boxalino\DataIntegrationDoc\Framework\Integrate\Type\UserSelectionTrait;
 use Boxalino\DataIntegrationDoc\Framework\Util\DiConfigurationInterface;
 use Boxalino\DataIntegrationDoc\Service\Integration\UserSelectionDeltaIntegrationHandlerInterface;
@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 class DeltaMviewDataIntegration extends AbstractMviewDataIntegration
 {
 
-    use FullTrait;
+    use DeltaTrait;
     use UserSelectionTrait;
     use MviewIdsExecuteTrait;
 

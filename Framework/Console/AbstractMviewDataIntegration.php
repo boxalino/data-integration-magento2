@@ -81,8 +81,10 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
 
             $exceptionMessages = $this->_execute();
 
-            if (empty($exceptionMessages)) {
-                if (!is_null($this->mviewVersionId) && !is_null($this->changelogVersionId)) {
+            if (empty($exceptionMessages))
+            {
+                if (!is_null($this->mviewVersionId) && !is_null($this->changelogVersionId))
+                {
                     $this->_updateMview();
                 }
 
