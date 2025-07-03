@@ -49,7 +49,7 @@ class TierPrice extends ModeIntegrator
                 ["main" => new \Zend_Db_Expr("( ". $tierPriceSelect->__toString() . ' )')],
                 [
                     "main.entity_id", "main.customer_group_id",
-                    new \Zend_Db_Expr("JSON_ARRAYAGG(JSON_OBJECT('qty', CAST(qty AS DECIMAL),'value', value)) AS tier_price")
+                    new \Zend_Db_Expr("CONCAT('[', GROUP_CONCAT(JSON_OBJECT('qty', CAST(main.qty AS DECIMAL), 'value', main.value) ORDER BY main.qty ASC SEPARATOR ','), ']') AS tier_price")
                 ]
             )
             ->group(["main.entity_id","main.customer_group_id"]);
