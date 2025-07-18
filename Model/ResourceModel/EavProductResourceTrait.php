@@ -106,12 +106,12 @@ trait EavProductResourceTrait
 
         if(is_array($storeId))
         {
-            $storeId = $this->adapter->quote($storeId);
+            $storeId = implode(",", $storeId);
         }
         $joinLeftConditions = [
             $this->adapter->quoteInto("{$attributeId}_store.entity_id = e.entity_id", ''),
             $this->adapter->quoteInto("{$attributeId}_store.attribute_id = ?", $attributeId),
-            $this->adapter->quoteInto("{$attributeId}_store.store_id IN(?)", $storeId)
+            $this->adapter->quoteInto("{$attributeId}_store.store_id IN({$storeId})")
         ];
 
         $select
