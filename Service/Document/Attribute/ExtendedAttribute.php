@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\DataIntegration\Service\Document\Attribute;
 
+use Boxalino\DataIntegration\Model\DataProvider\Document\Attribute\MinSaleQty;
 use Boxalino\DataIntegration\Model\DataProvider\Document\Attribute\ReviewSummary;
 
 /**
@@ -19,7 +20,8 @@ class ExtendedAttribute extends CustomAttributeAbstract
     public function getCustomAttributesDefinition() : array
     {
         return [
-            new ReviewSummary()
+            new ReviewSummary(),
+	        new MinSaleQty()
         ];
     }
 
