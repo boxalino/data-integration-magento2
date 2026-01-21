@@ -129,12 +129,12 @@ class Price extends AttributeStrategyAbstract
         {
             if($indexPrice[DocSchemaInterface::FIELD_TYPE] != \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
             {
-                if(in_array($indexPrice["price"], [null, 0]))
+                if(in_array($indexPrice["final_price"], [null, 0]))
                 {
                     return [];
                 }
 
-                return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["price"]);
+                return array_fill_keys($this->getSystemConfiguration()->getLanguages(), $indexPrice["final_price"]);
             }
         }
 
