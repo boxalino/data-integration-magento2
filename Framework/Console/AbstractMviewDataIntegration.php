@@ -71,9 +71,9 @@ abstract class AbstractMviewDataIntegration extends DiGenericAbstractCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("Start of MVIEW Boxalino Data Integration (DI)...");
         try {
